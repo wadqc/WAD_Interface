@@ -1,69 +1,82 @@
+-- phpMyAdmin SQL Dump
+-- version 3.5.1
+-- http://www.phpmyadmin.net
+--
+-- Machine: localhost
+-- Genereertijd: 08 okt 2012 om 21:32
+-- Serverversie: 5.5.16
+-- PHP-versie: 5.3.8
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
 --
--- Table structure for table `collector_status_omschrijving`
+-- Databank: `iqc`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `collector_status_omschrijving`
 --
 
 DROP TABLE IF EXISTS `collector_status_omschrijving`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `collector_status_omschrijving` (
+CREATE TABLE IF NOT EXISTS `collector_status_omschrijving` (
   `nummer` int(11) NOT NULL,
   `veld_omschrijving` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
 
 --
--- Dumping data for table `collector_status_omschrijving`
+-- Gegevens worden uitgevoerd voor tabel `collector_status_omschrijving`
 --
 
-LOCK TABLES `collector_status_omschrijving` WRITE;
-/*!40000 ALTER TABLE `collector_status_omschrijving` DISABLE KEYS */;
-INSERT INTO `collector_status_omschrijving` VALUES (0,'Collector bezig'),(1,'Collector klaar'),(2,'Selector bezig'),(3,'Selector klaar');
-/*!40000 ALTER TABLE `collector_status_omschrijving` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `collector_status_omschrijving` (`nummer`, `veld_omschrijving`) VALUES
+(0, 'Collector bezig'),
+(1, 'Collector klaar'),
+(2, 'Selector bezig'),
+(3, 'Selector klaar');
+
+
+
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `collector_study_status`
+-- Tabelstructuur voor tabel `collector_study_status`
 --
 
 DROP TABLE IF EXISTS `collector_study_status`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `collector_study_status` (
+CREATE TABLE IF NOT EXISTS `collector_study_status` (
   `pk` int(11) NOT NULL AUTO_INCREMENT,
   `study_fk` int(11) DEFAULT NULL,
   `study_status` int(11) DEFAULT '0',
   PRIMARY KEY (`pk`),
   UNIQUE KEY `pk_UNIQUE` (`pk`)
-) ENGINE=InnoDB AUTO_INCREMENT=351 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
 --
--- Table structure for table `collector_series_status`
+-- Tabelstructuur voor tabel `collector_series_status`
 --
 
 DROP TABLE IF EXISTS `collector_series_status`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `collector_series_status` (
+CREATE TABLE IF NOT EXISTS `collector_series_status` (
   `pk` int(11) NOT NULL AUTO_INCREMENT,
   `series_fk` int(11) DEFAULT NULL,
   `series_status` int(11) DEFAULT '0',
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB AUTO_INCREMENT=750 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-
+-- --------------------------------------------------------
 
 --
--- Table structure for table `files`
+-- Tabelstructuur voor tabel `files`
 --
 
 DROP TABLE IF EXISTS `files`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `files` (
+CREATE TABLE IF NOT EXISTS `files` (
   `pk` bigint(20) NOT NULL AUTO_INCREMENT,
   `instance_fk` bigint(20) DEFAULT NULL,
   `filesystem_fk` bigint(20) DEFAULT NULL,
@@ -75,19 +88,16 @@ CREATE TABLE `files` (
   `md5_check_time` datetime DEFAULT NULL,
   `created_time` datetime DEFAULT NULL,
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB AUTO_INCREMENT=454 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-
+-- --------------------------------------------------------
 
 --
--- Table structure for table `filesystem`
+-- Tabelstructuur voor tabel `filesystem`
 --
 
 DROP TABLE IF EXISTS `filesystem`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `filesystem` (
+CREATE TABLE IF NOT EXISTS `filesystem` (
   `pk` bigint(20) NOT NULL AUTO_INCREMENT,
   `next_fk` bigint(20) DEFAULT NULL,
   `dirpath` varchar(250) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
@@ -97,20 +107,16 @@ CREATE TABLE `filesystem` (
   `fs_status` int(11) NOT NULL,
   `user_info` varchar(250) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-
+-- --------------------------------------------------------
 
 --
--- Table structure for table `patient`
+-- Tabelstructuur voor tabel `patient`
 --
-SET FOREIGN_KEY_CHECKS=0;
+
 DROP TABLE IF EXISTS `patient`;
-SET FOREIGN_KEY_CHECKS=1;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `patient` (
+CREATE TABLE IF NOT EXISTS `patient` (
   `pk` bigint(20) NOT NULL AUTO_INCREMENT,
   `merge_fk` bigint(20) DEFAULT NULL,
   `pat_id` varchar(250) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
@@ -129,18 +135,16 @@ CREATE TABLE `patient` (
   `created_time` datetime DEFAULT NULL,
   `pat_attrs` longblob,
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
 --
--- Table structure for table `study`
+-- Tabelstructuur voor tabel `study`
 --
 
 DROP TABLE IF EXISTS `study`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `study` (
+CREATE TABLE IF NOT EXISTS `study` (
   `pk` bigint(20) NOT NULL AUTO_INCREMENT,
   `patient_fk` bigint(20) DEFAULT NULL,
   `accno_issuer_fk` bigint(20) DEFAULT NULL,
@@ -173,18 +177,16 @@ CREATE TABLE `study` (
   `created_time` datetime DEFAULT NULL,
   `study_attrs` longblob,
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
 --
--- Table structure for table `series`
+-- Tabelstructuur voor tabel `series`
 --
 
 DROP TABLE IF EXISTS `series`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `series` (
+CREATE TABLE IF NOT EXISTS `series` (
   `pk` bigint(20) NOT NULL AUTO_INCREMENT,
   `study_fk` bigint(20) DEFAULT NULL,
   `mpps_fk` bigint(20) DEFAULT NULL,
@@ -220,18 +222,16 @@ CREATE TABLE `series` (
   `updated_time` datetime DEFAULT NULL,
   `series_attrs` longblob,
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
 --
--- Table structure for table `instance`
+-- Tabelstructuur voor tabel `instance`
 --
 
 DROP TABLE IF EXISTS `instance`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `instance` (
+CREATE TABLE IF NOT EXISTS `instance` (
   `pk` bigint(20) NOT NULL AUTO_INCREMENT,
   `series_fk` bigint(20) DEFAULT NULL,
   `srcode_fk` bigint(20) DEFAULT NULL,
@@ -256,5 +256,6 @@ CREATE TABLE `instance` (
   `created_time` datetime DEFAULT NULL,
   `inst_attrs` longblob,
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB AUTO_INCREMENT=454 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------

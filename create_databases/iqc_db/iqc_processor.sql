@@ -1,111 +1,118 @@
+-- phpMyAdmin SQL Dump
+-- version 3.5.1
+-- http://www.phpmyadmin.net
+--
+-- Machine: localhost
+-- Genereertijd: 08 okt 2012 om 21:32
+-- Serverversie: 5.5.16
+-- PHP-versie: 5.3.8
 
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
 --
--- Table structure for table `analysemodule_output`
+-- Databank: `iqc`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `analysemodule_output`
 --
 
 DROP TABLE IF EXISTS `analysemodule_output`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `analysemodule_output` (
+CREATE TABLE IF NOT EXISTS `analysemodule_output` (
   `pk` int(11) NOT NULL AUTO_INCREMENT,
-  `analysemodule_output_filename` varchar(250) NOT NULL,
-  `analysemodule_output_filepath` varchar(250) NOT NULL,
+  `filename` varchar(250) NOT NULL,
+  `filepath` varchar(250) NOT NULL,
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-
+-- --------------------------------------------------------
 
 --
--- Table structure for table `resultaten_boolean`
+-- Tabelstructuur voor tabel `resultaten_boolean`
 --
 
 DROP TABLE IF EXISTS `resultaten_boolean`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `resultaten_boolean` (
+CREATE TABLE IF NOT EXISTS `resultaten_boolean` (
   `pk` int(11) NOT NULL AUTO_INCREMENT,
-  `niveau` int(11) NOT NULL,
-  `resultaten_fk` int(11) NOT NULL,
-  `omschrijving` varchar(100) NOT NULL,
-  `waarde` tinyint(1) NOT NULL,
+  `gewenste_processen_fk` int(11) NOT NULL,
+  `omschrijving` varchar(100) DEFAULT NULL,
+  `volgnummer` int(11) DEFAULT NULL,
+  `niveau` int(11) DEFAULT NULL,
+  `waarde` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-
-
+-- --------------------------------------------------------
 --
--- Table structure for table `resultaten_char`
+-- Tabelstructuur voor tabel `resultaten_char`
 --
 
 DROP TABLE IF EXISTS `resultaten_char`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `resultaten_char` (
+CREATE TABLE IF NOT EXISTS `resultaten_char` (
   `pk` int(11) NOT NULL AUTO_INCREMENT,
-  `resultaten_fk` int(11) NOT NULL,
-  `omschrijving` varchar(100) NOT NULL,
-  `waarde` varchar(100) NOT NULL,
+  `gewenste_processen_fk` int(11) NOT NULL,
+  `omschrijving` varchar(100) DEFAULT NULL,
+  `volgnummer` int(11) DEFAULT NULL,
+  `niveau` int(11) DEFAULT NULL,
+  `waarde` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-
+-- --------------------------------------------------------
 
 --
--- Table structure for table `resultaten_floating`
+-- Tabelstructuur voor tabel `resultaten_floating`
 --
 
 DROP TABLE IF EXISTS `resultaten_floating`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `resultaten_floating` (
+CREATE TABLE IF NOT EXISTS `resultaten_floating` (
   `pk` int(11) NOT NULL AUTO_INCREMENT,
-  `resultaten_fk` int(11) NOT NULL,
-  `grootheid` varchar(100) NOT NULL,
-  `eenheid` varchar(100) NOT NULL,
-  `waarde` float NOT NULL,
-  `grens_kritisch_onder` float NOT NULL,
-  `grens_kritisch_boven` float NOT NULL,
-  `grens_acceptabel_onder` float NOT NULL,
+  `gewenste_processen_fk` int(11) NOT NULL,
+  `omschrijving` varchar(100) DEFAULT NULL,
+  `volgnummer` int(11) DEFAULT NULL,
+  `niveau` int(11) DEFAULT NULL,
+  `grootheid` varchar(100) DEFAULT NULL,
+  `eenheid` varchar(100) DEFAULT NULL,
+  `waarde` float DEFAULT NULL,
+  `grens_kritisch_onder` float DEFAULT NULL,
+  `grens_kritisch_boven` float DEFAULT NULL,
+  `grens_acceptabel_onder` float DEFAULT NULL,
   `grens_acceptabel_boven` float NOT NULL,
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-
+-- --------------------------------------------------------
 
 --
--- Table structure for table `resultaten_object`
+-- Tabelstructuur voor tabel `resultaten_object`
 --
 
 DROP TABLE IF EXISTS `resultaten_object`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `resultaten_object` (
+CREATE TABLE IF NOT EXISTS `resultaten_object` (
   `pk` int(11) NOT NULL AUTO_INCREMENT,
-  `resultaten_fk` int(11) NOT NULL,
-  `object_naam_pad` varchar(200) NOT NULL,
+  `gewenste_processen_fk` int(11) NOT NULL,
+  `omschrijving` varchar(100) DEFAULT NULL,
+  `volgnummer` int(11) DEFAULT NULL,
+  `niveau` int(11) DEFAULT NULL,
+  `object_naam_pad` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-
-
+-- --------------------------------------------------------
 --
--- Table structure for table `status_omschrijving`
+-- Tabelstructuur voor tabel `status_omschrijving`
 --
 
 DROP TABLE IF EXISTS `status_omschrijving`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `status_omschrijving` (
+CREATE TABLE IF NOT EXISTS `status_omschrijving` (
   `nummer` int(11) NOT NULL,
   `veld_omschrijving` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
 
 --
 -- Dumping data for table `status_omschrijving`
@@ -119,35 +126,34 @@ UNLOCK TABLES;
 
 
 
+-- --------------------------------------------------------
 --
--- Table structure for table `testen`
+-- Tabelstructuur voor tabel `testen`
 --
 
 DROP TABLE IF EXISTS `testen`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `testen` (
+CREATE TABLE IF NOT EXISTS `testen` (
   `pk` int(11) NOT NULL AUTO_INCREMENT,
   `filenaam` varchar(200) NOT NULL,
   `filenaam_pad` varchar(200) NOT NULL,
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-
+-- --------------------------------------------------------
 
 --
--- Table structure for table `testen_configuratie`
+-- Tabelstructuur voor tabel `testen_configuratie`
 --
 
 DROP TABLE IF EXISTS `testen_configuratie`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `testen_configuratie` (
+CREATE TABLE IF NOT EXISTS `testen_configuratie` (
   `pk` int(11) NOT NULL AUTO_INCREMENT,
   `testen_pk` int(11) NOT NULL,
   `filenaam` varchar(50) NOT NULL,
   `filenaam_pad` varchar(200) NOT NULL,
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+

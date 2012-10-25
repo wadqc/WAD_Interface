@@ -1,3 +1,21 @@
+-- phpMyAdmin SQL Dump
+-- version 3.5.1
+-- http://www.phpmyadmin.net
+--
+-- Machine: localhost
+-- Genereertijd: 08 okt 2012 om 22:47
+-- Serverversie: 5.5.16
+-- PHP-versie: 5.3.8
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Databank: `iqc`
+--
+
+-- --------------------------------------------------------
+
 --
 -- Tabelstructuur voor tabel `users`
 --
@@ -18,7 +36,20 @@ CREATE TABLE IF NOT EXISTS `users` (
   `login` varchar(20) NOT NULL DEFAULT '',
   `password` varchar(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Gegevens worden uitgevoerd voor tabel `users`
+--
+
+INSERT INTO `users` (`pk`, `firstname`, `lastname`, `initials`, `phone`, `email`, `login_level_1`, `login_level_2`, `login_level_3`, `login_level_4`, `login_level_5`, `login`, `password`) VALUES
+(3, 'Voor', '8er Naam', '', '', '', 'on', '', '', '', '', 'root', '7df288e512aa7090138f14012e6d3a3a');
+
+
+
+
+-- --------------------------------------------------------
+
 
 
 --
@@ -32,5 +63,7 @@ CREATE TABLE IF NOT EXISTS `config_file` (
   `filenaam` varchar(50) NOT NULL,
   `filenaam_pad` varchar(200) NOT NULL,
   PRIMARY KEY (`pk`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 

@@ -1,7 +1,7 @@
-<?php /* Smarty version 2.6.7, created on 2012-07-17 14:51:37
+<?php /* Smarty version 2.6.7, created on 2012-10-03 09:53:42
          compiled from new_selector.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
-smarty_core_load_plugins(array('plugins' => array(array('function', 'html_options', 'new_selector.tpl', 38, false),)), $this); ?>
+smarty_core_load_plugins(array('plugins' => array(array('function', 'html_options', 'new_selector.tpl', 33, false),)), $this); ?>
 <!DOCTYPE public "-//w3c//dtd html 4.01 transitional//en"
 		"http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -33,6 +33,16 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'html_option
 </textarea>
     </td>
   </tr>
+  <tr>
+    <td class="table_data_blue"> Analyse Level </td>
+    <td class="table_data">
+         <select name="selector_analyselevel">
+           <?php echo smarty_function_html_options(array('options' => $this->_tpl_vars['analyselevel_options'],'selected' => $this->_tpl_vars['analyselevel_id']), $this);?>
+
+         </select>
+    </td>
+  </tr>
+
 </table>
      
 <hr>

@@ -8,19 +8,19 @@
            <input   name="pat_id" type="text" value="{$default_pat_id}" size="30"> </input>
           </td>
         </tr>
-        <tr>
+   <!--     <tr>
           <td class="table_data_blue"> Pat_id_issuer </td>
           <td class="table_data">
             <input   name="pat_id_issuer" type="text" value="{$default_pat_id_issuer}" size="30"> </input>
           </td>
-        </tr>
+        </tr>  -->
         <tr>
           <td class="table_data_blue"> Pat_name </td>
           <td class="table_data">
             <input   name="pat_name" type="text" value="{$default_pat_name}" size="30"> </input>
           </td>
         </tr>
-        <tr>
+  <!--      <tr>
           <td class="table_data_blue"> Pat_fn_sx </td>
           <td class="table_data">
             <input   name="pat_fn_sx" type="text" value="{$default_pat_fn_sx}" size="30"> </input>
@@ -73,7 +73,7 @@
           <td class="table_data">
            <input   name="pat_custom3" type="text" value="{$default_pat_custom3}" size="30"> </input>
           </td>
-        </tr>
+        </tr>  -->
    </table>
 
 

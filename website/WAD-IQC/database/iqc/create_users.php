@@ -60,7 +60,7 @@ $b=($j%2);
        $users_row=$table_data->fetch("users_header.tpl");
      }
    }
-   $checkbox_name=sprintf("users[%d]",$field_users->year_ref);
+   $checkbox_name=sprintf("users[%d]",$field_users->pk);
    $action=sprintf("view_users.php?pk=%s&t=%d",$field_users->pk,time());
    $table_data->assign("bgcolor",$bgcolor);
    $table_data->assign("checkbox_name",$checkbox_name);
@@ -90,14 +90,8 @@ mysql_free_result($result_users);
 
 $data = new Smarty_NM();
 
-$data->assign("year_options",$list_year);
-$data->assign("school_options",$school_list);
-$data->assign("school_id",$fixed_school);
 
-$data->assign("header",sprintf("%s %s",$school,$school_year));
-
-
-$data->assign("form_action",sprintf("transfer_users.php?school=$school&school_year=$school_year"));
+$data->assign("form_action",sprintf("transfer_users.php?t=%d",time()));
 $data->assign("users_list",$users_row);
 
 $new_users=sprintf("<a href=\"new_users.php?users_pk=-1&t=%d\">Add new User</a>",time());

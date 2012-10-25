@@ -1,8 +1,8 @@
 <?php
 
 require("../globals_login.php") ;
-require("../open_school/common.php") ;
-require("../../database/open_school/php/includes/setup.php");
+require("../iqc/common.php") ;
+require("../iqc/php/includes/setup.php");
 
 
 $user_password1=$_POST['user_password1'];
@@ -10,9 +10,9 @@ $user_password2=$_POST['user_password2'];
 
 $user_name=$user;
 
-$table_teacher='teacher';
+$table_users='users';
 
-$updateStmt_password = "Update $table_teacher set password='%s' where $table_teacher.login='%s'";
+$updateStmt_password = "Update $table_users set password='%s' where $table_users.login='%s'";
 
 // Connect to the Database
 if (!($link=mysql_pconnect($hostName, $userName, $password))) {
@@ -41,7 +41,7 @@ if ($user_password1==$user_password2)
    $message=sprintf("Password succesfully entered, login with new password");
 
    $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname($_SERVER['PHP_SELF']));
-   $executestring.= sprintf("main_login_open_school.php?message=$message");
+   $executestring.= sprintf("main_login_iqc.php?message=$message");
    header($executestring);
    exit();
   

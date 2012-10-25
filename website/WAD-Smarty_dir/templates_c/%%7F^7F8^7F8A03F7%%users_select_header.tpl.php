@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.7, created on 2012-05-26 21:09:18
+<?php /* Smarty version 2.6.7, created on 2012-10-03 12:09:07
          compiled from users_select_header.tpl */ ?>
 <tr>
     <td><font color="blue"><b>Selectie</b></font></td>

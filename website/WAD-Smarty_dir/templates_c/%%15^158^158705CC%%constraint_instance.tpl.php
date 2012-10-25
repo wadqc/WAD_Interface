@@ -1,16 +1,16 @@
-<?php /* Smarty version 2.6.7, created on 2012-06-20 20:33:25
+<?php /* Smarty version 2.6.7, created on 2012-10-03 21:45:43
          compiled from constraint_instance.tpl */ ?>
 <table>
 	    <tr>
           <td colspan="2" align="center" class="table_data_blue"> Instance </td>
         </tr>
-        <tr>
+   <!--     <tr>
           <td class="table_data_blue"> Sop_iuid </td>
           <td class="table_data">
            <input   name="sop_iuid" type="text" value="<?php echo $this->_tpl_vars['default_sop_iuid']; ?>
 " size="30"> </input>
           </td>
-        </tr>
+        </tr> -->
         <tr>
           <td class="table_data_blue"> Sop_cuid </td>
           <td class="table_data">
@@ -18,7 +18,7 @@
 " size="30"> </input>
           </td>
         </tr>
-        <tr>
+    <!--    <tr>
           <td class="table_data_blue"> Inst_no </td>
           <td class="table_data">
             <input   name="inst_no" type="text" value="<?php echo $this->_tpl_vars['default_inst_no']; ?>
@@ -45,7 +45,7 @@
            <input   name="sr_verified" type="text" value="<?php echo $this->_tpl_vars['default_sr_verified']; ?>
 " size="30"> </input>
           </td>
-        </tr>
+        </tr> -->
         <tr>
           <td class="table_data_blue"> Inst_custom1 </td>
           <td class="table_data">
@@ -67,7 +67,7 @@
 " size="30"> </input>
           </td>
         </tr>
-        <tr>
+ <!--       <tr>
           <td class="table_data_blue"> Ext_retr_aet </td>
           <td class="table_data">
             <input   name="ext_retr_aet" type="text" value="<?php echo $this->_tpl_vars['default_ext_retr_aet']; ?>
@@ -136,7 +136,7 @@
            <input   name="inst_attrs" type="text" value="<?php echo $this->_tpl_vars['default_inst_attrs']; ?>
 " size="30"> </input>
           </td>
-        </tr>
+        </tr> -->
    
 </table>
 

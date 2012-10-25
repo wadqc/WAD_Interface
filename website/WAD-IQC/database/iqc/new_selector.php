@@ -47,6 +47,10 @@ if( (!empty($_POST['action']))||(!empty($_POST['selector'])) )
   {
     $selector_description=$_POST['selector_description'];
   }
+  if (!empty($_POST['selector_analyselevel']))
+  {
+    $selector_analyselevel=$_POST['selector_analyselevel'];
+  }
   
   //test and config files
   $analysemodule_fk=0;
@@ -68,11 +72,11 @@ if( (!empty($_POST['action']))||(!empty($_POST['selector'])) )
   if ($pk==0) //Add Selector
   { 
 
-   $add_Stmt = "Insert into $table_selector(name,description,analysemodule_fk,analysemodule_cfg_fk) values ('%s','%s','%s','%s')";
+   $add_Stmt = "Insert into $table_selector(name,description,analysemodule_fk,analysemodule_cfg_fk,analyselevel) values ('%s','%s','%s','%s','%s')";
 
-   if(!(mysql_query(sprintf($add_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk),$link))) 
+   if(!(mysql_query(sprintf($add_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$selector_analyselevel),$link))) 
    {
-     DisplayErrMsg(sprintf("Error in executing %s stmt",sprintf($add_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk) )) ;
+     DisplayErrMsg(sprintf("Error in executing %s stmt",sprintf($add_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$selector_analyselevel) )) ;
      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
      exit() ;
    }
@@ -88,11 +92,11 @@ if( (!empty($_POST['action']))||(!empty($_POST['selector'])) )
 
   if ($pk>0)  
   { 
-    $update_Stmt = "update $table_selector set name='%s',description='%s',analysemodule_fk='%s',analysemodule_cfg_fk='%s' where pk='%d' ";
+    $update_Stmt = "update $table_selector set name='%s',description='%s',analysemodule_fk='%s',analysemodule_cfg_fk='%s', analyselevel='%s' where pk='%d' ";
   
-    if(!(mysql_query(sprintf($update_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$pk),$link))) 
+    if(!(mysql_query(sprintf($update_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$selector_analyselevel,$pk),$link))) 
     {
-      DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($update_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$pk) )) ;
+      DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($update_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$selector_analyselevel,$pk) )) ;
       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
       exit() ;
     }
@@ -212,7 +216,7 @@ if(!empty($_POST['constraint']))
   $constraint=$_POST['constraint'];
    
   $executestring.=sprintf("constraint.php?constraint=$constraint&selector_patient_fk=$selector_patient_fk&selector_study_fk=$selector_study_fk&selector_series_fk=$selector_series_fk&selector_instance_fk=$selector_instance_fk&pk=$pk&t=%d",time());
-  
+
   header($executestring);
   exit();
 
@@ -251,6 +255,10 @@ if (empty($_GET['selectorl']))  //first visit
   if ($pk==0)  // new selector
   {
       // no default values sofar
+
+     $selector->assign("analyselevel_options",$analyselevel_list);
+
+
   }   
 
   if ($pk>0)  //update selector
@@ -279,7 +287,9 @@ if (empty($_GET['selectorl']))  //first visit
     
     $selector->assign("default_selector_name",$field_selector->name);
     $selector->assign("default_selector_description",$field_selector->description);
-
+    
+    $selector->assign("analyselevel_options",$analyselevel_list); 
+    $selector->assign("analyselevel_id",$field_selector->analyselevel);
 
   
 

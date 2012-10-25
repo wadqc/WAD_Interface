@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.7, created on 2012-07-17 14:41:38
+<?php /* Smarty version 2.6.7, created on 2012-10-03 09:36:12
          compiled from selector_select_row.tpl */ ?>
 <tr bgcolor="<?php echo $this->_tpl_vars['bgcolor']; ?>
 ">

@@ -3,7 +3,7 @@
 	    <tr>
           <td colspan="2" align="center" class="table_data_blue"> Study </td>
         </tr>
-        <tr>
+   <!--    <tr>
           <td class="table_data_blue"> Study_iuid </td>
           <td class="table_data">
            <input   name="study_iuid" type="text" value="{$default_study_iuid}" size="30"> </input>
@@ -56,7 +56,7 @@
           <td class="table_data">
             <input   name="ref_phys_p_name" type="text" value="{$default_ref_phys_p_name}" size="30"> </input>
           </td>
-        </tr>
+        </tr>   -->
         <tr>
           <td class="table_data_blue"> Study_desc </td>
           <td class="table_data">
@@ -81,7 +81,7 @@
            <input   name="study_custom3" type="text" value="{$default_study_custom3}" size="30"> </input>
           </td>
         </tr>
-        <tr>
+  <!--      <tr>
           <td class="table_data_blue"> Study_status_id </td>
           <td class="table_data">
            <input   name="study_status_id" type="text" value="{$default_study_status_id}" size="30"> </input>
@@ -202,7 +202,7 @@
           <td class="table_data">
            <input   name="created_time" type="text" value="{$default_created_time}" size="30"> </input>
           </td>
-        </tr>
+        </tr>  -->
         
 
 

@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.7, created on 2012-07-17 15:13:57
+<?php /* Smarty version 2.6.7, created on 2012-10-06 12:34:29
          compiled from selector_patient.tpl */ ?>
     <table>
 	    <tr>

@@ -17,7 +17,7 @@ $id_card_background=sprintf("./logo_pictures/id_card_background.jpg");
 
 //$id_card_header=sprintf("St. Dominic High School");
 
-$first_login='tls_314';
+$first_login='iqc_123';
 // 6d0095831bb5f9b47d568ff90bf2fa70
 
 

@@ -26,6 +26,15 @@
       <textarea name="selector_description" cols="50" rows="5">{$default_selector_description}</textarea>
     </td>
   </tr>
+  <tr>
+    <td class="table_data_blue"> Analyse Level </td>
+    <td class="table_data">
+         <select name="selector_analyselevel">
+           {html_options options=$analyselevel_options selected=$analyselevel_id}
+         </select>
+    </td>
+  </tr>
+
 </table>
      
 <hr>

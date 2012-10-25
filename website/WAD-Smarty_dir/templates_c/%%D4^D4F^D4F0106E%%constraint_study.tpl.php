@@ -1,11 +1,11 @@
-<?php /* Smarty version 2.6.7, created on 2012-06-20 20:32:19
+<?php /* Smarty version 2.6.7, created on 2012-10-07 10:13:30
          compiled from constraint_study.tpl */ ?>
 
 <table>
 	    <tr>
           <td colspan="2" align="center" class="table_data_blue"> Study </td>
         </tr>
-        <tr>
+   <!--    <tr>
           <td class="table_data_blue"> Study_iuid </td>
           <td class="table_data">
            <input   name="study_iuid" type="text" value="<?php echo $this->_tpl_vars['default_study_iuid']; ?>
@@ -67,7 +67,7 @@
             <input   name="ref_phys_p_name" type="text" value="<?php echo $this->_tpl_vars['default_ref_phys_p_name']; ?>
 " size="30"> </input>
           </td>
-        </tr>
+        </tr>   -->
         <tr>
           <td class="table_data_blue"> Study_desc </td>
           <td class="table_data">
@@ -96,7 +96,7 @@
 " size="30"> </input>
           </td>
         </tr>
-        <tr>
+  <!--      <tr>
           <td class="table_data_blue"> Study_status_id </td>
           <td class="table_data">
            <input   name="study_status_id" type="text" value="<?php echo $this->_tpl_vars['default_study_status_id']; ?>
@@ -237,7 +237,7 @@
            <input   name="created_time" type="text" value="<?php echo $this->_tpl_vars['default_created_time']; ?>
 " size="30"> </input>
           </td>
-        </tr>
+        </tr>  -->
         
 
 

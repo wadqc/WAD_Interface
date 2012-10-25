@@ -2,6 +2,7 @@
 
 require("../globals.php") ;
 require("./common.php") ;
+require("../iqc_data.php") ;
 require("./php/includes/setup.php");
 
 $users_pk=$_GET['users_pk'];
@@ -112,14 +113,14 @@ if( (!empty($_POST['action']) ) )
 
   if ($amount<1)
   {
-    $message3=sprintf("No user level selected");
+    $message3=sprintf("Geen user level geselecteerd");
   }
   if ($amount>1)
   {
-    $message3=sprintf("Only one user level allowed");
+    $message3=sprintf("Slechts een user level mogelijk");
   } 
 
-  if (  (!empty($message1) )||(!empty($message1) )||(!empty($message1) ) )
+  if (  (!empty($message1) )||(!empty($message2) )||(!empty($message3) ) )
   {
      $executestring.= sprintf("new_users.php?users_pk=$users_pk&message_lastname=$message1&message_login=$message2&message_level=$message3&t=%d",time());
      header($executestring);
@@ -132,9 +133,9 @@ if( (!empty($_POST['action']) ) )
   {  
      $table_users='users';
 
-     $addStmt = "Insert into $table_users(firstname,lastname,initials,phone,email,login_level_1,login_level_2,login_level_3,login_level_4,login_level_5,login) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')";
+     $addStmt = "Insert into $table_users(firstname,lastname,initials,phone,email,login_level_1,login_level_2,login_level_3,login_level_4,login_level_5,login,password) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')";
 
-     $addStmt=sprintf($addStmt,$users_firstname,$users_lastname,$users_initials,$users_phone,$users_email,$login_level_1,$login_level_2,$login_level_3,$login_level_4,$login_level_5,$users_login);
+     $addStmt=sprintf($addStmt,$users_firstname,$users_lastname,$users_initials,$users_phone,$users_email,$login_level_1,$login_level_2,$login_level_3,$login_level_4,$login_level_5,$users_login,md5($first_login));
    
      if (!(mysql_query($addStmt,$link))) 
      {

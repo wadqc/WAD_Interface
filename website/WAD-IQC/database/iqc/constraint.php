@@ -69,7 +69,7 @@ if( (!empty($_POST['action'])))
       $qStmt=sprintf($updateStmt,$pat_id,$pat_id_issuer,$pat_name,$pat_fn_sx,$pat_gn_sx,$pat_i_name,$pat_p_name,$pat_birthdate,$pat_sex,$pat_custom1,$pat_custom2,$pat_custom3,$selector_patient_fk);
     }
 
-    
+    $qStmt=str_replace("''","NULL",$qStmt);
 
     if
     (!(mysql_query($qStmt,$link))) 
@@ -134,7 +134,7 @@ if( (!empty($_POST['action'])))
       $qStmt=sprintf($updateStmt,$study_iuid,$study_id,$study_datetime,$accession_no,$ref_physician,$ref_phys_fn_sx,$ref_phys_gn_sx,$ref_phys_i_name,$ref_phys_p_name,$study_desc,$study_custom1,$study_custom2,$study_custom3,$study_status_id,$mods_in_study,$cuids_in_study,$num_series,$num_instances,$ext_retr_aet,$retrieve_aets,$fileset_iuid,$fileset_id,$availability,$study_status,$checked_time,$updated_time,$created_time,$selector_study_fk);
     }
 
-    
+    $qStmt=str_replace("''","NULL",$qStmt);     
 
     if
     (!(mysql_query($qStmt,$link))) 
@@ -204,7 +204,7 @@ if( (!empty($_POST['action'])))
       $qStmt=sprintf($updateStmt,$series_iuid,$series_no,$modality,$body_part,$laterality,$series_desc,$institution,$station_name,$department,$perf_physician,$perf_phys_fn_sx,$perf_phys_gn_sx,$perf_phys_i_name,$perf_phys_p_name,$pps_start,$pps_iuid,$series_custom1,$series_custom2,$series_custom3,$num_instances,$src_aet,$ext_retr_aet,$retrieve_aets,$fileset_iuid,$fileset_id,$availability,$series_status,$created_time,$updated_time,$series_attrs,$selector_series_fk);
     }
 
-    
+    $qStmt=str_replace("''","NULL",$qStmt);
 
     if
     (!(mysql_query($qStmt,$link))) 
@@ -259,6 +259,7 @@ if( (!empty($_POST['action'])))
       $qStmt=sprintf($updateStmt,$sop_iuid,$sop_cuid,$inst_no,$content_datetime,$sr_complete,$sr_verified,$inst_custom1,$inst_custom2,$inst_custom3,$ext_retr_aet,$retrieve_aets,$availability,$inst_status,$all_attrs,$commitment,$archived,$updated_time,$created_time,$inst_attrs,$selector_instance_fk);
     }
 
+    $qStmt=str_replace("''","NULL",$qStmt);
     
     if
     (!(mysql_query($qStmt,$link))) 
@@ -453,36 +454,35 @@ if ( ($constraint=='Add_Study')||($constraint=='Modify_Study') )
   
     //personal_study
     $table_study='';
-    $study->assign("default_series_iuid",$field_study->series_iuid); 			
-    $study->assign("default_series_no",$field_study->series_no); 			
-    $study->assign("default_modality",$field_study->modality); 			
-    $study->assign("default_body_part",$field_study->body_part); 			
-    $study->assign("default_laterality",$field_study->laterality); 			
-    $study->assign("default_series_desc",$field_study->series_desc); 			
-    $study->assign("default_institution",$field_study->institution); 			
-    $study->assign("default_station_name",$field_study->station_name); 			
-    $study->assign("default_department",$field_study->department); 			
-    $study->assign("default_perf_physician",$field_study->perf_physician); 			
-    $study->assign("default_perf_phys_fn_sx",$field_study->perf_phys_fn_sx); 			
-    $study->assign("default_perf_phys_gn_sx",$field_study->perf_phys_gn_sx); 			
-    $study->assign("default_perf_phys_i_name",$field_study->perf_phys_i_name); 			
-    $study->assign("default_perf_phys_p_name",$field_study->perf_phys_p_name); 			
-    $study->assign("default_pps_start",$field_study->pps_start);
-    $study->assign("default_pps_iuid",$field_study->pps_iuid); 			
-    $study->assign("default_series_custom1",$field_study->series_custom1); 			
-    $study->assign("default_series_custom2",$field_study->series_custom2); 			
-    $study->assign("default_series_custom3",$field_study->series_custom3); 			
+    $study->assign("default_study_iuid",$field_study->study_iuid); 			
+    $study->assign("default_study_id",$field_study->study_id); 			
+    $study->assign("default_study_datetime",$field_study->study_datetime); 			
+    $study->assign("default_accession_no",$field_study->accession_no); 			
+    $study->assign("default_ref_physician",$field_study->ref_physician); 			
+    $study->assign("default_ref_phys_fn_sx",$field_study->ref_phys_fn_sx); 			
+    $study->assign("default_ref_phys_gn_sx",$field_study->ref_phys_gn_sx); 			
+    $study->assign("default_ref_phys_i_name",$field_study->ref_phys_i_name); 			
+    $study->assign("default_ref_phys_p_name",$field_study->ref_phys_p_name); 			
+    $study->assign("default_study_desc",$field_study->study_desc); 			
+    $study->assign("default_study_custom1",$field_study->study_custom1); 			
+    $study->assign("default_study_custom2",$field_study->study_custom2); 			
+    $study->assign("default_study_custom3",$field_study->study_custom3); 			
+    $study->assign("default_study_status_id",$field_study->study_status_id); 			
+    $study->assign("default_mods_in_study",$field_study->mods_in_study);
+    $study->assign("default_cuids_in_study",$field_study->cuids_in_study); 			
+    $study->assign("default_num_series",$field_study->num_series); 			
     $study->assign("default_num_instances",$field_study->num_instances); 			
-    $study->assign("default_src_aet",$field_study->src_aet); 			
     $study->assign("default_ext_retr_aet",$field_study->ext_retr_aet); 			
     $study->assign("default_retrieve_aets",$field_study->retrieve_aets); 			
     $study->assign("default_fileset_iuid",$field_study->fileset_iuid); 			
     $study->assign("default_fileset_id",$field_study->fileset_id); 			
     $study->assign("default_availability",$field_study->availability); 			
-    $study->assign("default_series_status",$field_study->series_status); 			
+    $study->assign("default_study_status",$field_study->study_status); 			
+    $study->assign("default_checked_time",$field_study->checked_time); 			
+    $study->assign("default_updated_time",$field_study->updated_time); 			
     $study->assign("default_created_time",$field_study->created_time);
     $study->assign("default_updated_time",$field_study->updated_time);
-    $study->assign("default_series_attrs",$field_study->series_attrs);     
+    $study->assign("default_study_attrs",$field_study->study_attrs);    
 
     mysql_free_result($result_study);
 

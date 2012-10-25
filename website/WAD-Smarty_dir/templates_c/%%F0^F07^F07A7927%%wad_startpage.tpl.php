@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.7, created on 2012-05-20 19:46:28
+<?php /* Smarty version 2.6.7, created on 2012-07-17 21:54:50
          compiled from wad_startpage.tpl */ ?>
 <!DOCTYPE public "-//w3c//dtd html 4.01 transitional//en"
 		"http://www.w3.org/TR/html4/loose.dtd">

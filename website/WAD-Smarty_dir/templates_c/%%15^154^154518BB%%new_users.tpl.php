@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.7, created on 2012-05-27 18:17:34
+<?php /* Smarty version 2.6.7, created on 2012-10-07 15:34:58
          compiled from new_users.tpl */ ?>
 <!DOCTYPE public "-//w3c//dtd html 4.01 transitional//en"
 		"http://www.w3.org/TR/html4/loose.dtd">
@@ -97,10 +97,10 @@
         </tr>
         <tr>
           <td class="table_data_blue"> Admin </td>
-		  <td class="table_data_blue"> Management </td>
-		  <td class="table_data_blue"> Attendance </td>
-		  <td class="table_data_blue"> users </td>
-          <td class="table_data_blue"> Secretary </td>
+		  <td class="table_data_blue"> User level 1 </td>
+		  <td class="table_data_blue"> User level 2 </td>
+		  <td class="table_data_blue"> User level 3 </td>
+          <td class="table_data_blue"> User level 4 </td>
 		</tr>
       </table>
     </td>

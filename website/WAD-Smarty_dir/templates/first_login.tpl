@@ -1,5 +1,3 @@
-<?php /* Smarty version 2.6.7, created on 2012-10-08 20:42:59
-         compiled from first_login.tpl */ ?>
 <!DOCTYPE public "-//w3c//dtd html 4.01 transitional//en"
 		"http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -11,16 +9,13 @@
 </head>
 <body bgcolor="#f3f6ff" link="blue" alink="blue" vlink="red">
 
-<img src="<?php echo $this->_tpl_vars['login_picure_src']; ?>
-" border="0">
+<img src="{$login_picure_src}" border="0">
 
-<form action="<?php echo $this->_tpl_vars['login_action']; ?>
-" method="POST">
+<form action="{$login_action}" method="POST">
 
 <table>
 <tr>
-  <td class="template_data"> <?php echo $this->_tpl_vars['message']; ?>
-</td>
+  <td class="template_data"> {$message}</td>
 </tr>
 <tr>
   <td class="template_data"> Insert Password (first time)</td>
@@ -31,8 +26,7 @@
   <td class="template_data"><input type="password" name="user_password2" size=16 maxlength=20></td>
 </tr>
 <tr>
-  <td class="template_data"> <input type="submit" value="<?php echo $this->_tpl_vars['login_submit']; ?>
-"> </td>
+  <td class="template_data"> <input type="submit" value="{$login_submit}"> </td>
 </tr>
 </table>
 

@@ -86,7 +86,7 @@ function selector_function_pssi($pk,$selector_patient_pk,$selector_study_pk,$sel
       $study_Stmt = "SELECT * from $table_study where
       $table_study.pk='$selector_study_pk'";
 
-   
+         
       if (!($result_study= mysql_query($study_Stmt,$link))) {
        DisplayErrMsg(sprintf("Error in executing %s stmt", $student_Stmt)) ;
        DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
@@ -101,36 +101,35 @@ function selector_function_pssi($pk,$selector_patient_pk,$selector_study_pk,$sel
   
       //personal_study
       $table_study='';
-      $study->assign("default_series_iuid",$field_study->series_iuid); 			
-      $study->assign("default_series_no",$field_study->series_no); 			
-      $study->assign("default_modality",$field_study->modality); 			
-      $study->assign("default_body_part",$field_study->body_part); 			
-      $study->assign("default_laterality",$field_study->laterality); 			
-      $study->assign("default_series_desc",$field_study->series_desc); 			
-      $study->assign("default_institution",$field_study->institution); 			
-      $study->assign("default_station_name",$field_study->station_name); 			
-      $study->assign("default_department",$field_study->department); 			
-      $study->assign("default_perf_physician",$field_study->perf_physician); 			
-      $study->assign("default_perf_phys_fn_sx",$field_study->perf_phys_fn_sx); 			
-      $study->assign("default_perf_phys_gn_sx",$field_study->perf_phys_gn_sx); 			
-      $study->assign("default_perf_phys_i_name",$field_study->perf_phys_i_name); 			
-      $study->assign("default_perf_phys_p_name",$field_study->perf_phys_p_name); 			
-      $study->assign("default_pps_start",$field_study->pps_start);
-      $study->assign("default_pps_iuid",$field_study->pps_iuid); 			
-      $study->assign("default_series_custom1",$field_study->series_custom1); 			
-      $study->assign("default_series_custom2",$field_study->series_custom2); 			
-      $study->assign("default_series_custom3",$field_study->series_custom3); 			
+      $study->assign("default_study_iuid",$field_study->study_iuid); 			
+      $study->assign("default_study_id",$field_study->study_id); 			
+      $study->assign("default_study_datetime",$field_study->study_datetime); 			
+      $study->assign("default_accession_no",$field_study->accession_no); 			
+      $study->assign("default_ref_physician",$field_study->ref_physician); 			
+      $study->assign("default_ref_phys_fn_sx",$field_study->ref_phys_fn_sx); 			
+      $study->assign("default_ref_phys_gn_sx",$field_study->ref_phys_gn_sx); 			
+      $study->assign("default_ref_phys_i_name",$field_study->ref_phys_i_name); 			
+      $study->assign("default_ref_phys_p_name",$field_study->ref_phys_p_name); 			
+      $study->assign("default_study_desc",$field_study->study_desc); 			
+      $study->assign("default_study_custom1",$field_study->study_custom1); 			
+      $study->assign("default_study_custom2",$field_study->study_custom2); 			
+      $study->assign("default_study_custom3",$field_study->study_custom3); 			
+      $study->assign("default_study_status_id",$field_study->study_status_id); 			
+      $study->assign("default_mods_in_study",$field_study->mods_in_study);
+      $study->assign("default_cuids_in_study",$field_study->cuids_in_study); 			
+      $study->assign("default_num_series",$field_study->num_series); 			
       $study->assign("default_num_instances",$field_study->num_instances); 			
-      $study->assign("default_src_aet",$field_study->src_aet); 			
       $study->assign("default_ext_retr_aet",$field_study->ext_retr_aet); 			
       $study->assign("default_retrieve_aets",$field_study->retrieve_aets); 			
       $study->assign("default_fileset_iuid",$field_study->fileset_iuid); 			
       $study->assign("default_fileset_id",$field_study->fileset_id); 			
       $study->assign("default_availability",$field_study->availability); 			
-      $study->assign("default_series_status",$field_study->series_status); 			
+      $study->assign("default_study_status",$field_study->study_status); 			
+      $study->assign("default_checked_time",$field_study->checked_time); 			
+      $study->assign("default_updated_time",$field_study->updated_time); 			
       $study->assign("default_created_time",$field_study->created_time);
       $study->assign("default_updated_time",$field_study->updated_time);
-      $study->assign("default_series_attrs",$field_study->series_attrs);     
+      $study->assign("default_study_attrs",$field_study->study_attrs);     
       
       mysql_free_result($result_study);
 

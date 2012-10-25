@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.7, created on 2012-07-17 15:28:32
+<?php /* Smarty version 2.6.7, created on 2012-10-03 21:09:38
          compiled from selector_series.tpl */ ?>
  <table>
 	    <tr>

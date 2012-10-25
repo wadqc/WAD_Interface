@@ -12,16 +12,16 @@ $target_path = sprintf("%s%s/../../",$site_root,dirname($_SERVER['PHP_SELF']));
 
 
 
-$table_analysemodule='analysemodule';
-$addStmt = "Insert into $table_analysemodule(description,filename,filepath) values ('%s','%s','%s')";
-$update_Stmt = "Update $table_analysemodule set description='%s',filename='%s',filepath='%s' where $table_analysemodule.pk='%d'";
-$update_Stmt1 = "Update $table_analysemodule set description='%s' where $table_analysemodule.pk='%d'";
+$table_test_file='test_file';
+$addStmt = "Insert into $table_test_file(omschrijving,filenaam,filenaam_pad) values ('%s','%s','%s')";
+$update_Stmt = "Update $table_test_file set omschrijving='%s',filenaam='%s',filenaam_pad='%s' where $table_test_file.pk='%d'";
+$update_Stmt1 = "Update $table_test_file set omschrijving='%s' where $table_test_file.pk='%d'";
 
-$select_Stmt= "select * from $table_analysemodule where $table_analysemodule.pk='%d'";
-$select_Stmt1= "select * from $table_analysemodule where $table_analysemodule.filepath='%s'";
+$select_Stmt= "select * from $table_test_file where $table_test_file.pk='%d'";
+$select_Stmt1= "select * from $table_test_file where $table_test_file.filenaam_pad='%s'";
 
 
-$del_analysemodule_Stmt = "delete from  $table_analysemodule where $table_analysemodule.pk='%d'";
+$del_test_file_Stmt = "delete from  $table_test_file where $table_test_file.pk='%d'";
 
 // Connect to the Database
 if (!($link=mysql_pconnect($hostName, $userName, $password))) {
@@ -50,17 +50,16 @@ if(!empty($_POST['action']))
  
   
   $error    = $_FILES['uploadedfile']['error'];
-  $description=$_POST['description'];
+  $omschrijving=$_POST['omschrijving'];
   
   
 
   if ($pk==0)
   { 
-    $filename=basename( $_FILES['uploadedfile']['name']);
-    $filepath_root="WAD-IQC/uploads/analysemodule/";
-    $filepath = $filepath_root.basename( $_FILES['uploadedfile']['name']); 
-    $target_path=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath;
-	
+    $filenaam=basename( $_FILES['uploadedfile']['name']);
+    $filenaam_pad = "uploads/test_files/".basename( $_FILES['uploadedfile']['name']); 
+    $target_path=$target_path.$filenaam_pad;
+  
     if ( move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path) )
     {
     // echo "The file ".  basename( $_FILES['uploadedfile']['name'])." has been uploaded";
@@ -72,7 +71,7 @@ if(!empty($_POST['action']))
 
 
 
-    if (!(mysql_query(sprintf($addStmt,$description,$filename,$filepath_root),$link))) 
+    if (!(mysql_query(sprintf($addStmt,$omschrijving,$filenaam,$filenaam_pad),$link))) 
     {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
@@ -83,7 +82,7 @@ if(!empty($_POST['action']))
   { 
     if ($error==4)    
     {
-      if (!(mysql_query(sprintf($update_Stmt1,$description,$pk),$link)))  
+      if (!(mysql_query(sprintf($update_Stmt1,$omschrijving,$pk),$link)))  
       {
         DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
         DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
@@ -92,12 +91,10 @@ if(!empty($_POST['action']))
     }
     if ($error==0)    
     {
-       $filename=basename( $_FILES['uploadedfile']['name']);
+       $filenaam=basename( $_FILES['uploadedfile']['name']);
 
-       $filepath = "WAD-IQC/uploads/analysemodule/".basename( $_FILES['uploadedfile']['name']); 
-       $target_path=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath;
-
-	   //$target_path=$site_root.$filepath;
+       $filenaam_pad = "uploads/test_files/".basename( $_FILES['uploadedfile']['name']); 
+       $target_path=$target_path.$filenaam_pad;
   
        if ( move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path) )
        {
@@ -109,7 +106,7 @@ if(!empty($_POST['action']))
        }
 
 
-       if (!(mysql_query(sprintf($update_Stmt,$description,$filename,$filepath,$pk),$link))) 
+       if (!(mysql_query(sprintf($update_Stmt,$omschrijving,$filenaam,$filenaam_pad,$pk),$link))) 
        {   
         DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
         DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
@@ -125,7 +122,7 @@ if(!empty($_POST['action']))
 
 if (!empty($_POST['action']))
 {
-  $executestring.=sprintf("create_analysemodule.php?t=%d",time());
+  $executestring.=sprintf("create_test_files.php?t=%d",time());
   header($executestring);
   exit();
 }
@@ -138,54 +135,54 @@ if (!empty($_POST['action']))
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-$analysemodule = new Smarty_NM();
+$test_file = new Smarty_NM();
 
 
 
 if ($pk==-1)         //delete
 {
   $limit=0;
-  if (!empty($_POST['analysemodule']))
+  if (!empty($_POST['test_file']))
   {
-    $analysemodule=$_POST['analysemodule'];
-    $analysemodule_ref_key=array_keys($analysemodule);
-    $limit=sizeof($analysemodule_ref_key);
+    $test_file=$_POST['test_file'];
+    $test_file_ref_key=array_keys($test_file);
+    $limit=sizeof($test_file_ref_key);
   } 
   $i=0;
 
   while ($i<$limit) // loop for $pk
   {
-    if ($analysemodule[$analysemodule_ref_key[$i]]=='on')
+    if ($test_file[$test_file_ref_key[$i]]=='on')
     {
     
-      if (!($result_analysemodule= mysql_query(sprintf($select_Stmt,$analysemodule_ref_key[$i]), $link))) {
+      if (!($result_test_file= mysql_query(sprintf($select_Stmt,$test_file_ref_key[$i]), $link))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
       exit() ;
       }
-      $field_analysemodule = mysql_fetch_object($result_analysemodule);
-      $filepath=$field_analysemodule->filepath;
-      mysql_free_result($result_analysemodule);
+      $field_test_file = mysql_fetch_object($result_test_file);
+      $filenaam_pad=$field_test_file->filenaam_pad;
+      mysql_free_result($result_test_file);
 
-      if (!($result_analysemodule= mysql_query(sprintf($select_Stmt1,$filepath), $link))) {
+      if (!($result_test_file= mysql_query(sprintf($select_Stmt1,$filenaam_pad), $link))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
       exit() ;
       }
       $counter=0;
-      while ($field_analysemodule = mysql_fetch_object($result_analysemodule) )
+      while ($field_test_file = mysql_fetch_object($result_test_file) )
       {
         $counter++;
       }
-      mysql_free_result($result_analysemodule);
-      if ($counter==1) //only 1 row that contains filepath
+      mysql_free_result($result_test_file);
+      if ($counter==1) //only 1 row that contains filenaam_pad
       {
-        $target_path=$target_path.$filepath;
+        $target_path=$target_path.$filenaam_pad;
         //printf("target=%s",$target_path);
         //exit();
         unlink($target_path);
       } 
-      if (!($result_analysemodule= mysql_query(sprintf($del_analysemodule_Stmt,$analysemodule_ref_key[$i]),$link))) {
+      if (!($result_test_file= mysql_query(sprintf($del_test_file_Stmt,$test_file_ref_key[$i]),$link))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
       exit() ;}
@@ -194,7 +191,7 @@ if ($pk==-1)         //delete
     $i++;
   }
 
-  $executestring.=sprintf("create_analysemodule.php?t=%d",time());
+  $executestring.=sprintf("create_test_files.php?t=%d",time());
   header($executestring);
   exit();
 }
@@ -207,14 +204,14 @@ if ($pk==-1)         //delete
 
 if ($pk==0)   //add
 {
-  $analysemodule->assign("submit_value","Add");  
+  $test_file->assign("submit_value","Add");  
 }
 
 if ($pk>0)   //insert part of update
 {
-  $table_analysemodule='analysemodule';
-  $analysemodule_Stmt = "SELECT * from $table_analysemodule where
-  $table_analysemodule.pk='$pk' ";
+  $table_test_file='test_file';
+  $test_file_Stmt = "SELECT * from $table_test_file where
+  $table_test_file.pk='$pk' ";
 
   // Connect to the Database
   if (!($link=mysql_pconnect($hostName, $userName, $password))) {
@@ -229,33 +226,33 @@ if ($pk>0)   //insert part of update
     exit() ;
   }
   
-  if (!($result_analysemodule= mysql_query($analysemodule_Stmt, $link))) {
+  if (!($result_test_file= mysql_query($test_file_Stmt, $link))) {
      DisplayErrMsg(sprintf("Error in executing %s stmt", $mpc_class_Stmt)) ;
      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
      exit() ;
   }
     
-  $new = mysql_fetch_object($result_analysemodule);
+  $new = mysql_fetch_object($result_test_file);
 
-  $analysemodule->assign("title","Test file");
-  $analysemodule->assign("header","Test file");
+  $test_file->assign("title","Test file");
+  $test_file->assign("header","Test file");
 
   
-  $analysemodule->assign("default_description",$new->description);
-  $analysemodule->assign("default_filename",$new->filename);
-  $analysemodule->assign("default_filepath",$new->filepath);
+  $test_file->assign("default_omschrijving",$new->omschrijving);
+  $test_file->assign("default_filenaam",$new->filenaam);
+  $test_file->assign("default_filenaam_pad",$new->filenaam_pad);
   
   
-  mysql_free_result($result_analysemodule);
+  mysql_free_result($result_test_file);
   
-  $analysemodule->assign("submit_value","Update");
+  $test_file->assign("submit_value","Update");
 }
 
-  $analysemodule->assign("action_new_file",sprintf("new_analysemodule.php?pk=%d&t=%d",$pk,time()));
+  $test_file->assign("action_new_file",sprintf("new_test_file.php?pk=%d&t=%d",$pk,time()));
 
     
 
-  $analysemodule->display("file_new.tpl");
+  $test_file->display("file_new.tpl");
 
    
 ?>

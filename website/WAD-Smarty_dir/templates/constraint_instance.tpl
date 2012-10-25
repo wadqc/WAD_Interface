@@ -2,19 +2,19 @@
 	    <tr>
           <td colspan="2" align="center" class="table_data_blue"> Instance </td>
         </tr>
-        <tr>
+   <!--     <tr>
           <td class="table_data_blue"> Sop_iuid </td>
           <td class="table_data">
            <input   name="sop_iuid" type="text" value="{$default_sop_iuid}" size="30"> </input>
           </td>
-        </tr>
+        </tr> -->
         <tr>
           <td class="table_data_blue"> Sop_cuid </td>
           <td class="table_data">
            <input   name="sop_cuid" type="text" value="{$default_sop_cuid}" size="30"> </input>
           </td>
         </tr>
-        <tr>
+    <!--    <tr>
           <td class="table_data_blue"> Inst_no </td>
           <td class="table_data">
             <input   name="inst_no" type="text" value="{$default_inst_no}" size="30"> </input>
@@ -37,7 +37,7 @@
           <td class="table_data">
            <input   name="sr_verified" type="text" value="{$default_sr_verified}" size="30"> </input>
           </td>
-        </tr>
+        </tr> -->
         <tr>
           <td class="table_data_blue"> Inst_custom1 </td>
           <td class="table_data">
@@ -56,7 +56,7 @@
            <input   name="inst_custom3" type="text" value="{$default_inst_custom3}" size="30"> </input>
           </td>
         </tr>
-        <tr>
+ <!--       <tr>
           <td class="table_data_blue"> Ext_retr_aet </td>
           <td class="table_data">
             <input   name="ext_retr_aet" type="text" value="{$default_ext_retr_aet}" size="30"> </input>
@@ -115,7 +115,7 @@
           <td class="table_data">
            <input   name="inst_attrs" type="text" value="{$default_inst_attrs}" size="30"> </input>
           </td>
-        </tr>
+        </tr> -->
    
 </table>
 

@@ -6,6 +6,8 @@ require("../iqc/common.php") ;
 require("../../database/iqc/php/includes/setup.php");
 
 
+
+
 $user_password=$_POST['user_password'];
 $user_name=$_POST['user_name'];
 

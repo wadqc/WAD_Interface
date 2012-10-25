@@ -1,16 +1,16 @@
-<?php /* Smarty version 2.6.7, created on 2012-06-20 20:39:03
+<?php /* Smarty version 2.6.7, created on 2012-10-06 11:19:55
          compiled from constraint_series.tpl */ ?>
  <table>
 	    <tr>
           <td colspan="2" align="center" class="table_data_blue"> Series </td>
         </tr>
-        <tr>
+    <!--    <tr>
           <td class="table_data_blue"> Series_iuid </td>
           <td class="table_data">
            <input   name="series_iuid" type="text" value="<?php echo $this->_tpl_vars['default_series_iuid']; ?>
 " size="30"> </input>
           </td>
-        </tr>
+        </tr> -->
         <tr>
           <td class="table_data_blue"> Series_no </td>
           <td class="table_data">
@@ -25,7 +25,7 @@
 " size="30"> </input>
           </td>
         </tr>
-        <tr>
+    <!--    <tr>
           <td class="table_data_blue"> Body_part </td>
           <td class="table_data">
             <input   name="body_part" type="text" value="<?php echo $this->_tpl_vars['default_body_part']; ?>
@@ -38,7 +38,7 @@
            <input   name="laterality" type="text" value="<?php echo $this->_tpl_vars['default_laterality']; ?>
 " size="30"> </input>
           </td>
-        </tr>
+        </tr>  -->
         <tr>
           <td class="table_data_blue"> Series_desc </td>
           <td class="table_data">
@@ -60,7 +60,7 @@
 " size="30"> </input>
           </td>
         </tr>
-        <tr>
+   <!--     <tr>
           <td class="table_data_blue"> Department </td>
           <td class="table_data">
             <input   name="department" type="text" value="<?php echo $this->_tpl_vars['default_department']; ?>
@@ -116,7 +116,7 @@
             <input   name="pps_iuid" type="text" value="<?php echo $this->_tpl_vars['default_pps_iuid']; ?>
 " size="30"> </input>
           </td>
-        </tr>
+        </tr>  -->
         <tr>
           <td class="table_data_blue"> Series_custom1 </td>
           <td class="table_data">
@@ -138,14 +138,13 @@
 " size="30"> </input>
           </td>
         </tr>
-
-        <tr>
+  <!--      <tr>
           <td class="table_data_blue"> Num_instances </td>
           <td class="table_data">
            <input   name="num_instances" type="text" value="<?php echo $this->_tpl_vars['default_num_instances']; ?>
 " size="30"> </input>
           </td>
-        </tr>
+        </tr>  -->
         <tr>
           <td class="table_data_blue"> Src_aet </td>
           <td class="table_data">
@@ -153,7 +152,7 @@
 " size="30"> </input>
           </td>
         </tr>
-        <tr>
+  <!--      <tr>
           <td class="table_data_blue"> Ext_retr_aet </td>
           <td class="table_data">
             <input   name="ext_retr_aet" type="text" value="<?php echo $this->_tpl_vars['default_ext_retr_aet']; ?>
@@ -215,7 +214,7 @@
            <input   name="series_attrs" type="text" value="<?php echo $this->_tpl_vars['default_series_attrs']; ?>
 " size="30"> </input>
           </td>
-        </tr>
+        </tr>  -->
 
 
 

@@ -80,10 +80,10 @@
         </tr>
         <tr>
           <td class="table_data_blue"> Admin </td>
-		  <td class="table_data_blue"> Management </td>
-		  <td class="table_data_blue"> Attendance </td>
-		  <td class="table_data_blue"> users </td>
-          <td class="table_data_blue"> Secretary </td>
+		  <td class="table_data_blue"> User level 1 </td>
+		  <td class="table_data_blue"> User level 2 </td>
+		  <td class="table_data_blue"> User level 3 </td>
+          <td class="table_data_blue"> User level 4 </td>
 		</tr>
       </table>
     </td>

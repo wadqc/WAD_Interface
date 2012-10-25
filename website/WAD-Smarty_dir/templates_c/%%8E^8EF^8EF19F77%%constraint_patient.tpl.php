@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.7, created on 2012-06-18 20:36:29
+<?php /* Smarty version 2.6.7, created on 2012-10-06 12:34:16
          compiled from constraint_patient.tpl */ ?>
     <table>
 	    <tr>
@@ -11,13 +11,13 @@
 " size="30"> </input>
           </td>
         </tr>
-        <tr>
+   <!--     <tr>
           <td class="table_data_blue"> Pat_id_issuer </td>
           <td class="table_data">
             <input   name="pat_id_issuer" type="text" value="<?php echo $this->_tpl_vars['default_pat_id_issuer']; ?>
 " size="30"> </input>
           </td>
-        </tr>
+        </tr>  -->
         <tr>
           <td class="table_data_blue"> Pat_name </td>
           <td class="table_data">
@@ -25,7 +25,7 @@
 " size="30"> </input>
           </td>
         </tr>
-        <tr>
+  <!--      <tr>
           <td class="table_data_blue"> Pat_fn_sx </td>
           <td class="table_data">
             <input   name="pat_fn_sx" type="text" value="<?php echo $this->_tpl_vars['default_pat_fn_sx']; ?>
@@ -87,7 +87,7 @@
            <input   name="pat_custom3" type="text" value="<?php echo $this->_tpl_vars['default_pat_custom3']; ?>
 " size="30"> </input>
           </td>
-        </tr>
+        </tr>  -->
    </table>
 
 

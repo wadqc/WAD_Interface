@@ -1,4 +1,4 @@
-<?
+<?php
 
 $home_path=$_SERVER['DOCUMENT_ROOT'];
 $SMARTY_folder=sprintf("%s/WAD-Smarty",$home_path);

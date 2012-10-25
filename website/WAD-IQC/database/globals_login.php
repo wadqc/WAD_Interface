@@ -18,8 +18,8 @@ session_start();
 
 
 $hostName="localhost";		
-$userName="iqc";	
-$password="TY8BqYRdn3Uhzq8T";	
+$userName="wad";	
+$password="wad";	
 
 
 $databaseName = "iqc"; 	   

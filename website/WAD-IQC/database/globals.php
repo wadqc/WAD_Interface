@@ -85,8 +85,8 @@ $site_dir="WAD-IQC";
 //$site_root="c:/xampp/htdocs";
 $site_root="c:/WAD-software/WAD_Interface";
 $hostName="localhost";		
-$userName="iqc";	
-$password="TY8BqYRdn3Uhzq8T";	
+$userName="wad";	
+$password="wad";	
 
 $databaseName = "iqc"; 	   
 

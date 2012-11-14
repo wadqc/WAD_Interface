@@ -64,11 +64,12 @@ CREATE TABLE IF NOT EXISTS `resultaten_char` (
 
 -- --------------------------------------------------------
 
+
+
 --
 -- Tabelstructuur voor tabel `resultaten_floating`
 --
 
-DROP TABLE IF EXISTS `resultaten_floating`;
 CREATE TABLE IF NOT EXISTS `resultaten_floating` (
   `pk` int(11) NOT NULL AUTO_INCREMENT,
   `gewenste_processen_fk` int(11) NOT NULL,
@@ -81,11 +82,11 @@ CREATE TABLE IF NOT EXISTS `resultaten_floating` (
   `grens_kritisch_onder` float DEFAULT NULL,
   `grens_kritisch_boven` float DEFAULT NULL,
   `grens_acceptabel_onder` float DEFAULT NULL,
-  `grens_acceptabel_boven` float NOT NULL,
+  `grens_acceptabel_boven` float DEFAULT NULL,
   PRIMARY KEY (`pk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
+
 
 --
 -- Tabelstructuur voor tabel `resultaten_object`

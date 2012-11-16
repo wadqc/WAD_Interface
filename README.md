@@ -1,6 +1,4 @@
 WAD_Interface
 ============
 
-Bundle of website & create_databases
-
-merge-test
+Bundle of website and create_databases

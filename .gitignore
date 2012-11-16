@@ -10,4 +10,7 @@
 Thumbs.db
 
 # smarty template files
+cache
+templates_c
 %%*
+%%*.*

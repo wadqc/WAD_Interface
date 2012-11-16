@@ -11,7 +11,7 @@ Thumbs.db
 
 # smarty template files
 cache
-templates_c
+#templates_c
 %%*
 %%*.*
 

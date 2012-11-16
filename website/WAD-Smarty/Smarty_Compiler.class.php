@@ -797,7 +797,11 @@ class Smarty_Compiler extends Smarty {
 
         $_cacheable_state = $this->_push_cacheable_state('function', $tag_command);
         $attrs = $this->_parse_attrs($tag_args);
+		// temporarily turn off strict error reporting to suppress error msg for php5
+		error_reporting( E_ERROR | E_WARNING | E_PARSE );
         $arg_list = $this->_compile_arg_list('function', $tag_command, $attrs, $_cache_attrs='');
+		// restore error reporting
+		error_reporting( E_ALL & ~E_NOTICE );
 
         $output = $this->_compile_plugin_call('function', $tag_command).'(array('.implode(',', $arg_list)."), \$this)";
         if($tag_modifier != '') {

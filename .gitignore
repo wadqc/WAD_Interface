@@ -8,3 +8,6 @@
 *.swp
 *.out
 Thumbs.db
+
+# smarty template files
+%%*

@@ -45,25 +45,3 @@ CREATE TABLE IF NOT EXISTS `users` (
 INSERT INTO `users` (`pk`, `firstname`, `lastname`, `initials`, `phone`, `email`, `login_level_1`, `login_level_2`, `login_level_3`, `login_level_4`, `login_level_5`, `login`, `password`) VALUES
 (3, 'Voor', '8er Naam', '', '', '', 'on', '', '', '', '', 'root', '7df288e512aa7090138f14012e6d3a3a');
 
-
-
-
--- --------------------------------------------------------
-
-
-
---
--- Tabelstructuur voor tabel `config_file`
---
-
-DROP TABLE IF EXISTS `config_file`;
-CREATE TABLE IF NOT EXISTS `config_file` (
-  `pk` int(11) NOT NULL AUTO_INCREMENT,
-  `omschrijving` varchar(100) NOT NULL,
-  `filenaam` varchar(50) NOT NULL,
-  `filenaam_pad` varchar(200) NOT NULL,
-  PRIMARY KEY (`pk`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-

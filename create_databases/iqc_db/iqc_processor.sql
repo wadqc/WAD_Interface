@@ -127,34 +127,3 @@ UNLOCK TABLES;
 
 
 
--- --------------------------------------------------------
---
--- Tabelstructuur voor tabel `testen`
---
-
-DROP TABLE IF EXISTS `testen`;
-CREATE TABLE IF NOT EXISTS `testen` (
-  `pk` int(11) NOT NULL AUTO_INCREMENT,
-  `filenaam` varchar(200) NOT NULL,
-  `filenaam_pad` varchar(200) NOT NULL,
-  PRIMARY KEY (`pk`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabelstructuur voor tabel `testen_configuratie`
---
-
-DROP TABLE IF EXISTS `testen_configuratie`;
-CREATE TABLE IF NOT EXISTS `testen_configuratie` (
-  `pk` int(11) NOT NULL AUTO_INCREMENT,
-  `testen_pk` int(11) NOT NULL,
-  `filenaam` varchar(50) NOT NULL,
-  `filenaam_pad` varchar(200) NOT NULL,
-  PRIMARY KEY (`pk`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
-

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.1
+-- version 3.5.2
 -- http://www.phpmyadmin.net
 --
 -- Machine: localhost
--- Genereertijd: 08 okt 2012 om 21:32
--- Serverversie: 5.5.16
--- PHP-versie: 5.3.8
+-- Genereertijd: 20 dec 2012 om 04:55 PM
+-- Serverversie: 5.5.25a
+-- PHP-versie: 5.4.4
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -49,10 +49,11 @@ INSERT INTO `collector_status_omschrijving` (`nummer`, `veld_omschrijving`) VALU
 DROP TABLE IF EXISTS `collector_study_status`;
 CREATE TABLE IF NOT EXISTS `collector_study_status` (
   `pk` int(11) NOT NULL AUTO_INCREMENT,
-  `study_fk` int(11) DEFAULT NULL,
+  `study_fk` bigint(20) DEFAULT NULL,
   `study_status` int(11) DEFAULT '0',
   PRIMARY KEY (`pk`),
-  UNIQUE KEY `pk_UNIQUE` (`pk`)
+  KEY `study_fk` (`study_fk`),
+  KEY `study_status` (`study_status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -64,9 +65,11 @@ CREATE TABLE IF NOT EXISTS `collector_study_status` (
 DROP TABLE IF EXISTS `collector_series_status`;
 CREATE TABLE IF NOT EXISTS `collector_series_status` (
   `pk` int(11) NOT NULL AUTO_INCREMENT,
-  `series_fk` int(11) DEFAULT NULL,
+  `series_fk` bigint(20) DEFAULT NULL,
   `series_status` int(11) DEFAULT '0',
-  PRIMARY KEY (`pk`)
+  PRIMARY KEY (`pk`),
+  KEY `series_fk` (`series_fk`),
+  KEY `series_status` (`series_status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -87,7 +90,9 @@ CREATE TABLE IF NOT EXISTS `files` (
   `file_status` int(11) DEFAULT NULL,
   `md5_check_time` datetime DEFAULT NULL,
   `created_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`pk`)
+  PRIMARY KEY (`pk`),
+  KEY `instance_fk` (`instance_fk`),
+  KEY `filesystem_fk` (`filesystem_fk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -176,7 +181,8 @@ CREATE TABLE IF NOT EXISTS `study` (
   `updated_time` datetime DEFAULT NULL,
   `created_time` datetime DEFAULT NULL,
   `study_attrs` longblob,
-  PRIMARY KEY (`pk`)
+  PRIMARY KEY (`pk`),
+  KEY `patient_fk` (`patient_fk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -221,7 +227,8 @@ CREATE TABLE IF NOT EXISTS `series` (
   `created_time` datetime DEFAULT NULL,
   `updated_time` datetime DEFAULT NULL,
   `series_attrs` longblob,
-  PRIMARY KEY (`pk`)
+  PRIMARY KEY (`pk`),
+  KEY `study_fk` (`study_fk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -255,7 +262,52 @@ CREATE TABLE IF NOT EXISTS `instance` (
   `updated_time` datetime DEFAULT NULL,
   `created_time` datetime DEFAULT NULL,
   `inst_attrs` longblob,
-  PRIMARY KEY (`pk`)
+  PRIMARY KEY (`pk`),
+  KEY `series_fk` (`series_fk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `collector_series_status`
+--
+ALTER TABLE `collector_series_status`
+  ADD CONSTRAINT `collector_series_status_ibfk_1` FOREIGN KEY (`series_fk`) REFERENCES `series` (`pk`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `collector_study_status`
+--
+ALTER TABLE `collector_study_status`
+  ADD CONSTRAINT `collector_study_status_ibfk_1` FOREIGN KEY (`study_fk`) REFERENCES `study` (`pk`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `files`
+--
+ALTER TABLE `files`
+  ADD CONSTRAINT `files_ibfk_1` FOREIGN KEY (`instance_fk`) REFERENCES `instance` (`pk`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `files_ibfk_2` FOREIGN KEY (`filesystem_fk`) REFERENCES `filesystem` (`pk`);
+
+--
+-- Constraints for table `instance`
+--
+ALTER TABLE `instance`
+  ADD CONSTRAINT `instance_ibfk_1` FOREIGN KEY (`series_fk`) REFERENCES `series` (`pk`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `series`
+--
+ALTER TABLE `series`
+  ADD CONSTRAINT `series_ibfk_1` FOREIGN KEY (`study_fk`) REFERENCES `study` (`pk`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `study`
+--
+ALTER TABLE `study`
+  ADD CONSTRAINT `study_ibfk_1` FOREIGN KEY (`patient_fk`) REFERENCES `patient` (`pk`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- --------------------------------------------------------

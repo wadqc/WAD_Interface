@@ -77,15 +77,22 @@ DROP TABLE IF EXISTS `gewenste_processen`;
 CREATE TABLE IF NOT EXISTS `gewenste_processen` (
   `pk` int(11) NOT NULL AUTO_INCREMENT,
   `selector_fk` int(11) DEFAULT NULL,
-  `study_fk` int(11) DEFAULT NULL,
-  `series_fk` int(11) DEFAULT NULL,
-  `instance_fk` int(11) DEFAULT NULL,
+  `study_fk` bigint(20) DEFAULT NULL,
+  `series_fk` bigint(20) DEFAULT NULL,
+  `instance_fk` bigint(20) DEFAULT NULL,
   `creation_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `status` int(11) DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `analysemodule_input_fk` int(11) DEFAULT NULL,
   `analysemodule_output_fk` int(11) DEFAULT NULL,
-  PRIMARY KEY (`pk`)
+  PRIMARY KEY (`pk`),
+  KEY `selector_fk` (`selector_fk`),
+  KEY `study_fk` (`study_fk`),
+  KEY `series_fk` (`series_fk`),
+  KEY `instance_fk` (`instance_fk`),
+  KEY `status` (`status`),
+  KEY `analysemodule_input_fk` (`analysemodule_input_fk`),
+  KEY `analysemodule_output_fk` (`analysemodule_output_fk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -261,3 +268,16 @@ CREATE TABLE IF NOT EXISTS `selector_study` (
 
 -- --------------------------------------------------------
 
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `gewenste_processen`
+--
+ALTER TABLE `gewenste_processen`
+  ADD CONSTRAINT `gewenste_processen_ibfk_1` FOREIGN KEY (`analysemodule_input_fk`) REFERENCES `analysemodule_input` (`pk`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `gewenste_processen_ibfk_2` FOREIGN KEY (`analysemodule_output_fk`) REFERENCES `analysemodule_output` (`pk`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- --------------------------------------------------------

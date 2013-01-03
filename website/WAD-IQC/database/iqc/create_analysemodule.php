@@ -68,12 +68,12 @@ $b=($j%2);
 mysql_free_result($result_analysemodule);  
 
 $data = new Smarty_NM();
-$data->assign("Title","Test files");
-$data->assign("header","Test files");
+$data->assign("Title","Analyse Modules");
+$data->assign("header","Analyse Modules");
 $data->assign("form_action",sprintf("new_analysemodule.php?pk=-1&t=%d",time() ) );
 $data->assign("file_list",$table_analysemodule);
 
-$new_analysemodule=sprintf("<a href=\"new_analysemodule.php?pk=0&t=%d\">Add new analysemodule</a>",time());
+$new_analysemodule=sprintf("<a href=\"new_analysemodule.php?pk=0&t=%d\">Add new analyse module</a>",time());
 
 $data->assign("new_file",$new_analysemodule);
 

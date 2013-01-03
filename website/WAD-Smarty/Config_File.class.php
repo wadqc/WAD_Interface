@@ -1,7 +1,7 @@
 <?php
 
 /**
- * analysemodule_cfg class.
+ * Config_File class.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,13 +25,13 @@
  * @package Smarty
  */
 
-/* $Id: analysemodule_cfg.class.php,v 1.76 2005/02/03 14:41:33 mohrt Exp $ */
+/* $Id: Config_File.class.php,v 1.76 2005/02/03 14:41:33 mohrt Exp $ */
 
 /**
  * Config file reading class
  * @package Smarty
  */
-class analysemodule_cfg {
+class Config_File {
     /**#@+
      * Options
      * @var boolean
@@ -69,7 +69,7 @@ class analysemodule_cfg {
      *
      * @param string $config_path (optional) path to the config files
      */
-    function analysemodule_cfg($config_path = NULL)
+    function Config_File($config_path = NULL)
     {
         if (isset($config_path))
             $this->set_path($config_path);
@@ -229,33 +229,33 @@ class analysemodule_cfg {
     function load_file($file_name, $prepend_path = true)
     {
         if ($prepend_path && $this->_config_path != "")
-            $analysemodule_cfg = $this->_config_path . $file_name;
+            $config_file = $this->_config_path . $file_name;
         else
-            $analysemodule_cfg = $file_name;
+            $config_file = $file_name;
 
         ini_set('track_errors', true);
-        $fp = @fopen($analysemodule_cfg, "r");
+        $fp = @fopen($config_file, "r");
         if (!is_resource($fp)) {
-            $this->_trigger_error_msg("Could not open config file '$analysemodule_cfg'");
+            $this->_trigger_error_msg("Could not open config file '$config_file'");
             return false;
         }
 
-        $contents = ($size = filesize($analysemodule_cfg)) ? fread($fp, $size) : '';
+        $contents = ($size = filesize($config_file)) ? fread($fp, $size) : '';
         fclose($fp);
 
-        $this->_config_data[$analysemodule_cfg] = $this->parse_contents($contents);
+        $this->_config_data[$config_file] = $this->parse_contents($contents);
         return true;
     }
 
     /**
      * Store the contents of a file manually.
      *
-     * @param string $analysemodule_cfg file name of the related contents
+     * @param string $config_file file name of the related contents
      * @param string $contents the file-contents to parse
      */
-    function set_file_contents($analysemodule_cfg, $contents)
+    function set_file_contents($config_file, $contents)
     {
-        $this->_config_data[$analysemodule_cfg] = $this->parse_contents($contents);
+        $this->_config_data[$config_file] = $this->parse_contents($contents);
         return true;
     }
 
@@ -381,7 +381,7 @@ class analysemodule_cfg {
      */
     function _trigger_error_msg($error_msg, $error_type = E_USER_WARNING)
     {
-        trigger_error("analysemodule_cfg error: $error_msg", $error_type);
+        trigger_error("Config_File error: $error_msg", $error_type);
     }
     /**#@-*/
 }

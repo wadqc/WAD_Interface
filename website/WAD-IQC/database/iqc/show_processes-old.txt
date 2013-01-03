@@ -1,0 +1,134 @@
+<?php
+require("../globals.php") ;
+require("./common.php") ;
+require("./php/includes/setup.php");
+
+
+$table_gewenste_processen='gewenste_processen';
+$table_series='series';
+$table_status='status_omschrijving';
+
+
+$v=$_GET['v'];
+$selector_fk=0;
+if (!empty($_GET['selector_fk']))
+{
+  $selector_fk=$_GET['selector_fk'];
+}
+
+$analyse_level='';
+if (!empty($_GET['analyse_level']))
+{
+  $analyse_level=$_GET['analyse_level'];
+}
+
+if ($analyse_level=='series')
+{
+  $processen_Stmt="SELECT  * from $table_series inner join ($table_gewenste_processen inner join $table_status on $table_gewenste_processen.status=$table_status.nummer inner join $table_resultaten_floating on $table_gewenste_processen.pk=$table_resultaten_floating.gewenste_processen_fk) on $table_series.pk=$table_gewenste_processen.series_fk 
+  where
+  $table_gewenste_processen.selector_fk=$selector_fk
+  group by $table_gewenste_processen.series_fk
+  order by $table_gewenste_processen.creation_time";
+  printf("%s",$processen_Stmt);
+}
+
+if ($analyse_level=='study')
+{
+  $processen_Stmt="SELECT  * from $table_series inner join ($table_gewenste_processen inner join $table_status on $table_gewenste_processen.status=$table_status.nummer inner join $table_resultaten_floating on $table_gewenste_processen.pk=$table_resultaten_floating.gewenste_processen_fk) on $table_series.study_fk=$table_gewenste_processen.study_fk 
+  where
+  $table_gewenste_processen.selector_fk=$selector_fk";
+  //group by $table_gewenste_processen.series_fk
+  //order by $table_gewenste_processen.creation_time";
+  printf("%s",$processen_Stmt);
+}
+
+if ($analyse_level=='instance')
+{
+  $processen_Stmt="SELECT  * from $table_series inner join ($table_gewenste_processen inner join $table_status on $table_gewenste_processen.status=$table_status.nummer) on $table_series.study_fk=$table_gewenste_processen.study_fk 
+  where
+  $table_gewenste_processen.selector_fk=$selector_fk"
+  group by $table_gewenste_processen.series_fk
+  order by $table_gewenste_processen.creation_time";
+  printf("%s",$processen_Stmt);
+}
+
+
+
+
+
+
+// Connect to the Database
+if (!($link=mysql_pconnect($hostName, $userName, $password))) {
+   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
+                             $hostName, $userName)) ;
+   exit();
+}
+
+
+// Select the Database
+if (!mysql_select_db($databaseName, $link)) {
+   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
+   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   exit() ;
+}
+
+if (!($result_processen= mysql_query($processen_Stmt, $link))) {
+   DisplayErrMsg(sprintf("Error in executing %s stmt", $processen_Stmt)) ;
+   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   exit() ;
+}
+
+
+$table_processen='';
+
+
+$j=0;
+while (($field_processen = mysql_fetch_object($result_processen)))
+{
+  
+   $b=($j%2);
+   $bgcolor=''; 
+   if ($b==0)
+   {
+     $bgcolor='#B8E7FF';
+   }   
+
+   $table_data = new Smarty_NM();
+   
+   if ($j==0) //define header data
+   {
+     $table_processen=$table_data->fetch("processen_result_header.tpl");
+   }
+
+   $action=sprintf("show_processes.php?processen_fk=%d&t=%d",$field_processen->pk,time()); 
+  
+   $table_data->assign("bgcolor",$bgcolor);
+   $table_data->assign("station_name",$field_processen->station_name);
+   $table_data->assign("modality",$field_processen->modality);
+   $table_data->assign("creation_time",$field_processen->creation_time);
+   $table_data->assign("status",$field_processen->veld_omschrijving);
+   printf("Mod=%s",$field_processen->modality);
+
+
+   $table_data->assign("action_processen",$action);
+      
+   $table_processen.=$table_data->fetch("processen_select_row.tpl");
+
+   $j++;
+}
+
+
+mysql_free_result($result_processen);  
+
+$data = new Smarty_NM();
+$data->assign("Title","processen Results");
+$data->assign("header","Processen");
+$data->assign("processen_list",$table_processen);
+
+$data->display("processen_result.tpl");
+
+
+
+
+
+?>

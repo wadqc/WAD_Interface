@@ -102,7 +102,7 @@ while (($field_selector = mysql_fetch_object($result_selector)))
    
    $table_data->assign("action",$action);
       
-   $table_selector.=$table_data->fetch("selector_select_row.tpl");
+   $table_selector.=$table_data->fetch("selector_selector_select_row.tpl");
 
    $j++;
 }

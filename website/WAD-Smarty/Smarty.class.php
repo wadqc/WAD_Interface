@@ -396,7 +396,7 @@ class Smarty
      *
      * @var string
      */
-    var $config_class          =   'analysemodule_cfg';
+    var $config_class          =   'Config_File';
 
 /**#@+
  * END Smarty Configuration Section
@@ -441,7 +441,7 @@ class Smarty
     /**
      * configuration object
      *
-     * @var analysemodule_cfg
+     * @var Config_file
      */
     var $_conf_obj             = null;
 

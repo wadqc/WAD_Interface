@@ -9,6 +9,29 @@
  ;
 }
 
+.table_data_red {
+ font-family: arial;
+ font-size: 12px;
+ font-style: normal;
+ font-variant: normal;
+ font-weight: normal;
+ color: red;
+ text-decoration: none;
+ ;
+}
+
+.table_data_orange {
+ font-family: arial;
+ font-size: 12px;
+ font-style: normal;
+ font-variant: normal;
+ font-weight: normal;
+ color: orange;
+ text-decoration: none;
+ ;
+}
+
+
 .table_data_header {
  font-family: arial;
  font-size: 14px;

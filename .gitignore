@@ -10,10 +10,10 @@
 Thumbs.db
 
 # smarty template files
-cache
+#cache
 #templates_c
 %%*
 %%*.*
 
 # iqc uploads
-uploads
+#uploads

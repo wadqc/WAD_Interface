@@ -13,10 +13,6 @@
 <hr>
 {$selection_list}
 <hr>
-<h1 class="table_data_blue" >{$header_char} </h1>
-<table NOSAVE="true" width="100%" border="true" bgcolor="#f3f6ff" frame="border">
-  {$resultaten_char_list}
-</table>
 <h1 class="table_data_blue" >{$header_floating} </h1>
 <table NOSAVE="true" width="100%" border="true" bgcolor="#f3f6ff" frame="border">
   {$resultaten_floating_list}

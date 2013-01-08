@@ -138,7 +138,7 @@ while (($field_results = mysql_fetch_object($result_floating)))
    
    if ($j==0) //define header data
    {
-     $table_resultaten_floating=$table_data->fetch("resultaten_floating_header.tpl");
+     $table_resultaten_floating=$table_data->fetch("resultaten_floating_value_header.tpl");
    }
 
         

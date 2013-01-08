@@ -3,6 +3,9 @@
     {$datum}
   </td>
   <td class="table_data">
+    {$type}
+  </td>
+  <td class="table_data">
     <a href="{$action_floating}" class="table_data_select" target="_blank">{$omschrijving}</a> 
   </td>
   <td class="table_data">

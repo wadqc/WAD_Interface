@@ -12,6 +12,21 @@ $table_gewenste_processen='gewenste_processen';
 $table_selector='selector';
 
 
+//new
+
+
+//$data = new Smarty_NM();
+//$data->display("resultaten_floating_high_charts.tpl");
+//exit();
+
+
+
+//new
+
+
+
+
+
 $v=$_GET['v'];
 $selector_fk=0;
 if (!empty($_GET['selector_fk']))
@@ -134,7 +149,6 @@ $filename = sprintf("IQC-floating_data-%s.xls",$omschrijving);
 
 
 header ("Content-type: application/vnd.ms-excel");
-//header ("Content-type: application/octet-stream");
 header ("Content-Disposition: attachment; filename=".$filename);
 
 //setting the cache expiration to 30 seconds ahead of current time. an IE 8 issue when opening the data directly in the browser without first saving it to a file

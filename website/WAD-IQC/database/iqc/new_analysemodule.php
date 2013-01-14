@@ -4,6 +4,20 @@ require("../globals.php") ;
 require("./common.php") ;
 require("./php/includes/setup.php");
 
+
+
+# recursively remove a directory
+function rrmdir($dir) {
+    foreach(glob($dir . '/*') as $file) {
+        if(is_dir($file))
+            rrmdir($file);
+        else
+            unlink($file);
+    }
+    rmdir($dir);
+}
+
+
 $pk=$_GET['pk'];
 
 
@@ -57,22 +71,51 @@ if(!empty($_POST['action']))
   if ($pk==0)
   { 
     $filename=basename( $_FILES['uploadedfile']['name']);
-    $filepath_root="WAD-IQC/uploads/analysemodule/";
-    $filepath = $filepath_root.basename( $_FILES['uploadedfile']['name']); 
+    $filename_noext=current(explode('.',$filename));
+    $filename_ext=strrchr($filename,'.');
+    $filepath_root="WAD-IQC/uploads/analysemodule/".$filename_noext;
+    $filepath = $filepath_root.'/'.$filename; 
+    $target_folder=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath_root;
     $target_path=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath;
+    $source_path=$_FILES['uploadedfile']['tmp_name'];
 	
-    if ( move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path) )
-    {
-    // echo "The file ".  basename( $_FILES['uploadedfile']['name'])." has been uploaded";
-    } else
-    {
-     echo "There was an error uploading the file, please try again!";
-     exit();
-    }
+	// maak module-subfolder aan (foldernaam = bestandsnaam zonder extensies)
+	if ( ! is_dir($target_folder)) {
+		mkdir($target_folder);
+	} else {
+		echo "Module folder already exists! Please rename module and try to upload again.";
+		exit();
+	}
+	
+	// check of de upload een zip-file is; zo ja, dan uitpakken in module-subfolder
+	// zo niet, dan gewoon kopieren naar de module-subfolder
+	if ($filename_ext=='.zip') {
+		$zip = new ZipArchive;
+		$res = $zip->open($source_path);
+		if($res===TRUE){
+			$zip->extractTo($target_folder);
+			$zip->close();
+		} else {
+			echo $source_path;
+			//echo 'Invalid zip-file!';
+			rmdir($target_folder);
+			exit();
+		}
+	} else {
+		if ( move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path) )
+		{
+			// echo "The file ".  basename( $_FILES['uploadedfile']['name'])." has been uploaded";
+		} else {
+			echo "There was an error uploading the file, please try again!";
+			rmdir($target_path);
+			exit();
+		}
+	}
 
 
-
-    if (!(mysql_query(sprintf($addStmt,$description,$filename,$filepath_root),$link))) 
+    $filename_strippedzip=basename($filename, '.zip');     // strip de zip-extensie om de executable naam te extraheren
+    
+	if (!(mysql_query(sprintf($addStmt,$description,$filename_strippedzip,$filepath_root),$link))) 
     {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
@@ -180,10 +223,12 @@ if ($pk==-1)         //delete
       mysql_free_result($result_analysemodule);
       if ($counter==1) //only 1 row that contains filepath
       {
-        $target_path=$target_path.$filepath;
+        //$target_path=$target_path.$filepath;
         //printf("target=%s",$target_path);
         //exit();
-        unlink($target_path);
+        //unlink($target_path);
+        $target_path=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath;
+        rrmdir($target_path);
       } 
       if (!($result_analysemodule= mysql_query(sprintf($del_analysemodule_Stmt,$analysemodule_ref_key[$i]),$link))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;

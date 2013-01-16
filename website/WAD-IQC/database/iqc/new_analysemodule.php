@@ -70,20 +70,20 @@ if(!empty($_POST['action']))
 
   if ($pk==0)
   { 
-    $filename=basename( $_FILES['uploadedfile']['name']);
-    $filename_noext=current(explode('.',$filename));
-    $filename_ext=strrchr($filename,'.');
-    $filepath_root="WAD-IQC/uploads/analysemodule/".$filename_noext;
-    $filepath = $filepath_root.'/'.$filename; 
-    $target_folder=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath_root;
-    $target_path=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath;
-    $source_path=$_FILES['uploadedfile']['tmp_name'];
+    $filename=basename( $_FILES['uploadedfile']['name']);				// 'module.jar
+    $filename_noext=current(explode('.',$filename));					// 'module'
+    $filename_ext=strrchr($filename,'.');								// '.jar'
+    $filepath_root="WAD-IQC/uploads/analysemodule/".$filename_noext;	// WAD-IQC/uploads/analysemodule/module
+    $filepath = $filepath_root.'/'.$filename; 							// WAD-IQC/uploads/analysemodule/module/module.jar
+    $target_folder=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath_root;		// /C:/xampp/htdocs/WAD-IQC/uploads/analysemodule/module
+    $target_path=$target_folder.'/'.$filename;							// /C:/xampp/htdocs/WAD-IQC/uploads/analysemodule/module/module.jar
+    $source_path=$_FILES['uploadedfile']['tmp_name'];					// /C:/xampp/tmp/file.tmp  
 	
 	// maak module-subfolder aan (foldernaam = bestandsnaam zonder extensies)
 	if ( ! is_dir($target_folder)) {
 		mkdir($target_folder);
 	} else {
-		echo "Module folder already exists! Please rename module and try to upload again.";
+		echo "Module folder already exists! Please rename module and try to upload again, or click on module filename to update the module.";
 		exit();
 	}
 	
@@ -116,11 +116,11 @@ if(!empty($_POST['action']))
     $filename_strippedzip=basename($filename, '.zip');     // strip de zip-extensie om de executable naam te extraheren
     
 	if (!(mysql_query(sprintf($addStmt,$description,$filename_strippedzip,$filepath_root),$link))) 
-    {
-      DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-      exit() ;
-    }
+	{
+		DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
+		DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+		exit() ;
+	}
   }
   if ($pk>0)
   { 
@@ -135,29 +135,53 @@ if(!empty($_POST['action']))
     }
     if ($error==0)    
     {
-       $filename=basename( $_FILES['uploadedfile']['name']);
-
-       $filepath = "WAD-IQC/uploads/analysemodule/".basename( $_FILES['uploadedfile']['name']); 
-       $target_path=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath;
-
-	   //$target_path=$site_root.$filepath;
+		$filename=basename( $_FILES['uploadedfile']['name']);					// 'module.jar
+		$filename_noext=current(explode('.',$filename));						// 'module'
+		$filename_ext=strrchr($filename,'.');									// '.jar'
+		$filepath_root="WAD-IQC/uploads/analysemodule/".$filename_noext;		// WAD-IQC/uploads/analysemodule/module
+		$filepath = $filepath_root.'/'.$filename; 								// WAD-IQC/uploads/analysemodule/module/module.jar
+		$target_folder=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath_root;			// /C:/xampp/htdocs/WAD-IQC/uploads/analysemodule/module
+		$target_folder_tmp=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath_root.'.tmp';	// /C:/xampp/htdocs/WAD-IQC/uploads/analysemodule/module.tmp
+		$target_path_tmp=$target_folder_tmp.'/'.$filename;						// /C:/xampp/htdocs/WAD-IQC/uploads/analysemodule/module.tmp/module.jar
+		$source_path=$_FILES['uploadedfile']['tmp_name'];						// /C:/xampp/tmp/file.tmp
+		
+		// tijdelijke modulefolder aanmaken tbv nieuwe upload
+		mkdir($target_folder_tmp);
   
-       if ( move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path) )
-       {
-         // echo "The file ".  basename( $_FILES['uploadedfile']['name'])." has been uploaded";
-       } else
-       {
-          echo "There was an error uploading the file, please try again!";
-          exit();
-       }
+		// check of de upload een zip-file is; zo ja, dan uitpakken in module-subfolder
+		// zo niet, dan gewoon kopieren naar de module-subfolder
+		if ($filename_ext=='.zip') {
+			$zip = new ZipArchive;
+			$res = $zip->open($source_path);
+			if($res===TRUE){
+				$zip->extractTo($target_folder_tmp);
+				$zip->close();
+			} else {
+				echo 'Invalid zip-file!';
+				rrmdir($target_path.'.tmp');  // tijdelijke folder weghalen
+				exit();
+			}
+		} else {
+			if ( !(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path_tmp)) )
+			{
+				echo "There was an error uploading the file, please try again!";
+				rrmdir($target_path_tmp);  // tijdelijke folder weghalen
+				exit();
+			}
+		}
 
+		// succesvolle upload dus oude folder weghalen en tijdelijke folder hernoemen
+		rrmdir($target_folder);
+		rename($target_folder_tmp,$target_folder);
+		
+		$filename_strippedzip=basename($filename, '.zip');     // strip de zip-extensie om de executable naam te extraheren
 
-       if (!(mysql_query(sprintf($update_Stmt,$description,$filename,$filepath,$pk),$link))) 
-       {   
-        DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-        DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-        exit() ;
-       }
+		if (!(mysql_query(sprintf($update_Stmt,$description,$filename_strippedzip,$filepath_root,$pk),$link))) 
+		{   
+			DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
+			DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+			exit() ;
+		}
 
     }
     
@@ -177,7 +201,7 @@ if (!empty($_POST['action']))
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// if it will get to here it is either the first time or it returned from add/modify picture
+// if it will get to here it is either the first time or it returned from add/modify filename
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 

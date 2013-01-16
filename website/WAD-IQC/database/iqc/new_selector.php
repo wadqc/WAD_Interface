@@ -215,7 +215,7 @@ if(!empty($_POST['constraint']))
 
   $constraint=$_POST['constraint'];
    
-  $executestring.=sprintf("constraint.php?constraint=$constraint&selector_patient_fk=$selector_patient_fk&selector_study_fk=$selector_study_fk&selector_series_fk=$selector_series_fk&selector_instance_fk=$selector_instance_fk&pk=$pk&t=%d",time());
+  $executestring.=sprintf("constraint.php?constraint=$constraint&selector_pk=$pk&selector_patient_fk=$selector_patient_fk&selector_study_fk=$selector_study_fk&selector_series_fk=$selector_series_fk&selector_instance_fk=$selector_instance_fk&pk=$pk&t=%d",time());
 
   header($executestring);
   exit();

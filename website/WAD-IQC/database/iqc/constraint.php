@@ -10,6 +10,7 @@ $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname(
 
 $constraint=$_GET['constraint'];
 
+$selector_pk=$_GET['selector_pk'];
 $selector_patient_fk=$_GET['selector_patient_fk'];
 $selector_study_fk=$_GET['selector_study_fk'];
 $selector_series_fk=$_GET['selector_series_fk'];
@@ -308,6 +309,8 @@ if ( ($constraint=='Delete_Patient')||($constraint=='Delete_Study')||($constrain
      $table_delete="selector_patient";
      $del_Stmt = "delete from  $table_delete where $table_delete.pk='%d'";
      $del_Stmt = sprintf($del_Stmt,$selector_patient_fk);
+	 $update_Stmt = "update selector set selector_patient_fk=0 where pk='%d'";
+     $update_Stmt = sprintf($update_Stmt,$selector_pk);
      $selector_patient_fk=0;
    }
    if ($constraint=='Delete_Study')
@@ -315,6 +318,8 @@ if ( ($constraint=='Delete_Patient')||($constraint=='Delete_Study')||($constrain
      $table_delete="selector_study";
      $del_Stmt = "delete from  $table_delete where $table_delete.pk='%d'";
      $del_Stmt = sprintf($del_Stmt,$selector_study_fk);
+	 $update_Stmt = "update selector set selector_study_fk=0 where pk='%d'";
+     $update_Stmt = sprintf($update_Stmt,$selector_pk);
      $selector_study_fk=0;
    }
    if ($constraint=='Delete_Series')
@@ -322,6 +327,8 @@ if ( ($constraint=='Delete_Patient')||($constraint=='Delete_Study')||($constrain
      $table_delete="selector_series";
      $del_Stmt = "delete from  $table_delete where $table_delete.pk='%d'";
      $del_Stmt = sprintf($del_Stmt,$selector_series_fk);
+	 $update_Stmt = "update selector set selector_series_fk=0 where pk='%d'";
+     $update_Stmt = sprintf($update_Stmt,$selector_pk);
      $selector_series_fk=0;
    }
    if ($constraint=='Delete_Instance')
@@ -329,6 +336,8 @@ if ( ($constraint=='Delete_Patient')||($constraint=='Delete_Study')||($constrain
      $table_delete="selector_instance";
      $del_Stmt = "delete from  $table_delete where $table_delete.pk='%d'";
      $del_Stmt = sprintf($del_Stmt,$selector_instance_fk);
+	 $update_Stmt = "update selector set selector_instance_fk=0 where pk='%d'";
+     $update_Stmt = sprintf($update_Stmt,$selector_pk);
      $selector_instance_fk=0;
    }
    
@@ -337,8 +346,15 @@ if ( ($constraint=='Delete_Patient')||($constraint=='Delete_Study')||($constrain
     if (!($result_analysemodule= mysql_query($del_Stmt,$link))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $del_Stmt)) ;
       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-      exit() ;}
+      exit() ;
+	}
 
+	if (!($result_analysemodule= mysql_query($update_Stmt,$link))) {
+      DisplayErrMsg(sprintf("Error in executing %s stmt", $del_Stmt)) ;
+      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      exit() ;
+	}  
+	  
     $executestring.=sprintf("new_selector.php?pk=$pk&selector_patient_fk=$selector_patient_fk&selector_study_fk=$selector_study_fk&selector_series_fk=$selector_series_fk&selector_instance_fk=$selector_instance_fk&t=%d",time() );
 
     header($executestring);

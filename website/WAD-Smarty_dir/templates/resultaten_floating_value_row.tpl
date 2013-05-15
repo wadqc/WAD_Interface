@@ -18,7 +18,7 @@
     {$kritisch_onder}
   </td>
   <td class="table_data">
-    {$krtisch_boven}
+    {$kritisch_boven}
   </td>
   <td class="table_data">
     {$acceptabel_onder}

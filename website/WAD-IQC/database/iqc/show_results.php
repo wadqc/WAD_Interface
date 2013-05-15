@@ -287,7 +287,7 @@ $j=0;
 while (($field_results = mysql_fetch_object($result_floating)))
 {
   
-   $action[$field_results->volgnummer]=sprintf("show_floating_value.php?selector_fk=%d&gewenste_processen_id=0&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$field_results->omschrijving,$field_results->grootheid,$field_results->eenheid ,time()); 
+   $action[$field_results->volgnummer]=sprintf("show_floating_value.php?selector_fk=%d&analyse_level=%s&gewenste_processen_id=0&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$field_results->omschrijving,$field_results->grootheid,$field_results->eenheid ,time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
    $grootheid[$field_results->volgnummer]=$field_results->grootheid;

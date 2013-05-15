@@ -3,6 +3,14 @@ require("../globals.php") ;
 require("./common.php") ;
 require("./php/includes/setup.php");
 
+
+$table_study='study';
+$table_series='series';
+$table_instance='instance';
+
+
+
+
 $table_resultaten_floating='resultaten_floating';
 $table_resultaten_char='resultaten_char';
 $table_resultaten_object='resultaten_object';
@@ -54,13 +62,57 @@ if (!empty($_GET['analyse_level']))
 
 
 
-
-$results_floating_Stmt="SELECT * from $table_gewenste_processen inner join $table_resultaten_floating on $table_gewenste_processen.pk=$table_resultaten_floating.gewenste_processen_fk 
+if ($analyse_level=='study')
+{
+  
+$results_floating_Stmt="SELECT $table_study.study_datetime as 'date_time', $table_resultaten_floating.omschrijving as 'omschrijving', $table_resultaten_floating.grootheid as 'grootheid', $table_resultaten_floating.eenheid as 'eenheid', $table_resultaten_floating.grens_kritisch_boven as 'grens_kritisch_boven', $table_resultaten_floating.grens_kritisch_onder as 'grens_kritisch_onder', $table_resultaten_floating.grens_acceptabel_boven as 'grens_acceptabel_boven', $table_resultaten_floating.grens_acceptabel_onder as 'grens_acceptabel_onder', $table_resultaten_floating.waarde as 'waarde' from $table_study inner join ($table_gewenste_processen inner join $table_resultaten_floating on $table_gewenste_processen.pk=$table_resultaten_floating.gewenste_processen_fk) on $table_study.pk=$table_gewenste_processen.study_fk 
 where $table_gewenste_processen.selector_fk=$selector_fk 
 and $table_resultaten_floating.omschrijving like '$omschrijving'
 and $table_resultaten_floating.grootheid like '$grootheid' 
 and $table_resultaten_floating.eenheid like '$eenheid' 
-order by $table_gewenste_processen.pk, $table_resultaten_floating.volgnummer";
+order by date_time";
+//order by $table_gewenste_processen.pk, $table_resultaten_floating.volgnummer";
+
+}
+
+
+
+if ($analyse_level=='series')
+{
+  
+$results_floating_Stmt="SELECT $table_series.pps_start as 'date_time', $table_resultaten_floating.omschrijving as 'omschrijving', $table_resultaten_floating.grootheid as 'grootheid', $table_resultaten_floating.eenheid as 'eenheid', $table_resultaten_floating.grens_kritisch_boven as 'grens_kritisch_boven', $table_resultaten_floating.grens_kritisch_onder as 'grens_kritisch_onder', $table_resultaten_floating.grens_acceptabel_boven as 'grens_acceptabel_boven', $table_resultaten_floating.grens_acceptabel_onder as 'grens_acceptabel_onder', $table_resultaten_floating.waarde as 'waarde' from $table_series inner join ($table_gewenste_processen inner join $table_resultaten_floating on $table_gewenste_processen.pk=$table_resultaten_floating.gewenste_processen_fk) on $table_series.pk=$table_gewenste_processen.series_fk 
+where $table_gewenste_processen.selector_fk=$selector_fk 
+and $table_resultaten_floating.omschrijving like '$omschrijving'
+and $table_resultaten_floating.grootheid like '$grootheid' 
+and $table_resultaten_floating.eenheid like '$eenheid' 
+order by date_time";
+//order by $table_gewenste_processen.pk, $table_resultaten_floating.volgnummer";
+
+}
+
+
+if ($analyse_level=='instance')
+{
+  
+$results_floating_Stmt="SELECT $table_instance.content_datetime as 'date_time', $table_resultaten_floating.omschrijving as 'omschrijving', $table_resultaten_floating.grootheid as 'grootheid', $table_resultaten_floating.eenheid as 'eenheid', $table_resultaten_floating.grens_kritisch_boven as 'grens_kritisch_boven', $table_resultaten_floating.grens_kritisch_onder as 'grens_kritisch_onder', $table_resultaten_floating.grens_acceptabel_boven as 'grens_acceptabel_boven', $table_resultaten_floating.grens_acceptabel_onder as 'grens_acceptabel_onder', $table_resultaten_floating.waarde as 'waarde' from $table_instance inner join ($table_gewenste_processen inner join $table_resultaten_floating on $table_gewenste_processen.pk=$table_resultaten_floating.gewenste_processen_fk) on $table_instance.pk=$table_gewenste_processen.instance_fk 
+where $table_gewenste_processen.selector_fk=$selector_fk 
+and $table_resultaten_floating.omschrijving like '$omschrijving'
+and $table_resultaten_floating.grootheid like '$grootheid' 
+and $table_resultaten_floating.eenheid like '$eenheid' 
+order by date_time";
+//order by $table_gewenste_processen.pk, $table_resultaten_floating.volgnummer";
+
+}
+
+
+
+
+//$results_floating_Stmt="SELECT * from $table_gewenste_processen inner join $table_resultaten_floating on $table_gewenste_processen.pk=$table_resultaten_floating.gewenste_processen_fk 
+//where $table_gewenste_processen.selector_fk=$selector_fk 
+//and $table_resultaten_floating.omschrijving like '$omschrijving'
+//and $table_resultaten_floating.grootheid like '$grootheid' 
+//and $table_resultaten_floating.eenheid like '$eenheid' 
+//order by $table_gewenste_processen.pk, $table_resultaten_floating.volgnummer";
 
 
 
@@ -143,7 +195,7 @@ while (($field_results = mysql_fetch_object($result_floating)))
 
         
    $table_data->assign("bgcolor",$bgcolor);
-   $table_data->assign("datum",$field_results->creation_time);
+   $table_data->assign("datum",$field_results->date_time);
    $table_data->assign("omschrijving",$field_results->omschrijving);
    $table_data->assign("grootheid",$field_results->grootheid);
    $table_data->assign("eenheid",$field_results->eenheid);
@@ -189,8 +241,10 @@ $data->assign("selection_list",$selector_list);
 $data->assign("header_result",$header_result);
 $data->assign("header_value","Resultaten floating");
 $data->assign("picture_src","./logo_pictures/excel.jpg");
-$export_action=sprintf("export_floating_value.php?selector_fk=%d&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$omschrijving,$grootheid,$eenheid ,time());
+$export_action=sprintf("export_floating_value.php?selector_fk=%d&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$omschrijving,$grootheid,$eenheid ,time());
+$action_page=sprintf("data_floating.php?selector_fk=%d&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$omschrijving,$grootheid,$eenheid ,time());
 $data->assign("export_action",$export_action);
+$data->assign("action_page",$action_page);
 
 if ($table_resultaten_floating!='')
 {
@@ -202,9 +256,9 @@ if ($table_resultaten_floating!='')
 //$action_result=sprintf("show_results.php?selector_fk=%d&analyse_level=%s&t=%d",$selector_fk,$analyselevel,time()); 
 //$data->assign("action_result",$action_result);
 
+$data->display("data_floating_highcharts.tpl");
 
-
-$data->display("resultaten_result_value.tpl");
+//$data->display("resultaten_result_value.tpl");
 
 
 

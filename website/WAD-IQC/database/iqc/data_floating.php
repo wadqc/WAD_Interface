@@ -176,29 +176,61 @@ $table_resultaten_floating='';
 
 $value="Meetwaarde";
 
-printf("kritischboven \t acceptabelboven \t %s \t acceptabelonder \t kritischonder \n",$value);         //name 
-printf("Red \t Orange \t Blue \t Orange \t Red \n");                                                          //color
-printf("ShortDot\tShortDot\tSolid\tShortDot\tShortDot\n");                                    //dashstyle
-printf("0\t0\t0\t0\t0\n");                                    //marker
-printf("diamond\ttriangle\tcircle\ttriangle-down\tdiamond\n");
-printf("%s [%s]\t%s\tcircle\ttriangle-down\tdiamond\n",$grootheid,$eenheid,$omschrijving);
+//printf("kritischboven \t acceptabelboven \t %s \t acceptabelonder \t kritischonder \n",$value);         //name 
+//printf("Red \t Orange \t Blue \t Orange \t Red \n");                                                          //color
+//printf("ShortDot\tShortDot\tSolid\tShortDot\tShortDot\n");                                    //dashstyle
+//printf("0\t0\t0\t0\t0\n");                                    //marker
+//printf("diamond\ttriangle\tcircle\ttriangle-down\tdiamond\n");
+//printf("%s [%s]\t%s\tcircle\ttriangle-down\tdiamond\n",$grootheid,$eenheid,$omschrijving);
 
+$grens_waarden=1;
 
 $j=0;
 while (($field_results = mysql_fetch_object($result_floating)))
 {
-  $tijd = strtotime(sprintf("%s UTC",$field_results->date_time)); 
   $grens_kritisch_boven=$field_results->grens_kritisch_boven;
   $grens_kritisch_onder=$field_results->grens_kritisch_onder;
   $grens_acceptabel_boven=$field_results->grens_acceptabel_boven;
-  $grens_acceptabel_onder=$field_results->grens_acceptabel_onder;
-  if ($grens_kritisch_boven=='') $grens_kritisch_boven=$field_results->waarde;
-  if ($grens_kritisch_onder=='') $grens_kritisch_onder=$field_results->waarde;
-  if ($grens_acceptabel_boven=='') $grens_acceptabel_boven=$field_results->waarde;
-  if ($grens_acceptabel_onder=='') $grens_acceptabel_onder=$field_results->waarde;
+  $grens_acceptabel_onder=$field_results->grens_acceptabel_onder;  
 
-  printf("%s \t %s \t %s \t %s \t %s \t %s \n",$tijd,$grens_kritisch_boven,$grens_acceptabel_boven,$field_results->waarde,$grens_acceptabel_onder,$grens_kritisch_onder);
-   
+  if ($j==0&&($grens_kritisch_boven=='')&& ($grens_kritisch_onder=='')&&($grens_acceptabel_boven=='')&&($grens_acceptabel_onder==''))
+  { 
+    //printf("kritischboven \t acceptabelboven \t %s \t acceptabelonder \t kritischonder \n",$value);         //name 
+    printf(" \t \t %s \t  \t \n",$value);         //name 
+    printf(" \t  \t Blue \t  \t  \n");                                                          //color
+    printf("Solid\tSolid\tSolid\tSolid\tSolid\n");                                    //dashstyle
+    printf("0\t0\t0\t0\t0\n");                                    //marker
+    printf("circle\tcircle\tcircle\tcircle\tcircle\n");
+    printf("%s [%s]\t%s\tcircle\ttriangle-down\tdiamond\n",$grootheid,$eenheid,$omschrijving);
+    //printf("GRENS one");
+    $grens_waarden=0;
+    //printf("GRENS zero");
+    
+  }
+  else if ( ($j==0)&&($grens_waarden==1))
+  {
+    printf("kritischboven \t acceptabelboven \t %s \t acceptabelonder \t kritischonder \n",$value);         //name 
+    printf("Red \t Orange \t Blue \t Orange \t Red \n");                                                          //color
+    printf("ShortDot\tShortDot\tSolid\tShortDot\tShortDot\n");                                    //dashstyle
+    printf("0\t0\t0\t0\t0\n");                                    //marker
+    printf("diamond\ttriangle\tcircle\ttriangle-down\tdiamond\n");
+    printf("%s [%s]\t%s\tcircle\ttriangle-down\tdiamond\n",$grootheid,$eenheid,$omschrijving);
+    //printf("GRENS one");
+  }
+  //printf("GRENS %d",$grens_waarden);
+
+  $tijd = strtotime(sprintf("%s UTC",$field_results->date_time)); 
+  
+  if ($grens_waarden==1)
+  {
+    printf("%s \t %s \t %s \t %s \t %s \t %s \n",$tijd,$grens_kritisch_boven,$grens_acceptabel_boven,$field_results->waarde,$grens_acceptabel_onder,$grens_kritisch_onder);
+  }
+  if ($grens_waarden==0)
+  {
+    printf("%s \t %s \t %s \t %s \t %s \t %s \n",$tijd,$field_results->waarde,$field_results->waarde,$field_results->waarde,$field_results->waarde,$field_results->waarde);
+  }
+  $j++;
+ 
 }
 
 

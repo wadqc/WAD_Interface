@@ -243,6 +243,8 @@ $data->assign("header_value","Resultaten floating");
 $data->assign("picture_src","./logo_pictures/excel.jpg");
 $export_action=sprintf("export_floating_value.php?selector_fk=%d&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$omschrijving,$grootheid,$eenheid ,time());
 $action_page=sprintf("data_floating.php?selector_fk=%d&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$omschrijving,$grootheid,$eenheid ,time());
+
+
 $data->assign("export_action",$export_action);
 $data->assign("action_page",$action_page);
 

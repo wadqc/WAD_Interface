@@ -18,13 +18,15 @@ require($SMARTY_folder.'/Smarty.class.php');
 class Smarty_NM extends Smarty 
 {
 
-   function Smarty_NM() 
+   //function Smarty_NM() 
+   function __construct()
    {
    
-            $home_path=$_SERVER['DOCUMENT_ROOT'];
+               $home_path=$_SERVER['DOCUMENT_ROOT'];
    		// Class Constructor. These automatically get set with each new instance.
 
-		$this->Smarty();
+		//$this->Smarty();
+                parent::__construct();
 
 		$this->template_dir = sprintf("%s/WAD-Smarty_dir/templates",$home_path);
 		$this->compile_dir = sprintf("%s/WAD-Smarty_dir/templates_c",$home_path);
@@ -33,8 +35,10 @@ class Smarty_NM extends Smarty
 		
 		$this->caching = false;
 		$this->assign('app_name','Image Quality Control');
-   }
+ }
 
 }
+  
+
 
 ?>

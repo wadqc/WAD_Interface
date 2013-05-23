@@ -170,9 +170,20 @@ if(!empty($_POST['action']))
 			}
 		}
 
-		// succesvolle upload dus oude folder weghalen en tijdelijke folder hernoemen
+		// checken of tijdens updaten een andere modulenaam wordt gebruikt dan degene in de DB; zo ja, dan de oude folder weghalen
+		if (!($result_analysemodule= mysql_query(sprintf($select_Stmt,$pk), $link))) {
+			DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
+			DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+			exit() ;
+		}
+		$field_analysemodule = mysql_fetch_object($result_analysemodule);
+		$db_filepath=$field_analysemodule->filepath;
+		mysql_free_result($result_analysemodule);
+		rrmdir($_SERVER['DOCUMENT_ROOT'].'/'.$db_filepath);
+		
+		// succesvolle upload dus oude folder met identieke naam weghalen (indien deze bestaat) en tijdelijke folder hernoemen
 		rrmdir($target_folder);
-		rename($target_folder_tmp,$target_folder);
+		rename($target_folder_tmp,$target_folder);		
 		
 		$filename_strippedzip=basename($filename, '.zip');     // strip de zip-extensie om de executable naam te extraheren
 

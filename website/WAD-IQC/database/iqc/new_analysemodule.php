@@ -73,7 +73,7 @@ if(!empty($_POST['action']))
     $filename=basename( $_FILES['uploadedfile']['name']);				// 'module.jar
     $filename_noext=current(explode('.',$filename));					// 'module'
     $filename_ext=strrchr($filename,'.');								// '.jar'
-    $filepath_root="WAD-IQC/uploads/analysemodule/".$filename_noext.'/';	// WAD-IQC/uploads/analysemodule/module
+    $filepath_root="WAD-IQC/uploads/analysemodule/".$filename_noext;	// WAD-IQC/uploads/analysemodule/module
     $filepath = $filepath_root.'/'.$filename; 							// WAD-IQC/uploads/analysemodule/module/module.jar
     $target_folder=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath_root;		// /C:/xampp/htdocs/WAD-IQC/uploads/analysemodule/module
     $target_path=$target_folder.'/'.$filename;							// /C:/xampp/htdocs/WAD-IQC/uploads/analysemodule/module/module.jar

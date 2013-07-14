@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Skies theme for Highcharts JS
  * @author Torstein Hønsi
  */
@@ -9,7 +9,7 @@ Highcharts.theme = {
 		className: 'skies',
 		borderWidth: 0,
 		plotShadow: true,
-		plotBackgroundImage: '/demo/gfx/skies.jpg',
+		plotBackgroundImage: './java/js/graphics/skies.jpg',
 		plotBackgroundColor: {
 			linearGradient: [0, 0, 250, 500],
 			stops: [

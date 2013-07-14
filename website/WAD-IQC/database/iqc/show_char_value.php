@@ -32,11 +32,19 @@ if (!empty($_GET['analyse_level']))
   $analyse_level=$_GET['analyse_level'];
 }
 
-
+if (!empty($_GET['status']))
+{
+  $status=$_GET['status'];
+}
+if (!empty($_POST['status']))
+{
+  $status=$_POST['status'];
+}
 
   
 $results_char_Stmt="SELECT  * from $table_gewenste_processen inner join $table_resultaten_char on $table_gewenste_processen.pk=$table_resultaten_char.gewenste_processen_fk 
 where $table_gewenste_processen.selector_fk=$selector_fk
+and $table_gewenste_processen.status=$status
 and $table_resultaten_char.omschrijving like '$omschrijving_char'
 order by $table_gewenste_processen.pk, $table_resultaten_char.volgnummer";
 

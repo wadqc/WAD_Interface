@@ -38,6 +38,7 @@ if (!($result_selector= mysql_query($selector_Stmt, $link))) {
 
 $table_selector='';
 
+$status=5;
 
 $j=0;
 while (($field_selector = mysql_fetch_object($result_selector)))
@@ -57,7 +58,7 @@ while (($field_selector = mysql_fetch_object($result_selector)))
      $table_selector=$table_data->fetch("selector_result_header.tpl");
    }
 
-   $action=sprintf("show_results.php?selector_fk=%d&analyse_level=%s&gewenste_processen_id=-1&t=%d",$field_selector->pk,$field_selector->analyselevel,time()); 
+   $action=sprintf("show_results.php?selector_fk=%d&analyse_level=%s&gewenste_processen_id=-1&status=$status&v=$v&t=%d",$field_selector->pk,$field_selector->analyselevel,time()); 
    //$action=sprintf("show_results_taste2.php?selector_fk=%d&analyse_level=%s&gewenste_processen_id=-1&t=%d",$field_selector->pk,$field_selector->analyselevel,time());   
 
    $table_data->assign("bgcolor",$bgcolor);

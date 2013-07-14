@@ -4,6 +4,7 @@ require("./common.php") ;
 require("./php/includes/setup.php");
 
 
+
 $table_study='study';
 $table_series='series';
 $table_instance='instance';
@@ -59,6 +60,11 @@ if (!empty($_GET['analyse_level']))
   $analyse_level=$_GET['analyse_level'];
 }
 
+$status='';
+if (!empty($_GET['status']))
+{
+  $status=$_GET['status'];
+}
 
 
 
@@ -67,11 +73,11 @@ if ($analyse_level=='study')
   
 $results_floating_Stmt="SELECT $table_study.study_datetime as 'date_time', $table_resultaten_floating.omschrijving as 'omschrijving', $table_resultaten_floating.grootheid as 'grootheid', $table_resultaten_floating.eenheid as 'eenheid', $table_resultaten_floating.grens_kritisch_boven as 'grens_kritisch_boven', $table_resultaten_floating.grens_kritisch_onder as 'grens_kritisch_onder', $table_resultaten_floating.grens_acceptabel_boven as 'grens_acceptabel_boven', $table_resultaten_floating.grens_acceptabel_onder as 'grens_acceptabel_onder', $table_resultaten_floating.waarde as 'waarde' from $table_study inner join ($table_gewenste_processen inner join $table_resultaten_floating on $table_gewenste_processen.pk=$table_resultaten_floating.gewenste_processen_fk) on $table_study.pk=$table_gewenste_processen.study_fk 
 where $table_gewenste_processen.selector_fk=$selector_fk 
+and $table_gewenste_processen.status=$status 
 and $table_resultaten_floating.omschrijving like '$omschrijving'
 and $table_resultaten_floating.grootheid like '$grootheid' 
 and $table_resultaten_floating.eenheid like '$eenheid' 
 order by date_time";
-//order by $table_gewenste_processen.pk, $table_resultaten_floating.volgnummer";
 
 }
 
@@ -82,11 +88,11 @@ if ($analyse_level=='series')
   
 $results_floating_Stmt="SELECT $table_series.pps_start as 'date_time', $table_resultaten_floating.omschrijving as 'omschrijving', $table_resultaten_floating.grootheid as 'grootheid', $table_resultaten_floating.eenheid as 'eenheid', $table_resultaten_floating.grens_kritisch_boven as 'grens_kritisch_boven', $table_resultaten_floating.grens_kritisch_onder as 'grens_kritisch_onder', $table_resultaten_floating.grens_acceptabel_boven as 'grens_acceptabel_boven', $table_resultaten_floating.grens_acceptabel_onder as 'grens_acceptabel_onder', $table_resultaten_floating.waarde as 'waarde' from $table_series inner join ($table_gewenste_processen inner join $table_resultaten_floating on $table_gewenste_processen.pk=$table_resultaten_floating.gewenste_processen_fk) on $table_series.pk=$table_gewenste_processen.series_fk 
 where $table_gewenste_processen.selector_fk=$selector_fk 
+and $table_gewenste_processen.status=$status 
 and $table_resultaten_floating.omschrijving like '$omschrijving'
 and $table_resultaten_floating.grootheid like '$grootheid' 
 and $table_resultaten_floating.eenheid like '$eenheid' 
 order by date_time";
-//order by $table_gewenste_processen.pk, $table_resultaten_floating.volgnummer";
 
 }
 
@@ -96,32 +102,22 @@ if ($analyse_level=='instance')
   
 $results_floating_Stmt="SELECT $table_instance.content_datetime as 'date_time', $table_resultaten_floating.omschrijving as 'omschrijving', $table_resultaten_floating.grootheid as 'grootheid', $table_resultaten_floating.eenheid as 'eenheid', $table_resultaten_floating.grens_kritisch_boven as 'grens_kritisch_boven', $table_resultaten_floating.grens_kritisch_onder as 'grens_kritisch_onder', $table_resultaten_floating.grens_acceptabel_boven as 'grens_acceptabel_boven', $table_resultaten_floating.grens_acceptabel_onder as 'grens_acceptabel_onder', $table_resultaten_floating.waarde as 'waarde' from $table_instance inner join ($table_gewenste_processen inner join $table_resultaten_floating on $table_gewenste_processen.pk=$table_resultaten_floating.gewenste_processen_fk) on $table_instance.pk=$table_gewenste_processen.instance_fk 
 where $table_gewenste_processen.selector_fk=$selector_fk 
+and $table_gewenste_processen.status=$status 
 and $table_resultaten_floating.omschrijving like '$omschrijving'
 and $table_resultaten_floating.grootheid like '$grootheid' 
 and $table_resultaten_floating.eenheid like '$eenheid' 
 order by date_time";
-//order by $table_gewenste_processen.pk, $table_resultaten_floating.volgnummer";
 
 }
-
-
-
-
-//$results_floating_Stmt="SELECT * from $table_gewenste_processen inner join $table_resultaten_floating on $table_gewenste_processen.pk=$table_resultaten_floating.gewenste_processen_fk 
-//where $table_gewenste_processen.selector_fk=$selector_fk 
-//and $table_resultaten_floating.omschrijving like '$omschrijving'
-//and $table_resultaten_floating.grootheid like '$grootheid' 
-//and $table_resultaten_floating.eenheid like '$eenheid' 
-//order by $table_gewenste_processen.pk, $table_resultaten_floating.volgnummer";
 
 
 
 $selector_Stmt="SELECT * from $table_selector
 where $table_selector.pk=$selector_fk"; 
 
-$gewenste_processen_Stmt="SELECT * from $table_gewenste_processen
-where $table_gewenste_processen.selector_fk=$selector_fk
-order by $table_gewenste_processen.pk";
+//$gewenste_processen_Stmt="SELECT * from $table_gewenste_processen
+//where $table_gewenste_processen.selector_fk=$selector_fk
+//order by $table_gewenste_processen.pk";
 
 // Connect to the Database
 if (!($link=mysql_pconnect($hostName, $userName, $password))) {
@@ -140,10 +136,10 @@ if (!mysql_select_db($databaseName, $link)) {
 
 
 
-if ($gewenste_processen_id==0) //wildcard on gewenste_processen_id
-{
-  $gewenste_processen_id="%";
-}
+//if ($gewenste_processen_id==0) //wildcard on gewenste_processen_id
+//{
+//  $gewenste_processen_id="%";
+//}
 
 
 
@@ -241,8 +237,8 @@ $data->assign("selection_list",$selector_list);
 $data->assign("header_result",$header_result);
 $data->assign("header_value","Resultaten floating");
 $data->assign("picture_src","./logo_pictures/excel.jpg");
-$export_action=sprintf("export_floating_value.php?selector_fk=%d&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$omschrijving,$grootheid,$eenheid ,time());
-$action_page=sprintf("data_floating.php?selector_fk=%d&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$omschrijving,$grootheid,$eenheid ,time());
+$export_action=sprintf("export_floating_value.php?selector_fk=%d&status=%d&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$status,$analyse_level,$omschrijving,$grootheid,$eenheid ,time());
+$action_page=sprintf("data_floating.php?selector_fk=%d&status=%d&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$status,$analyse_level,$omschrijving,$grootheid,$eenheid ,time());
 
 
 $data->assign("export_action",$export_action);

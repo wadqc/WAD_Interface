@@ -15,35 +15,16 @@ $table_resultaten_boolean='resultaten_boolean';
 $table_resultaten_object='resultaten_object';
 $table_gewenste_processen='gewenste_processen';
 $table_selector='selector';
+$table_selector_status='selector_status';
 
-
+$v=0;
 $v=$_GET['v'];
 $selector_fk=0;
 if (!empty($_GET['selector_fk']))
 {
   $selector_fk=$_GET['selector_fk'];
 }
-$omschrijving="%%";
-if (!empty($_GET['omschrijving']))
-{
-  $omschrijving=$_GET['omschrijving'];
-}
-$grootheid="%%";
-if (!empty($_GET['grootheid']))
-{
-  $grootheid=$_GET['grootheid'];
-}
-$eenheid="%%";
-if (!empty($_GET['eenheid']))
-{
-  $eenheid=$_GET['eenheid'];
-}
 
-$omschrijving_char="%%";
-if (!empty($_GET['omschrijving_char']))
-{
-  $omschrijving_char=$_GET['omschrijving_char'];
-}
 
 
 $analyse_level='';
@@ -57,19 +38,35 @@ if (!empty($_POST['niveau']))
 {
   $niveau=$_POST['niveau'];
 }
-
-
-$gewenste_processen_id=0;
-if (!empty($_POST['gewenste_processen_id']))
+if (!empty($_GET['niveau']))
 {
-  $gewenste_processen_id=$_POST['gewenste_processen_id'];
+  $niveau=$_GET['niveau'];
 }
+
+
+if (!empty($_GET['status']))
+{
+  $status=$_GET['status'];
+}
+if (!empty($_POST['status']))
+{
+  $status=$_POST['status'];
+}
+
+
+
+
+
+
+
 if (!empty($_GET['gewenste_processen_id']))
 {
   $gewenste_processen_id=$_GET['gewenste_processen_id'];
 }
-
-
+if (!empty($_POST['gewenste_processen_id']))
+{
+  $gewenste_processen_id=$_POST['gewenste_processen_id'];
+}
 
 
 
@@ -77,45 +74,54 @@ $results_floating_Stmt="SELECT * from $table_gewenste_processen inner join $tabl
 where $table_gewenste_processen.selector_fk=$selector_fk 
 and $table_gewenste_processen.pk='%s' 
 and $table_resultaten_floating.niveau like '$niveau'
-and $table_resultaten_floating.omschrijving like '$omschrijving'
-and $table_resultaten_floating.grootheid like '$grootheid' 
-and $table_resultaten_floating.eenheid like '$eenheid' 
 order by $table_gewenste_processen.pk, $table_resultaten_floating.volgnummer";
+
   
 $results_char_Stmt="SELECT  * from $table_gewenste_processen inner join $table_resultaten_char on $table_gewenste_processen.pk=$table_resultaten_char.gewenste_processen_fk 
 where $table_gewenste_processen.selector_fk=$selector_fk
 and $table_gewenste_processen.pk='%s'
 and $table_resultaten_char.niveau like '$niveau' 
-and $table_resultaten_char.omschrijving like '$omschrijving_char'
 order by $table_gewenste_processen.pk, $table_resultaten_char.volgnummer";
+
 
 $results_boolean_Stmt="SELECT  * from $table_gewenste_processen inner join $table_resultaten_boolean on $table_gewenste_processen.pk=$table_resultaten_boolean.gewenste_processen_fk 
 where $table_gewenste_processen.selector_fk=$selector_fk
 and $table_gewenste_processen.pk='%s'
 and $table_resultaten_boolean.niveau like '$niveau' 
-and $table_resultaten_boolean.omschrijving like '$omschrijving_char'
 order by $table_gewenste_processen.pk, $table_resultaten_boolean.volgnummer";
 
 
 $results_object_Stmt="SELECT  $table_resultaten_object.object_naam_pad as 'object_naam_pad', $table_resultaten_object.omschrijving as 'omschrijving', $table_resultaten_object.pk as 'pk' from $table_gewenste_processen inner join $table_resultaten_object on $table_gewenste_processen.pk=$table_resultaten_object.gewenste_processen_fk 
 where $table_gewenste_processen.selector_fk=$selector_fk
-and $table_gewenste_processen.pk='%s' 
+and $table_gewenste_processen.pk='%s'
 and $table_resultaten_object.niveau like '$niveau'
 order by $table_gewenste_processen.pk, $table_resultaten_object.volgnummer";
-//and $table_resultaten_object.omschrijving like '$omschrijving_object'
+
 
 $year_Stmt_study="SELECT $table_gewenste_processen.pk as 'pk', $table_study.study_datetime as 'date_time' from $table_gewenste_processen inner join $table_study on $table_gewenste_processen.study_fk=$table_study.pk where $table_gewenste_processen.selector_fk=$selector_fk
+and $table_gewenste_processen.status='%d' 
 order by $table_study.study_datetime desc";
 
 $year_Stmt_series="SELECT $table_gewenste_processen.pk as 'pk', $table_series.pps_start as 'date_time' from $table_gewenste_processen inner join $table_series on $table_gewenste_processen.series_fk=$table_series.pk where $table_gewenste_processen.selector_fk=$selector_fk
+and $table_gewenste_processen.status='%d' 
 order by $table_series.pps_start desc";
 
 $year_Stmt_instance="SELECT $table_gewenste_processen.pk as 'pk', $table_instance.content_datetime as 'date_time' from $table_gewenste_processen inner join $table_instance on $table_gewenste_processen.study_fk=$table_instance.pk where $table_gewenste_processen.selector_fk=$selector_fk
+and $table_gewenste_processen.status='%d' 
 order by $table_instance.content_datetime desc";
 
 
 $selector_Stmt="SELECT * from $table_selector
 where $table_selector.pk=$selector_fk"; 
+
+$selector_status_Stmt="SELECT * from $table_selector_status
+where $table_selector_status.gewenste_processen_fk=%d"; 
+
+$selector_processen_Stmt="SELECT * from $table_gewenste_processen
+where $table_gewenste_processen.status='%d' and $table_gewenste_processen.pk='%d'"; 
+
+$status_Stmt="SELECT * from $table_gewenste_processen
+where $table_gewenste_processen.selector_fk='%d'"; 
 
 
 // Connect to the Database
@@ -135,11 +141,82 @@ if (!mysql_select_db($databaseName, $link)) {
 
 
 
+  if (!($result_status= mysql_query(sprintf($status_Stmt,$selector_fk), $link))) {
+    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($selector_processen_Stmt,$selector_fk) )) ;
+    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    exit() ;
+  }
+
+  while($field = mysql_fetch_object($result_status))
+  {
+    $status_select=$field->status;
+    
+    if ($status_select==5)
+    {    
+      $list_status[5]='Afgerond';
+    }
+    if ($status_select==20)
+    {    
+      $list_status[20]='Verwijderd';
+    }
+    if ($status_select==30)
+    {    
+      $list_status[30]='Gevalideerd';
+    }
+   
+  }
+
+  
+  mysql_free_result($result_status);  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//In case of a switch of status, gewenste_processen_id needs to be changed as well 
+
+
+
+if (!($result_selector_processen= mysql_query(sprintf($selector_processen_Stmt,$status,$gewenste_processen_id), $link))) {
+    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($selector_status_Stmt,$gewenste_processen_id) )) ;
+    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    exit() ;
+  }
+
+
+  if (!($field_results = mysql_fetch_object($result_selector_processen) ))
+  {
+   $gewenste_processen_id=-1;
+  }
+  
+  
+  mysql_free_result($result_selector_processen);  
+
+
+//end of definition of gewenste_processen_id
+
+
+
+
 $list_year='';
 
 if ($analyse_level=='study')
 {
-  if (!($result_year= mysql_query($year_Stmt_study, $link))) {
+  
+  if (!($result_year= mysql_query(sprintf($year_Stmt_study,$status), $link))) {
      DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
      exit() ;
@@ -160,11 +237,39 @@ if ($analyse_level=='study')
     $counter++;
   } 
   mysql_free_result($result_year);
+  if ($counter==0)
+  {
+    if (!($result_year= mysql_query(sprintf($year_Stmt_study,$status_select), $link))) {
+    DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
+    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    exit() ;
+    }
+     
+    while($field = mysql_fetch_object($result_year))
+    {
+      if (($counter==0)&&($gewenste_processen_id==-1)) //first visit, id will be changed to the id that is linked to the most recent date of study
+      {
+        $gewenste_processen_id=$field->pk;
+      }   
+      if ($field->pk== $gewenste_processen_id)
+      {
+        $date_result=$field->date_time;
+      }  
+      $list_year["$field->pk"]="$field->date_time";
+      $counter++;
+    } 
+    mysql_free_result($result_year);
+    $status=$status_select;
+  }
+
 }
+
+
+
 
 if ($analyse_level=='series')
 {
-  if (!($result_year= mysql_query($year_Stmt_series, $link))) {
+  if (!($result_year= mysql_query(sprintf($year_Stmt_series,$status), $link))) {
      DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
      exit() ;
@@ -189,7 +294,7 @@ if ($analyse_level=='series')
 
 if ($analyse_level=='instance')
 {
-  if (!($result_year= mysql_query($year_Stmt_instance, $link))) {
+  if (!($result_year= mysql_query(sprintf($year_Stmt_instance,$status), $link))) {
      DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
      exit() ;
@@ -211,6 +316,138 @@ if ($analyse_level=='instance')
   } 
   mysql_free_result($result_year);
 }
+
+
+if ($counter==0)
+{
+  $data = new Smarty_NM();
+  $data->assign("error_message","Geen resultaten voor deze selector aanwezig.");
+  $data->display("error_handler.tpl");
+  exit();
+}
+
+
+
+//selector_header
+
+if (!($result_selector= mysql_query($selector_Stmt, $link))) {
+   DisplayErrMsg(sprintf("Error in executing %s stmt", $selector_Stmt)) ;
+   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   exit() ;
+}
+
+$field_results = mysql_fetch_object($result_selector);
+$header_result=sprintf("Selector: %s, analyse level: %s",$field_results->name,$field_results->analyselevel);
+mysql_free_result($result_selector);  
+
+if ($status==20||$status==30)
+{
+ 
+  if (!($result_selector_status= mysql_query(sprintf($selector_status_Stmt,$gewenste_processen_id), $link))) {
+    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($selector_status_Stmt,$gewenste_processen_id) )) ;
+    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    exit() ;
+  }
+
+
+  $field_results = mysql_fetch_object($result_selector_status);
+  if ($status==20)
+  {  
+    $recover_data=sprintf("Verwijderd door: %s, Reden: %s",$field_results->gebruiker,$field_results->omschrijving);
+  }
+  if ($status==30)
+  {  
+    $validate_data=sprintf("Gevalideerd door: %s, Initialen: %s",$field_results->gebruiker,$field_results->initialen);
+  }
+ 
+  mysql_free_result($result_selector_status);  
+
+}
+
+
+
+$list_niveau[1]='1';
+$list_niveau[2]='2';
+
+
+
+$table_data = new Smarty_NM();
+$table_data->assign("processen_options",$list_year);
+$table_data->assign("processen_id",$gewenste_processen_id);
+
+$table_data->assign("niveau_options",$list_niveau);
+$table_data->assign("niveau_id",$niveau);
+
+$table_data->assign("status_options",$list_status);
+$table_data->assign("status_id",$status);
+
+$table_data->assign("selector_fk",$selector_fk);
+$table_data->assign("analyse_level",$analyse_level);
+$table_data->assign("v",$v);
+
+
+
+
+//if ($status==5)
+//{
+//  $table_data->assign("select_value","Delete");
+//}
+
+
+
+if ($status==20)
+{
+  $table_data_verwijderd = new Smarty_NM();
+  $table_data_verwijderd->assign("recover_data",$recover_data); 
+  $menu_verwijderd=$table_data_verwijderd->fetch("selector_select_verwijderd.tpl");
+  $table_data->assign("row_line",$menu_verwijderd);
+  
+  $table_data->assign("select_value","Herstel");
+
+}
+
+if ($status==30)
+{
+  $table_data_verwijderd = new Smarty_NM();
+  $table_data_verwijderd->assign("recover_data",$validate_data); 
+  $menu_verwijderd=$table_data_verwijderd->fetch("selector_select_verwijderd.tpl");
+  $table_data->assign("row_line",$menu_verwijderd);
+  
+  $table_data->assign("select_value","Delete");
+
+}
+
+
+if ($status==5)
+{
+  $table_data_valideer = new Smarty_NM();
+  
+  $action_result_validate=sprintf("validate_results.php?selector_fk=%d&analyse_level=%s&v=%d&t=%d",$selector_fk,$analyse_level,$v,time()); 
+  $table_data_valideer->assign("select_validate","Valideer"); 
+  $table_data_valideer->assign("action_result_validate",$action_result_validate); 
+  
+  $menu_valideer=$table_data_valideer->fetch("selector_select_valideer.tpl");
+  
+
+
+  $table_data->assign("row_line",$menu_valideer);
+  
+  $table_data->assign("select_value","Delete");
+ 
+
+}
+
+
+
+
+$selector_list=$table_data->fetch("selector_select.tpl");
+
+
+//end selector_header
+
+
+
+
 
 
 
@@ -240,31 +477,10 @@ if (!($result_object= mysql_query(sprintf($results_object_Stmt,$gewenste_process
 }
 
 
-if (!($result_selector= mysql_query($selector_Stmt, $link))) {
-   DisplayErrMsg(sprintf("Error in executing %s stmt", $selector_Stmt)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
-}
-
-
-$field_results = mysql_fetch_object($result_selector);
-$header_result=sprintf("Selector: %s, analyse level: %s",$field_results->name,$field_results->analyselevel);
-mysql_free_result($result_selector);  
 
 
 
 
-$list_niveau[1]='1';
-$list_niveau[2]='2';
-
-$table_data = new Smarty_NM();
-$table_data->assign("processen_options",$list_year);
-$table_data->assign("processen_id",$gewenste_processen_id);
-
-$table_data->assign("niveau_options",$list_niveau);
-$table_data->assign("niveau_id",$niveau);
-
-$selector_list=$table_data->fetch("selector_select.tpl");
 
 
 
@@ -287,7 +503,7 @@ $j=0;
 while (($field_results = mysql_fetch_object($result_floating)))
 {
   
-   $action[$field_results->volgnummer]=sprintf("show_floating_value.php?selector_fk=%d&analyse_level=%s&gewenste_processen_id=0&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$field_results->omschrijving,$field_results->grootheid,$field_results->eenheid ,time()); 
+   $action[$field_results->volgnummer]=sprintf("show_floating_value.php?selector_fk=%d&analyse_level=%s&status=%d&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$status,$field_results->omschrijving,$field_results->grootheid,$field_results->eenheid ,time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
    $grootheid[$field_results->volgnummer]=$field_results->grootheid;
@@ -307,7 +523,7 @@ mysql_free_result($result_floating);
 while (($field_results = mysql_fetch_object($result_char)))
 {
   
-   $action[$field_results->volgnummer]=sprintf("show_char_value.php?selector_fk=%d&gewenste_processen_id=0&omschrijving_char=%s&t=%d",$selector_fk,$field_results->omschrijving,time()); 
+   $action[$field_results->volgnummer]=sprintf("show_char_value.php?selector_fk=%d&status=%d&omschrijving_char=%s&t=%d",$selector_fk,$status,$field_results->omschrijving,time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
    $grootheid[$field_results->volgnummer]='na';
@@ -328,7 +544,7 @@ mysql_free_result($result_char);
 while (($field_results = mysql_fetch_object($result_boolean)))
 {
   
-   $action[$field_results->volgnummer]=sprintf("show_boolean_value.php?selector_fk=%d&gewenste_processen_id=0&omschrijving_char=%s&t=%d",$selector_fk,$field_results->omschrijving,time()); 
+   $action[$field_results->volgnummer]=sprintf("show_boolean_value.php?selector_fk=%d&status=%d&omschrijving_char=%s&t=%d",$selector_fk,$status,$field_results->omschrijving,time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
    $grootheid[$field_results->volgnummer]='na';
@@ -462,16 +678,42 @@ while (($field_results = mysql_fetch_object($result_object)))
      $bgcolor='#B8E7FF';
    }   
 
+   
+
+
    $picture = new Smarty_NM();
    $description_name = new Smarty_NM();
 
-      
-   $action_object=sprintf("show_object.php?pk=%d&t=%d",$field_results->pk,time()); 
-
-     
    
 
-   $picture_src=sprintf("image_resize.php?f_name=$field_results->object_naam_pad&height=120");
+   $filename=$field_results->object_naam_pad;
+   $object_type="image";
+   
+   $finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
+   if (finfo_file($finfo, $filename)=='text/plain')
+   {
+     $object_type='text';
+   }
+   finfo_close($finfo);
+
+  
+  if ($object_type=='image')
+  {
+    $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
+    $picture_src=sprintf("image_resize.php?f_name=$field_results->object_naam_pad&height=120");
+  }  
+
+  if ($object_type=="text")
+  {
+
+    $executestring = sprintf("c:/xampp/htdocs%s/",dirname($_SERVER['PHP_SELF']));
+    $executestring.="logo_pictures/log_file.jpg";
+    $picture_log = $executestring;
+
+    $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
+    $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$picture_log);
+  }  
+
    $picture->assign("picture_src",$picture_src);
    $picture->assign("picture_action",$action_object);
    $picture_row.=$picture->fetch("insert_picture_row.tpl");
@@ -530,7 +772,12 @@ if ($table_resultaten_object!='')
   $data->assign("resultaten_object_list",$table_resultaten_object);
 }
 
-$action_result=sprintf("show_results.php?selector_fk=%d&analyse_level=%s&t=%d",$selector_fk,$analyse_level,time()); 
+$data->assign("header_result",$header_result);
+
+
+$action_result=sprintf("validate_results.php?selector_fk=%d&analyse_level=%s&v=%d&t=%d",$selector_fk,$analyse_level,$v,time()); 
+
+
 $data->assign("action_result",$action_result);
 
 

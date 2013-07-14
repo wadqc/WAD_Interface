@@ -189,8 +189,8 @@ function period_list(term,school,department,school_year,grade,klas,v)
   self.location.replace(action);
 }
 
-function student_drop_list(year_t,school_t,department_t,grade_t,class_t,school,department,school_year,grade,klas,v)
+function selector_drop_list(gewenste_processen_id,niveau,status,selector_fk,analyse_level,v) 
 {
-  action='show_students.php?grade='+grade+'&department='+department+'&class='+klas+'&school_year='+school_year+'&school='+school+'&v='+v+'&year_t='+year_t+'&school_t='+school_t+'&department_t='+department_t+'&grade_t='+grade_t+'&class_t='+class_t;
+  action='show_results.php?selector_fk='+selector_fk+'&analyse_level='+analyse_level+'&gewenste_processen_id='+gewenste_processen_id+'&niveau='+niveau+'&status='+status+'&v='+v;
   self.location.replace(action);
 }

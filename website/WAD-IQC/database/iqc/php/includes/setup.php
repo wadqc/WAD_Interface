@@ -15,7 +15,7 @@ require($SMARTY_folder.'/Smarty.class.php');
 // require('guestbook/guestbook.lib.php');
 
 
-class Smarty_NM extends Smarty 
+class Smarty_NM extends Smarty
 {
 
    //function Smarty_NM() 

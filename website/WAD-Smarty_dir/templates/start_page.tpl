@@ -8,8 +8,8 @@
   <frameset rows="140,*" framespacing="0" border="0" frameborder="0">
   {$menu_layer}
 
-  <frame name="navigator" src="{$top_frame}" marginwidth="1" marginheight="1" scrolling="no">
-  <frame name="main" src="{$bottom_frame}" marginwidth="1" marginheight="1" noresize scrolling="auto">
+  <frame name="navigator" src={$top_frame} marginwidth="1" marginheight="1" scrolling="no">
+  <frame name="main" src={$bottom_frame} marginwidth="1" marginheight="1" noresize scrolling="auto">
 
 <NOFRAMES>
 <BODY>

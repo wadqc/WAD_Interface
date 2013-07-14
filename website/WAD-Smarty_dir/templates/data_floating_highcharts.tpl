@@ -1,5 +1,7 @@
-<!DOCTYPE public "-//w3c//dtd html 4.01 transitional//en"
-		"http://www.w3.org/TR/html4/loose.dtd">
+
+
+
+
 <html>
 <head>
   <title>{$Title}</title>
@@ -8,7 +10,7 @@
   <meta name="GENERATOR" content="Quanta Plus">
   <script type="text/javascript" src="java/js/jquery-1.9.1.js"></script>
   <script type="text/javascript" src="java/js/highcharts.js" ></script>
-  <script type="text/javascript" src="java/js/themes/skies.js"></script>
+  <script type="text/javascript" src="java/js/themes/grid.js"></script>
 {literal}
 <script type="text/javascript">
 	var chart;

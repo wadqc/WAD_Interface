@@ -6,6 +6,7 @@
   <link   rel="StyleSheet" href="./css/styles.css" type="text/css">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="GENERATOR" content="Quanta Plus">
+  <script type="text/javascript" language="JavaScript" src="./java/scripts.js"></script>
 </head>
 <body bgcolor="#F3F6FF">
 <form action="{$action_result}" method="POST" >

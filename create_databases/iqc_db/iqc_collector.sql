@@ -31,16 +31,11 @@ CREATE TABLE IF NOT EXISTS `collector_status_omschrijving` (
 -- Gegevens worden uitgevoerd voor tabel `collector_status_omschrijving`
 --
 
-INSERT INTO `status_omschrijving` (`nummer`, `veld_omschrijving`) VALUES
-(0, 'Gewenst'),
-(1, 'Gestart'),
-(2, 'Bezig'),
-(3, 'Afgeronde analyse'),
-(4, 'Importeren'),
-(5, 'Afgerond'),
-(10, 'Error'),
-(20, 'Verwijderd'),
-(30, 'Gevalideerd');
+-INSERT INTO `collector_status_omschrijving` (`nummer`, `veld_omschrijving`) VALUES
+(0, 'Collector bezig'),
+(1, 'Collector klaar'),
+(2, 'Selector bezig'),
+(3, 'Selector klaar');
 
 
 

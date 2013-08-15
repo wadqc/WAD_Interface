@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `status_omschrijving` (
 
 LOCK TABLES `status_omschrijving` WRITE;
 /*!40000 ALTER TABLE `status_omschrijving` DISABLE KEYS */;
-INSERT INTO `status_omschrijving` VALUES (0,'Gewenst'),(1,'Gestart'),(2,'Bezig'),(3,'Afgeronde analyse'),(4,'Importeren'),(5,'Afgerond'),(10,'Error');
+INSERT INTO `status_omschrijving` VALUES (0,'Gewenst'),(1,'Gestart'),(2,'Bezig'),(3,'Afgeronde analyse'),(4,'Importeren'),(5,'Afgerond'),(10,'Error'),(20, 'Verwijderd'),(30, 'Gevalideerd');
 /*!40000 ALTER TABLE `status_omschrijving` ENABLE KEYS */;
 UNLOCK TABLES;
 

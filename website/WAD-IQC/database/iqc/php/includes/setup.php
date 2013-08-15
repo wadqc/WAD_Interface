@@ -2,7 +2,7 @@
 
 $home_path=$_SERVER['DOCUMENT_ROOT'];
 $SMARTY_folder=sprintf("%s/WAD-Smarty",$home_path);
-
+$logo_log_file="/logo_pictures/log_file.jpg";
 
 
 // load Smarty library files

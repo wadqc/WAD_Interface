@@ -1,4 +1,4 @@
-<?
+<?php
 
 require("../globals_login.php") ;
 require("../iqc/common.php") ;

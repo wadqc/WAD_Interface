@@ -290,6 +290,32 @@ if ($analyse_level=='series')
     $counter++;
   } 
   mysql_free_result($result_year);
+
+  if ($counter==0)
+  {
+    if (!($result_year= mysql_query(sprintf($year_Stmt_series,$status_select), $link))) {
+    DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
+    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    exit() ;
+    }
+     
+    while($field = mysql_fetch_object($result_year))
+    {
+      if (($counter==0)&&($gewenste_processen_id==-1)) //first visit, id will be changed to the id that is linked to the most recent date of study
+      {
+        $gewenste_processen_id=$field->pk;
+      }   
+      if ($field->pk== $gewenste_processen_id)
+      {
+        $date_result=$field->date_time;
+      }  
+      $list_year["$field->pk"]="$field->date_time";
+      $counter++;
+    } 
+    mysql_free_result($result_year);
+    $status=$status_select;
+  }
+
 }
 
 if ($analyse_level=='instance')
@@ -315,6 +341,32 @@ if ($analyse_level=='instance')
     $counter++;
   } 
   mysql_free_result($result_year);
+
+  if ($counter==0)
+  {
+    if (!($result_year= mysql_query(sprintf($year_Stmt_instance,$status_select), $link))) {
+    DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
+    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    exit() ;
+    }
+     
+    while($field = mysql_fetch_object($result_year))
+    {
+      if (($counter==0)&&($gewenste_processen_id==-1)) //first visit, id will be changed to the id that is linked to the most recent date of study
+      {
+        $gewenste_processen_id=$field->pk;
+      }   
+      if ($field->pk== $gewenste_processen_id)
+      {
+        $date_result=$field->date_time;
+      }  
+      $list_year["$field->pk"]="$field->date_time";
+      $counter++;
+    } 
+    mysql_free_result($result_year);
+    $status=$status_select;
+  }
+
 }
 
 
@@ -499,10 +551,12 @@ $grens_acceptabel_onder='';
 $type='';
 
 
+
 $j=0;
 while (($field_results = mysql_fetch_object($result_floating)))
 {
-  
+
+   
    $action[$field_results->volgnummer]=sprintf("show_floating_value.php?selector_fk=%d&analyse_level=%s&status=%d&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$status,$field_results->omschrijving,$field_results->grootheid,$field_results->eenheid ,time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
@@ -705,13 +759,10 @@ while (($field_results = mysql_fetch_object($result_object)))
 
   if ($object_type=="text")
   {
-
-    $executestring = sprintf("c:/xampp/htdocs%s/",dirname($_SERVER['PHP_SELF']));
-    $executestring.="logo_pictures/log_file.jpg";
-    $picture_log = $executestring;
+    $picture_log_file = sprintf("%s%s%s",$home_path,dirname($_SERVER['PHP_SELF']),$logo_log_file);
 
     $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
-    $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$picture_log);
+    $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$picture_log_file);
   }  
 
    $picture->assign("picture_src",$picture_src);

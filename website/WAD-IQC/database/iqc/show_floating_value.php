@@ -197,20 +197,23 @@ while (($field_results = mysql_fetch_object($result_floating)))
    $table_data->assign("eenheid",$field_results->eenheid);
    $table_data->assign("waarde",$field_results->waarde);
    $table_data->assign("waarde_class","table_data");
-   if ( ($field_results->waarde > $field_results->grens_kritisch_boven) or ($field_results->waarde < $field_results->grens_kritisch_onder) )
+   
+   if ( ($grens_kritisch_boven[$ref_key[$j]]!='') and ($grens_kritisch_onder[$ref_key[$j]]!='') )
+   {
+     $table_data->assign("waarde_class","table_data_green");
+   } 
+   if (  ( ($waarde[$ref_key[$j]] > $grens_kritisch_boven[$ref_key[$j]]) or ($waarde[$ref_key[$j]] < $grens_kritisch_onder[$ref_key[$j]]) ) and (($grens_kritisch_boven[$ref_key[$j]]!='') and ($grens_kritisch_onder[$ref_key[$j]]!='')) )
    {
      $table_data->assign("waarde_class","table_data_red");
    } 
-   if ( ($field_results->waarde > $field_results->grens_acceptabel_boven) and ($field_results->waarde < $field_results->grens_kritisch_boven) )
+   if ( ( ($waarde[$ref_key[$j]] > $grens_acceptabel_boven[$ref_key[$j]]) and ($waarde[$ref_key[$j]] < $grens_kritisch_boven[$ref_key[$j]]) ) and (($grens_acceptabel_boven[$ref_key[$j]]!='') and ($grens_kritisch_boven[$ref_key[$j]]!='')) )
    {
      $table_data->assign("waarde_class","table_data_orange");
    }
-   if ( ($field_results->waarde > $field_results->grens_kritisch_onder) and ($field_results->waarde < $field_results->grens_acceptabel_onder) )
+   if ( ( ($waarde[$ref_key[$j]] > $grens_kritisch_onder[$ref_key[$j]]) and ($waarde[$ref_key[$j]] < $grens_acceptabel_onder[$ref_key[$j]]) ) and (($grens_kritisch_onder[$ref_key[$j]]!='') and ($grens_acceptabel_onder[$ref_key[$j]]!='')) ) 
    {
      $table_data->assign("waarde_class","table_data_orange");
    }
-
-
 
 
    $table_data->assign("kritisch_onder",$field_results->grens_kritisch_onder);

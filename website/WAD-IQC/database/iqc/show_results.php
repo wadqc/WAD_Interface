@@ -646,15 +646,19 @@ while ($j<sizeof($ref_key)) // loop for $ref_keys
      $table_data->assign("eenheid",$eenheid[$ref_key[$j]]);
      $table_data->assign("waarde",$waarde[$ref_key[$j]]);
      $table_data->assign("waarde_class","table_data");
-     if ( ($waarde[$ref_key[$j]] > $grens_kritisch_boven[$ref_key[$j]]) or ($waarde[$ref_key[$j]] < $grens_kritisch_onder[$ref_key[$j]]) )
+     if ( ($grens_kritisch_boven[$ref_key[$j]]!='') and ($grens_kritisch_onder[$ref_key[$j]]!='') )
+     {
+       $table_data->assign("waarde_class","table_data_green");
+     } 
+     if (  ( ($waarde[$ref_key[$j]] > $grens_kritisch_boven[$ref_key[$j]]) or ($waarde[$ref_key[$j]] < $grens_kritisch_onder[$ref_key[$j]]) ) and (($grens_kritisch_boven[$ref_key[$j]]!='') and ($grens_kritisch_onder[$ref_key[$j]]!='')) )
      {
        $table_data->assign("waarde_class","table_data_red");
      } 
-     if ( ($waarde[$ref_key[$j]] > $grens_acceptabel_boven[$ref_key[$j]]) and ($waarde[$ref_key[$j]] < $grens_kritisch_boven[$ref_key[$j]]) )
+     if ( ( ($waarde[$ref_key[$j]] > $grens_acceptabel_boven[$ref_key[$j]]) and ($waarde[$ref_key[$j]] < $grens_kritisch_boven[$ref_key[$j]]) ) and (($grens_acceptabel_boven[$ref_key[$j]]!='') and ($grens_kritisch_boven[$ref_key[$j]]!='')) )
      {
        $table_data->assign("waarde_class","table_data_orange");
      }
-     if ( ($waarde[$ref_key[$j]] > $grens_kritisch_onder[$ref_key[$j]]) and ($waarde[$ref_key[$j]] < $grens_acceptabel_onder[$ref_key[$j]]) )
+     if ( ( ($waarde[$ref_key[$j]] > $grens_kritisch_onder[$ref_key[$j]]) and ($waarde[$ref_key[$j]] < $grens_acceptabel_onder[$ref_key[$j]]) ) and (($grens_kritisch_onder[$ref_key[$j]]!='') and ($grens_acceptabel_onder[$ref_key[$j]]!='')) ) 
      {
        $table_data->assign("waarde_class","table_data_orange");
      }

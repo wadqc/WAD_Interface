@@ -15,7 +15,8 @@
  font-style: normal;
  font-variant: normal;
  font-weight: normal;
- color: red;
+ color: black;
+ background-color: #FF3333;
  text-decoration: none;
  ;
 }
@@ -26,11 +27,23 @@
  font-style: normal;
  font-variant: normal;
  font-weight: normal;
- color: orange;
+ color: black;
+ background-color: yellow;
  text-decoration: none;
  ;
 }
 
+.table_data_green {
+ font-family: arial;
+ font-size: 12px;
+ font-style: normal;
+ font-variant: normal;
+ font-weight: normal;
+ color: black;
+ background-color: lightgreen;
+ text-decoration: none;
+ ;
+}
 
 .table_data_header {
  font-family: arial;
@@ -143,17 +156,6 @@ display:none;}
  height:25px ;
  white-space:nowrap;
 }
-.table_data_red {
- font-family: arial;
- font-size: 12px;
- font-style: normal;
- font-variant: normal;
- font-weight: normal;
- color: red;
- text-decoration: none;
- ;
-}
-
 
 .table_marks_header {
  font-family: arial;

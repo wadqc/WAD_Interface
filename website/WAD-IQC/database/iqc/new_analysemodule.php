@@ -12,7 +12,20 @@ function rrmdir($dir) {
         if(is_dir($file))
             rrmdir($file);
         else
-            unlink($file);
+            unlink($file); 
+    }
+    // also check for hidden files/folders, these are not found with the '/*' pattern
+    // Matlab runtime environment creates these in the mcr folder
+    foreach(glob($dir . '/.*') as $file) {
+	// get last occurrence of /
+	$tail = strrchr($file, "/");
+	// skip . and .. directories
+	if($tail != '/.' AND $tail != '/..') {
+	    if(is_dir($file))
+		rrmdir($file);
+	    else
+		unlink($file);
+	}
     }
     rmdir($dir);
 }

@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `collector_status_omschrijving` (
 -- Gegevens worden uitgevoerd voor tabel `collector_status_omschrijving`
 --
 
--INSERT INTO `collector_status_omschrijving` (`nummer`, `veld_omschrijving`) VALUES
+INSERT INTO `collector_status_omschrijving` (`nummer`, `veld_omschrijving`) VALUES
 (0, 'Collector bezig'),
 (1, 'Collector klaar'),
 (2, 'Selector bezig'),

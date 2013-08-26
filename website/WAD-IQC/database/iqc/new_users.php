@@ -133,6 +133,23 @@ if( (!empty($_POST['action']) ) )
   {  
      $table_users='users';
 
+	 // check if username (login) is already taken
+	 $user_exists_Stmt = "SELECT count(*) from $table_users where login='%s'";
+	 $user_exists_Stmt = sprintf($user_exists_Stmt,$users_login);
+	 
+     if (!($result= mysql_query($user_exists_Stmt, $link))) {
+        DisplayErrMsg(sprintf("Error in executing %s stmt", $selectStmt)) ;
+        DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+        exit() ;
+     }
+     
+	 $user_exists = mysql_fetch_row($result);
+	 if($user_exists[0]>0) {
+		echo "Gebruikersnaam bestaat al!";
+		echo '<FORM><INPUT Type="button" VALUE="Terug" onClick="history.go(-1);return true;"></FORM>';
+		exit();
+	 }
+	 
      $addStmt = "Insert into $table_users(firstname,lastname,initials,phone,email,login_level_1,login_level_2,login_level_3,login_level_4,login_level_5,login,password) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')";
 
      $addStmt=sprintf($addStmt,$users_firstname,$users_lastname,$users_initials,$users_phone,$users_email,$login_level_1,$login_level_2,$login_level_3,$login_level_4,$login_level_5,$users_login,md5($first_login));

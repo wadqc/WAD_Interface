@@ -15,7 +15,7 @@
     <td>
       <table cellspacing="4" cellpadding="0" align="left">
         <tr>
-          <td> <a href="about.html" name="about" type="image/jpeg" target="_blank"><img src="{$application_picture}"  border="0"></a> </td>
+          <td> <a href="{$application_link}" name="about" type="image/jpeg" target="_blank"><img src="{$application_picture}"  border="0"></a> </td>
           <td valign="top">
             <table align="left">
               <tr>

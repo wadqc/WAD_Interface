@@ -30,6 +30,10 @@
   <td class="template_data"> <input type="submit" value="{$login_submit}"> </td>
   <td></td>
 </tr>
+
+<tr>
+  <td class="table_data"><br><br><a href="{$application_link}" name="about" target="_blank">About Image Quality Control</a></td>
+</tr>
 </table>
 
 </form>

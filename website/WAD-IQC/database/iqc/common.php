@@ -6,7 +6,7 @@ function GenerateHTMLHeader($message)
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <html>
 <head>
-  <title>Main page neuro modulatie</title>
+  <title>Main page WAD Image Quality Control</title>
   <link   rel="StyleSheet" href="./css/styles.css" type="text/css">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="GENERATOR" content="Quanta Plus">

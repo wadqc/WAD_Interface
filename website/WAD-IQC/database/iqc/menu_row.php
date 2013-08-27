@@ -3,7 +3,6 @@
 require("../globals.php") ;
 require("./common.php") ;
 require("./menu_structure.php") ;
-//require("./../school_data.php") ;
 require("./php/includes/setup.php");
 
 
@@ -75,6 +74,7 @@ while ($i<sizeof($level_ref_key)) // loop sub_levels
     $button->assign("top_menu",$top_menu);
     $button->assign("bottom_menu",$level_ref_key[$i]);
     $button->assign("selected_top",$level[$menu][$level_ref_key[$i]]);
+    $button->assign("selected_bottom",$default_selected_bottom[$menu][$level_ref_key[$i]]);
     if (($i+1)==$selected_top)
     {
       $button->assign("menu_class","menu_top_selected");
@@ -83,7 +83,8 @@ while ($i<sizeof($level_ref_key)) // loop sub_levels
     {
       $button->assign("menu_class","menu_top");
     }
-    $bottom_frame=sprintf("../iqc/frontpage-bottom.html");
+    //$bottom_frame=sprintf("../iqc/frontpage-bottom.html");
+    $bottom_frame=$action[$menu][$level_ref_key[$i]];
     $button->assign("bottom_frame","$bottom_frame");
     //navigator
     $button->assign("menu_target",'_parent');
@@ -159,6 +160,7 @@ $top=new Smarty_NM();
 
 $top->assign("user",$users_name);
 $top->assign("application_picture","../../../WAD-logo_pictures/logo_iqc_70.jpg");
+$top->assign("application_link","./about.php");
 $top->assign("version",$version);
 
 $top->assign("top_row",$top_row);

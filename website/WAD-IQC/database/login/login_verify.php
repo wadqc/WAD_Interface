@@ -79,12 +79,19 @@ if (md5($user_password)==$pw_field->password)
     $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname($_SERVER['PHP_SELF']));
        
     $top_menu=sprintf("top");
-    $bottom_menu='';
-    $selected_top='100';
-    $selected_bottom='100';
+    //$bottom_menu='';
+    $bottom_menu='Results';
+    
+    // JK - by default choose results --> selector instead of nothing
+    //$selected_top='100';
+    //$selected_bottom='100';
+    $selected_top='1';
+    $selected_bottom='1';
 
 
-    $bottom_frame=sprintf("../iqc/frontpage-bottom.html");
+    // JK: change default behaviour: display results / selector table by default
+    //$bottom_frame=sprintf("../iqc/frontpage-bottom.html");
+    $bottom_frame=sprintf("../iqc/show_selector.php");
     $executestring.= sprintf("../main/main_iqc.php?top_menu=$top_menu&bottom_menu=$bottom_menu&selected_top=$selected_top&selected_bottom=$selected_bottom&bottom_frame=$bottom_frame&t=%d",time());
     header($executestring);
     exit();

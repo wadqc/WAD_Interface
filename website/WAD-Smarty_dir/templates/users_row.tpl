@@ -1,5 +1,8 @@
 <tr bgcolor="{$bgcolor}">
   <td class="table_data">
+    {$login}
+  </td>
+  <td class="table_data">
     {$firstname}
   </td>
   <td>

@@ -64,6 +64,7 @@ $b=($j%2);
    $action=sprintf("view_users.php?pk=%s&t=%d",$field_users->pk,time());
    $table_data->assign("bgcolor",$bgcolor);
    $table_data->assign("checkbox_name",$checkbox_name);
+   $table_data->assign("login",$field_users->login);
    $table_data->assign("firstname",$field_users->firstname);
    $table_data->assign("lastname",$field_users->lastname);
    $table_data->assign("initials",$field_users->initials);

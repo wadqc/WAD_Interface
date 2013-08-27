@@ -102,9 +102,9 @@ $year_Stmt_study="SELECT $table_gewenste_processen.pk as 'pk', $table_study.stud
 and $table_gewenste_processen.status='%d' 
 order by $table_study.study_datetime desc";
 
-$year_Stmt_series="SELECT $table_gewenste_processen.pk as 'pk', $table_series.pps_start as 'date_time' from $table_gewenste_processen inner join $table_series on $table_gewenste_processen.series_fk=$table_series.pk where $table_gewenste_processen.selector_fk=$selector_fk
+$year_Stmt_series="SELECT $table_gewenste_processen.pk as 'pk', $table_series.created_time as 'date_time' from $table_gewenste_processen inner join $table_series on $table_gewenste_processen.series_fk=$table_series.pk where $table_gewenste_processen.selector_fk=$selector_fk
 and $table_gewenste_processen.status='%d' 
-order by $table_series.pps_start desc";
+order by $table_series.created_time desc";
 
 $year_Stmt_instance="SELECT $table_gewenste_processen.pk as 'pk', $table_instance.content_datetime as 'date_time' from $table_gewenste_processen inner join $table_instance on $table_gewenste_processen.study_fk=$table_instance.pk where $table_gewenste_processen.selector_fk=$selector_fk
 and $table_gewenste_processen.status='%d' 

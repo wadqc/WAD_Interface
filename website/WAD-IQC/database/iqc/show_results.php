@@ -80,7 +80,7 @@ order by $table_gewenste_processen.pk, $table_resultaten_floating.volgnummer";
 $results_char_Stmt="SELECT  * from $table_gewenste_processen inner join $table_resultaten_char on $table_gewenste_processen.pk=$table_resultaten_char.gewenste_processen_fk 
 where $table_gewenste_processen.selector_fk=$selector_fk
 and $table_gewenste_processen.pk='%s'
-and $table_resultaten_char.niveau like '$niveau' 
+and $table_resultaten_char.niveau like '%s' 
 order by $table_gewenste_processen.pk, $table_resultaten_char.volgnummer";
 
 
@@ -102,9 +102,10 @@ $year_Stmt_study="SELECT $table_gewenste_processen.pk as 'pk', $table_study.stud
 and $table_gewenste_processen.status='%d' 
 order by $table_study.study_datetime desc";
 
-$year_Stmt_series="SELECT $table_gewenste_processen.pk as 'pk', $table_series.created_time as 'date_time' from $table_gewenste_processen inner join $table_series on $table_gewenste_processen.series_fk=$table_series.pk where $table_gewenste_processen.selector_fk=$selector_fk
-and $table_gewenste_processen.status='%d' 
-order by $table_series.created_time desc";
+$year_Stmt_series="SELECT $table_gewenste_processen.pk as 'pk', $table_series.created_time as 'date_time' from $table_gewenste_processen inner join $table_series on $table_gewenste_processen.series_fk=$table_series.pk where $table_gewenste_processen.selector_fk=$selector_fk and $table_gewenste_processen.status='%d' order by $table_series.created_time desc";
+
+// gebruik study-datetime ipv series-creationtime?
+//$year_Stmt_series="SELECT $table_gewenste_processen.pk as 'pk', $table_study.study_datetime as 'date_time' from $table_gewenste_processen inner join $table_series on $table_gewenste_processen.series_fk=$table_series.pk, study where $table_gewenste_processen.selector_fk=$selector_fk and $table_gewenste_processen.status='%d' and study.pk=series.study_fk order by $table_series.created_time desc";
 
 $year_Stmt_instance="SELECT $table_gewenste_processen.pk as 'pk', $table_instance.content_datetime as 'date_time' from $table_gewenste_processen inner join $table_instance on $table_gewenste_processen.study_fk=$table_instance.pk where $table_gewenste_processen.selector_fk=$selector_fk
 and $table_gewenste_processen.status='%d' 
@@ -122,6 +123,15 @@ where $table_gewenste_processen.status='%d' and $table_gewenste_processen.pk='%d
 
 $status_Stmt="SELECT * from $table_gewenste_processen
 where $table_gewenste_processen.selector_fk='%d'"; 
+
+
+$niveaus_Stmt="SELECT $table_resultaten_floating.niveau as niveau from $table_resultaten_floating inner join $table_gewenste_processen on $table_gewenste_processen.pk=$table_resultaten_floating.gewenste_processen_fk where $table_gewenste_processen.pk=%1\$d and $table_gewenste_processen.selector_fk=$selector_fk
+UNION DISTINCT
+SELECT $table_resultaten_char.niveau as niveau from $table_resultaten_char inner join $table_gewenste_processen on $table_gewenste_processen.pk=$table_resultaten_char.gewenste_processen_fk where $table_gewenste_processen.pk=%1\$d and $table_gewenste_processen.selector_fk=$selector_fk
+UNION DISTINCT
+SELECT $table_resultaten_boolean.niveau as niveau from $table_resultaten_boolean inner join $table_gewenste_processen on $table_gewenste_processen.pk=$table_resultaten_boolean.gewenste_processen_fk where $table_gewenste_processen.pk=%1\$d and $table_gewenste_processen.selector_fk=$selector_fk
+UNION DISTINCT
+SELECT $table_resultaten_object.niveau as niveau from $table_resultaten_object inner join $table_gewenste_processen on $table_gewenste_processen.pk=$table_resultaten_object.gewenste_processen_fk where $table_gewenste_processen.pk=%1\$d and $table_gewenste_processen.selector_fk=$selector_fk order by niveau asc";
 
 
 // Connect to the Database
@@ -417,11 +427,20 @@ if ($status==20||$status==30)
 }
 
 
+if (!($result_niveaus= mysql_query(sprintf($niveaus_Stmt,$gewenste_processen_id), $link))) {
+    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($niveaus_Stmt,$gewenste_processen_id) )) ;
+    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    exit() ;
+}
 
-$list_niveau[1]='1';
-$list_niveau[2]='2';
-
-
+$j=1;
+while ($field_results = mysql_fetch_object($result_niveaus)) {
+	$list_niveau[$j]=$field_results->niveau;
+	$j++;
+}
+$niveau=$list_niveau[1];
+//$list_niveau[1]='1';
+//$list_niveau[2]='2';
 
 $table_data = new Smarty_NM();
 $table_data->assign("processen_options",$list_year);
@@ -436,7 +455,6 @@ $table_data->assign("status_id",$status);
 $table_data->assign("selector_fk",$selector_fk);
 $table_data->assign("analyse_level",$analyse_level);
 $table_data->assign("v",$v);
-
 
 
 
@@ -510,8 +528,8 @@ if (!($result_floating= mysql_query(sprintf($results_floating_Stmt,$gewenste_pro
    exit() ;
 }
 
-if (!($result_char= mysql_query(sprintf($results_char_Stmt,$gewenste_processen_id), $link))) {
-   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($results_char_Stmt,$gewenste_processen_id)) );
+if (!($result_char= mysql_query(sprintf($results_char_Stmt,$gewenste_processen_id,$niveau), $link))) {
+   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($results_char_Stmt,$gewenste_processen_id,$niveau)) );
    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
    exit() ;
 }
@@ -527,9 +545,6 @@ if (!($result_object= mysql_query(sprintf($results_object_Stmt,$gewenste_process
    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
    exit() ;
 }
-
-
-
 
 
 
@@ -576,7 +591,7 @@ mysql_free_result($result_floating);
 
 while (($field_results = mysql_fetch_object($result_char)))
 {
-  
+   
    $action[$field_results->volgnummer]=sprintf("show_char_value.php?selector_fk=%d&status=%d&omschrijving_char=%s&t=%d",$selector_fk,$status,$field_results->omschrijving,time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;

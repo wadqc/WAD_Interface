@@ -636,6 +636,19 @@ while (($field_results = mysql_fetch_object($result_boolean)))
 
 mysql_free_result($result_boolean); 
 
+//Sorteren om op basis van volgnummer weer te geven
+ksort($action);
+ksort($datum);
+ksort($type);
+ksort($omschrijving);
+ksort($grootheid);
+ksort($eenheid);
+ksort($waarde);
+ksort($grens_kritisch_boven);
+ksort($grens_kritisch_onder);
+ksort($grens_acceptabel_boven);
+ksort($grens_acceptabel_onder);
+ksort($type);
 
 
 $ref_key=array_keys($action);

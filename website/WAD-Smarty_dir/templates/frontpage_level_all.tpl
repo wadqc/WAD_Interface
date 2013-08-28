@@ -20,7 +20,7 @@
             <table align="left">
               <tr>
                 <td nowrap>
-				  <font class="table_data_red">{$user}</font>
+				  <font class="table_data_user">{$user}</font>
 				</td>
                 <td>
 			      <a href="logout.php" class="table_data_select" type="text/html" target="_parent" class="href_table_data">Logout</A>

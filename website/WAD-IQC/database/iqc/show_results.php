@@ -33,7 +33,7 @@ if (!empty($_GET['analyse_level']))
   $analyse_level=$_GET['analyse_level'];
 }
 
-$niveau=1;
+//$niveau=1;
 if (!empty($_POST['niveau']))
 {
   $niveau=$_POST['niveau'];
@@ -73,7 +73,7 @@ if (!empty($_POST['gewenste_processen_id']))
 $results_floating_Stmt="SELECT * from $table_gewenste_processen inner join $table_resultaten_floating on $table_gewenste_processen.pk=$table_resultaten_floating.gewenste_processen_fk 
 where $table_gewenste_processen.selector_fk=$selector_fk 
 and $table_gewenste_processen.pk='%s' 
-and $table_resultaten_floating.niveau like '$niveau'
+and $table_resultaten_floating.niveau like '%s'
 order by $table_gewenste_processen.pk, $table_resultaten_floating.volgnummer";
 
   
@@ -87,14 +87,14 @@ order by $table_gewenste_processen.pk, $table_resultaten_char.volgnummer";
 $results_boolean_Stmt="SELECT  * from $table_gewenste_processen inner join $table_resultaten_boolean on $table_gewenste_processen.pk=$table_resultaten_boolean.gewenste_processen_fk 
 where $table_gewenste_processen.selector_fk=$selector_fk
 and $table_gewenste_processen.pk='%s'
-and $table_resultaten_boolean.niveau like '$niveau' 
+and $table_resultaten_boolean.niveau like '%s' 
 order by $table_gewenste_processen.pk, $table_resultaten_boolean.volgnummer";
 
 
 $results_object_Stmt="SELECT  $table_resultaten_object.object_naam_pad as 'object_naam_pad', $table_resultaten_object.omschrijving as 'omschrijving', $table_resultaten_object.pk as 'pk' from $table_gewenste_processen inner join $table_resultaten_object on $table_gewenste_processen.pk=$table_resultaten_object.gewenste_processen_fk 
 where $table_gewenste_processen.selector_fk=$selector_fk
 and $table_gewenste_processen.pk='%s'
-and $table_resultaten_object.niveau like '$niveau'
+and $table_resultaten_object.niveau like '%s'
 order by $table_gewenste_processen.pk, $table_resultaten_object.volgnummer";
 
 
@@ -438,7 +438,13 @@ while ($field_results = mysql_fetch_object($result_niveaus)) {
 	$list_niveau[$j]=$field_results->niveau;
 	$j++;
 }
-$niveau=$list_niveau[1];
+
+// Check of gekozen niveau in de lijst voorkomt van geldige niveaus.
+// Dit voor 't geval je een resultaat selecteert in de pulldown, met het niveau van het
+// huidig resultaat dat niet geldig is voor het geselecteerde resultaat.
+// In dat geval het hoogste geldige niveau nemen.
+in_array($niveau,$list_niveau)?:$niveau=$list_niveau[1];
+
 //$list_niveau[1]='1';
 //$list_niveau[2]='2';
 
@@ -522,8 +528,8 @@ $selector_list=$table_data->fetch("selector_select.tpl");
 
 
 
-if (!($result_floating= mysql_query(sprintf($results_floating_Stmt,$gewenste_processen_id), $link))) {
-   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($results_floating_Stmt,$gewenste_processen_id)) );
+if (!($result_floating= mysql_query(sprintf($results_floating_Stmt,$gewenste_processen_id,$niveau), $link))) {
+   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($results_floating_Stmt,$gewenste_processen_id,$niveau)) );
    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
    exit() ;
 }
@@ -534,14 +540,14 @@ if (!($result_char= mysql_query(sprintf($results_char_Stmt,$gewenste_processen_i
    exit() ;
 }
 
-if (!($result_boolean= mysql_query(sprintf($results_boolean_Stmt,$gewenste_processen_id), $link))) {
-   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($results_boolean_Stmt,$gewenste_processen_id)) );
+if (!($result_boolean= mysql_query(sprintf($results_boolean_Stmt,$gewenste_processen_id,$niveau), $link))) {
+   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($results_boolean_Stmt,$gewenste_processen_id,$niveau)) );
    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
    exit() ;
 }
 
-if (!($result_object= mysql_query(sprintf($results_object_Stmt,$gewenste_processen_id), $link))) {
-   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($results_object_Stmt,$gewenste_processen_id)) );
+if (!($result_object= mysql_query(sprintf($results_object_Stmt,$gewenste_processen_id,$niveau), $link))) {
+   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($results_object_Stmt,$gewenste_processen_id,$niveau)) );
    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
    exit() ;
 }

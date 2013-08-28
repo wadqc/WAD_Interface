@@ -99,16 +99,16 @@ order by $table_gewenste_processen.pk, $table_resultaten_object.volgnummer";
 
 
 $year_Stmt_study="SELECT $table_gewenste_processen.pk as 'pk', $table_study.study_datetime as 'date_time' from $table_gewenste_processen inner join $table_study on $table_gewenste_processen.study_fk=$table_study.pk where $table_gewenste_processen.selector_fk=$selector_fk
-and $table_gewenste_processen.status='%d' 
+and $table_gewenste_processen.status in (%s)
 order by $table_study.study_datetime desc";
 
-//$year_Stmt_series="SELECT $table_gewenste_processen.pk as 'pk', $table_series.created_time as 'date_time' from $table_gewenste_processen inner join $table_series on $table_gewenste_processen.series_fk=$table_series.pk where $table_gewenste_processen.selector_fk=$selector_fk and $table_gewenste_processen.status='%d' order by $table_series.created_time desc";
+//$year_Stmt_series="SELECT $table_gewenste_processen.pk as 'pk', $table_series.created_time as 'date_time' from $table_gewenste_processen inner join $table_series on $table_gewenste_processen.series_fk=$table_series.pk where $table_gewenste_processen.selector_fk=$selector_fk and $table_gewenste_processen.status in (%s) order by $table_series.created_time desc";
 
 // gebruik study-datetime ipv series-creationtime of pps_start
-$year_Stmt_series="SELECT $table_gewenste_processen.pk as 'pk', $table_study.study_datetime as 'date_time' from $table_gewenste_processen inner join $table_series on $table_gewenste_processen.series_fk=$table_series.pk, study where $table_gewenste_processen.selector_fk=$selector_fk and $table_gewenste_processen.status='%d' and study.pk=series.study_fk order by $table_series.created_time desc";
+$year_Stmt_series="SELECT $table_gewenste_processen.pk as 'pk', $table_study.study_datetime as 'date_time' from $table_gewenste_processen inner join $table_series on $table_gewenste_processen.series_fk=$table_series.pk, study where $table_gewenste_processen.selector_fk=$selector_fk and $table_gewenste_processen.status in (%s) and study.pk=series.study_fk order by $table_series.created_time desc";
 
 $year_Stmt_instance="SELECT $table_gewenste_processen.pk as 'pk', $table_instance.content_datetime as 'date_time' from $table_gewenste_processen inner join $table_instance on $table_gewenste_processen.study_fk=$table_instance.pk where $table_gewenste_processen.selector_fk=$selector_fk
-and $table_gewenste_processen.status='%d' 
+and $table_gewenste_processen.status in (%s) 
 order by $table_instance.content_datetime desc";
 
 
@@ -119,7 +119,7 @@ $resultaten_status_Stmt="SELECT * from $table_resultaten_status
 where $table_resultaten_status.gewenste_processen_fk=%d"; 
 
 $selector_processen_Stmt="SELECT * from $table_gewenste_processen
-where $table_gewenste_processen.status='%d' and $table_gewenste_processen.pk='%d'"; 
+where $table_gewenste_processen.status in (%s) and $table_gewenste_processen.pk='%d'"; 
 
 $status_Stmt="SELECT * from $table_gewenste_processen
 where $table_gewenste_processen.selector_fk='%d'"; 
@@ -164,6 +164,7 @@ if (!mysql_select_db($databaseName, $link)) {
     if ($status_select==5)
     {    
       $list_status[5]='Afgerond';
+	  $list_status['5,30']='*';
     }
     if ($status_select==20)
     {    
@@ -172,10 +173,11 @@ if (!mysql_select_db($databaseName, $link)) {
     if ($status_select==30)
     {    
       $list_status[30]='Gevalideerd';
+	  $list_status['5,30']='*';
     }
    
   }
-
+  asort($list_status);
   
   mysql_free_result($result_status);  
 
@@ -201,7 +203,7 @@ if (!mysql_select_db($databaseName, $link)) {
 
 
 if (!($result_selector_processen= mysql_query(sprintf($selector_processen_Stmt,$status,$gewenste_processen_id), $link))) {
-    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($resultaten_status_Stmt,$gewenste_processen_id) )) ;
+    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($selector_processen_Stmt,$gewenste_processen_id) )) ;
     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
     exit() ;
   }
@@ -578,7 +580,7 @@ while (($field_results = mysql_fetch_object($result_floating)))
 {
 
    
-   $action[$field_results->volgnummer]=sprintf("show_floating_value.php?selector_fk=%d&analyse_level=%s&status=%d&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$status,$field_results->omschrijving,$field_results->grootheid,$field_results->eenheid ,time()); 
+   $action[$field_results->volgnummer]=sprintf("show_floating_value.php?selector_fk=%d&analyse_level=%s&status=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$status,$field_results->omschrijving,$field_results->grootheid,$field_results->eenheid ,time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
    $grootheid[$field_results->volgnummer]=$field_results->grootheid;
@@ -597,8 +599,8 @@ mysql_free_result($result_floating);
 
 while (($field_results = mysql_fetch_object($result_char)))
 {
-   
-   $action[$field_results->volgnummer]=sprintf("show_char_value.php?selector_fk=%d&status=%d&omschrijving_char=%s&t=%d",$selector_fk,$status,$field_results->omschrijving,time()); 
+
+   $action[$field_results->volgnummer]=sprintf("show_char_value.php?selector_fk=%d&status=%s&omschrijving_char=%s&t=%d",$selector_fk,$status,$field_results->omschrijving,time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
    $grootheid[$field_results->volgnummer]='na';
@@ -619,7 +621,7 @@ mysql_free_result($result_char);
 while (($field_results = mysql_fetch_object($result_boolean)))
 {
   
-   $action[$field_results->volgnummer]=sprintf("show_boolean_value.php?selector_fk=%d&status=%d&omschrijving_char=%s&t=%d",$selector_fk,$status,$field_results->omschrijving,time()); 
+   $action[$field_results->volgnummer]=sprintf("show_boolean_value.php?selector_fk=%d&status=%s&omschrijving_char=%s&t=%d",$selector_fk,$status,$field_results->omschrijving,time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
    $grootheid[$field_results->volgnummer]='na';

@@ -103,6 +103,29 @@ CREATE TABLE IF NOT EXISTS `resultaten_object` (
   PRIMARY KEY (`pk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `resultaten_status`
+--
+
+CREATE TABLE IF NOT EXISTS `resultaten_status` (
+  `pk` int(11) NOT NULL AUTO_INCREMENT,
+  `gewenste_processen_fk` int(11) NOT NULL,
+  `gebruiker` varchar(30) DEFAULT NULL,
+  `omschrijving` varchar(300) DEFAULT NULL,
+  `initialen` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`pk`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+
+--
+-- Gegevens worden uitgevoerd voor tabel `resultaten_status`
+--
+
+-- --------------------------------------------------------
+
+
 -- --------------------------------------------------------
 --
 -- Tabelstructuur voor tabel `status_omschrijving`

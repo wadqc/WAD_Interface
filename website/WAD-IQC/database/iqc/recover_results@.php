@@ -8,7 +8,7 @@ require("./php/includes/setup.php");
 
 
 $table_gewenste_processen='gewenste_processen';
-$table_selector_status='selector_status';
+$table_resultaten_status='resultaten_status';
 
 
 
@@ -42,9 +42,9 @@ $table_selector_status='selector_status';
   }
 
 
-$select_Stmt= "select * from $table_selector_status where $table_selector_status.gewenste_processen_fk='%d'";
+$select_Stmt= "select * from $table_resultaten_status where $table_resultaten_status.gewenste_processen_fk='%d'";
 
-$delete_Stmt = "delete from  $table_selector_status where $table_selector_status.gewenste_processen_fk='%d'";
+$delete_Stmt = "delete from  $table_resultaten_status where $table_resultaten_status.gewenste_processen_fk='%d'";
 
 $update_Stmt = "update $table_gewenste_processen set status='%d' where pk='%d'";
 

@@ -19,7 +19,7 @@ $table_resultaten_boolean='resultaten_boolean';
 $table_resultaten_object='resultaten_object';
 $table_gewenste_processen='gewenste_processen';
 $table_selector='selector';
-$table_selector_status='selector_status';
+$table_resultaten_status='resultaten_status';
 
 
 
@@ -78,7 +78,7 @@ where $table_selector.pk=$selector_fk";
 
 $update_Stmt="update $table_gewenste_processen set status='%d' where $table_gewenste_processen.pk='%d'";
 
-$add_Stmt = "Insert into $table_selector_status(gewenste_processen_fk,gebruiker,omschrijving) 
+$add_Stmt = "Insert into $table_resultaten_status(gewenste_processen_fk,gebruiker,omschrijving) 
 values ('%d','%s','%s')";
 
 

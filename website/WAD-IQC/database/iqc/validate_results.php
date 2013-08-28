@@ -20,7 +20,7 @@ $table_resultaten_boolean='resultaten_boolean';
 $table_resultaten_object='resultaten_object';
 $table_gewenste_processen='gewenste_processen';
 $table_selector='selector';
-$table_selector_status='selector_status';
+$table_resultaten_status='resultaten_status';
 
 
 
@@ -91,14 +91,14 @@ where $table_selector.pk=$selector_fk";
 
 $update_Stmt="update $table_gewenste_processen set status='%d' where $table_gewenste_processen.pk='%d'";
 
-$update_selector_status_Stmt="update $table_selector_status set $table_selector_status.gebruiker='%s',$table_selector_status.omschrijving='%s',$table_selector_status.initialen='%s' where $table_selector_status.pk='%d'";
+$update_resultaten_status_Stmt="update $table_resultaten_status set $table_resultaten_status.gebruiker='%s',$table_resultaten_status.omschrijving='%s',$table_resultaten_status.initialen='%s' where $table_resultaten_status.pk='%d'";
 
-$add_Stmt = "Insert into $table_selector_status(gewenste_processen_fk,gebruiker,omschrijving,initialen) 
+$add_Stmt = "Insert into $table_resultaten_status(gewenste_processen_fk,gebruiker,omschrijving,initialen) 
 values ('%d','%s','%s','%s')";
 
-$select_recover_Stmt= "select * from $table_selector_status where $table_selector_status.gewenste_processen_fk='%d'";
+$select_recover_Stmt= "select * from $table_resultaten_status where $table_resultaten_status.gewenste_processen_fk='%d'";
 
-$delete_recover_Stmt = "delete from  $table_selector_status where $table_selector_status.gewenste_processen_fk='%d'";
+$delete_recover_Stmt = "delete from  $table_resultaten_status where $table_resultaten_status.gewenste_processen_fk='%d'";
 
 
 
@@ -193,7 +193,7 @@ case Delete:
   {
 
         
-    $selector_status_id=-1;
+    $resultaten_status_id=-1;
     if (!($result_select= mysql_query(sprintf($select_recover_Stmt,$gewenste_processen_id), $link))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($select_recover_Stmt,$gewenste_processen_id) )) ;
       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
@@ -202,7 +202,7 @@ case Delete:
   
     if ($field_results = mysql_fetch_object($result_select) )
     {
-      $selector_status_id=$field_results->pk;
+      $resultaten_status_id=$field_results->pk;
     }
    
     mysql_free_result($result_select);  
@@ -219,7 +219,7 @@ case Delete:
 
 
 
-    if ($selector_status_id==-1) //no row available, add a new one
+    if ($resultaten_status_id==-1) //no row available, add a new one
     {
       $initialen='';
       if(!mysql_query(sprintf($add_Stmt,$gewenste_processen_id,$user,$delete_description,$initialen),$link)) 
@@ -229,10 +229,10 @@ case Delete:
         exit() ;
       } 
     }
-    if ($selector_status_id!=-1) //row available, update row
+    if ($resultaten_status_id!=-1) //row available, update row
     {
-      if (!mysql_query(sprintf($update_selector_status_Stmt,$user,$delete_description,$initialen,$selector_status_id),$link)) {
-      DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($update_selector_status_Stmt,$user,$delete_description,$initialen,$selector_status_id) )) ;
+      if (!mysql_query(sprintf($update_resultaten_status_Stmt,$user,$delete_description,$initialen,$resultaten_status_id),$link)) {
+      DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($update_resultaten_status_Stmt,$user,$delete_description,$initialen,$resultaten_status_id) )) ;
       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
       exit() ;
       }

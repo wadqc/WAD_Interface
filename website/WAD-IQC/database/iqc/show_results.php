@@ -15,7 +15,7 @@ $table_resultaten_boolean='resultaten_boolean';
 $table_resultaten_object='resultaten_object';
 $table_gewenste_processen='gewenste_processen';
 $table_selector='selector';
-$table_selector_status='selector_status';
+$table_resultaten_status='resultaten_status';
 
 $v=0;
 $v=$_GET['v'];
@@ -115,8 +115,8 @@ order by $table_instance.content_datetime desc";
 $selector_Stmt="SELECT * from $table_selector
 where $table_selector.pk=$selector_fk"; 
 
-$selector_status_Stmt="SELECT * from $table_selector_status
-where $table_selector_status.gewenste_processen_fk=%d"; 
+$resultaten_status_Stmt="SELECT * from $table_resultaten_status
+where $table_resultaten_status.gewenste_processen_fk=%d"; 
 
 $selector_processen_Stmt="SELECT * from $table_gewenste_processen
 where $table_gewenste_processen.status='%d' and $table_gewenste_processen.pk='%d'"; 
@@ -201,7 +201,7 @@ if (!mysql_select_db($databaseName, $link)) {
 
 
 if (!($result_selector_processen= mysql_query(sprintf($selector_processen_Stmt,$status,$gewenste_processen_id), $link))) {
-    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($selector_status_Stmt,$gewenste_processen_id) )) ;
+    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($resultaten_status_Stmt,$gewenste_processen_id) )) ;
     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
     exit() ;
   }
@@ -405,14 +405,14 @@ mysql_free_result($result_selector);
 if ($status==20||$status==30)
 {
  
-  if (!($result_selector_status= mysql_query(sprintf($selector_status_Stmt,$gewenste_processen_id), $link))) {
-    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($selector_status_Stmt,$gewenste_processen_id) )) ;
+  if (!($result_resultaten_status= mysql_query(sprintf($resultaten_status_Stmt,$gewenste_processen_id), $link))) {
+    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($resultaten_status_Stmt,$gewenste_processen_id) )) ;
     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
     exit() ;
   }
 
 
-  $field_results = mysql_fetch_object($result_selector_status);
+  $field_results = mysql_fetch_object($result_resultaten_status);
   if ($status==20)
   {  
     $recover_data=sprintf("Verwijderd door: %s, Reden: %s",$field_results->gebruiker,$field_results->omschrijving);
@@ -422,7 +422,7 @@ if ($status==20||$status==30)
     $validate_data=sprintf("Gevalideerd door: %s, Initialen: %s",$field_results->gebruiker,$field_results->initialen);
   }
  
-  mysql_free_result($result_selector_status);  
+  mysql_free_result($result_resultaten_status);  
 
 }
 

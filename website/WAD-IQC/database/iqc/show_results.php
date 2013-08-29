@@ -639,6 +639,7 @@ while (($field_results = mysql_fetch_object($result_boolean)))
 mysql_free_result($result_boolean); 
 
 //Sorteren om op basis van volgnummer weer te geven
+if (is_array($action)){
 ksort($action);
 ksort($datum);
 ksort($type);
@@ -651,9 +652,12 @@ ksort($grens_kritisch_onder);
 ksort($grens_acceptabel_boven);
 ksort($grens_acceptabel_onder);
 ksort($type);
+}
 
 
+if (is_array($action)){
 $ref_key=array_keys($action);
+
 $table_resultaten_floating='';
 $j=0;
 while ($j<sizeof($ref_key)) // loop for $ref_keys
@@ -741,7 +745,9 @@ while ($j<sizeof($ref_key)) // loop for $ref_keys
    
 }
 
-
+} else {
+$table_resultaten_floating="Geen resultaten beschikbaar.";
+}
 
 
 

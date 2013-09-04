@@ -448,7 +448,9 @@ while ($field_results = mysql_fetch_object($result_niveaus)) {
 // Dit voor 't geval je een resultaat selecteert in de pulldown, met het niveau van het
 // huidig resultaat dat niet geldig is voor het geselecteerde resultaat.
 // In dat geval het hoogste geldige niveau nemen.
-in_array($niveau,$list_niveau)?:$niveau=$list_niveau[1];
+if(is_array($list_niveau)) {
+	in_array($niveau,$list_niveau)?:$niveau=$list_niveau[1];
+}
 
 //$list_niveau[1]='1';
 //$list_niveau[2]='2';

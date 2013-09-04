@@ -157,6 +157,7 @@ if (!mysql_select_db($databaseName, $link)) {
     exit() ;
   }
 
+  $status_select='NULL';
   while($field = mysql_fetch_object($result_status))
   {
     $status_select=$field->status;
@@ -177,7 +178,9 @@ if (!mysql_select_db($databaseName, $link)) {
     }
    
   }
-  asort($list_status);
+  if(is_array($list_status)) {
+	asort($list_status);
+  }
   
   mysql_free_result($result_status);  
 

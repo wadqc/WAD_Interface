@@ -1,5 +1,8 @@
 <tr bgcolor="{$bgcolor}">
    <td class="table_data">
+    {$study_datetime}
+  </td>
+  <td class="table_data">
     {$patient_id}
   </td>
   <td class="table_data">

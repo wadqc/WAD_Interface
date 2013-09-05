@@ -3,6 +3,9 @@
     <input type="checkbox" name="{$checkbox_name}" value="on">
   </td>
   <td class="table_data">
+    {$study_datetime}
+  </td>
+  <td class="table_data">
     {$patient_id}
   </td>
   <td>

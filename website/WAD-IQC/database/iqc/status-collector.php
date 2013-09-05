@@ -119,6 +119,7 @@ $b=($j%2);
    $action=sprintf("status-collector.php?pk=%s&t=%d",$field_collector_study->study_pk,time());
    $table_data->assign("bgcolor",$bgcolor);
    $table_data->assign("checkbox_name",$checkbox_name);
+   $table_data->assign("study_datetime",$field_collector_study->study_datetime);
    $table_data->assign("patient_id",$field_collector_study->pat_id);
    //printf("%s",$field_collector_study->pat_id);
    $table_data->assign("patient_name",$field_collector_study->pat_name);

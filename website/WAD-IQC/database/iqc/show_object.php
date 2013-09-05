@@ -128,7 +128,9 @@ if ($object_type=="text")
     if ($partial_content) header('Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $file_size);
     header("Connection: close");
     header("Content-type: " . $ctype);
-    header('Content-Disposition: attachment; filename=' . $file_name);
+        if($file_extension!='txt'){
+		header('Content-Disposition: attachment; filename=' . $file_name);
+	}
     echo $buffer;
     flush();
 

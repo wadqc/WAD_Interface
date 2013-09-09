@@ -18,7 +18,7 @@ $selector_instance_pk=$_GET['selector_instance_pk'];
 $pk=$_GET['pk'];  
 
 // Connect to the Database
-  if (!($link=mysql_pconnect($hostName, $userName, $password))) {
+  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
      DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
      exit() ;
   }

@@ -15,7 +15,7 @@ $table_users='users';
 $updateStmt_password = "Update $table_users set password='%s' where $table_users.login='%s'";
 
 // Connect to the Database
-if (!($link=mysql_pconnect($hostName, $userName, $password))) {
+if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
    DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
                              $hostName, $userName)) ;
    exit();

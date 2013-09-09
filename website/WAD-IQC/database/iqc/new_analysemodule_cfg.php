@@ -22,7 +22,7 @@ $select_Stmt1= "select * from $table_analysemodule_cfg where $table_analysemodul
 $del_analysemodule_cfg_Stmt = "delete from  $table_analysemodule_cfg where $table_analysemodule_cfg.pk='%d'";
 
 // Connect to the Database
-if (!($link=mysql_pconnect($hostName, $userName, $password))) {
+if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
 DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
 exit() ;
 }
@@ -214,7 +214,7 @@ if ($pk>0)   //insert part of update
   $table_analysemodule_cfg.pk='$pk' ";
 
   // Connect to the Database
-  if (!($link=mysql_pconnect($hostName, $userName, $password))) {
+  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
      DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
      exit() ;
   }

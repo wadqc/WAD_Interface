@@ -24,7 +24,7 @@ $select_Stmt1= "select * from $table_test_file where $table_test_file.filenaam_p
 $del_test_file_Stmt = "delete from  $table_test_file where $table_test_file.pk='%d'";
 
 // Connect to the Database
-if (!($link=mysql_pconnect($hostName, $userName, $password))) {
+if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
 DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
 exit() ;
 }
@@ -214,7 +214,7 @@ if ($pk>0)   //insert part of update
   $table_test_file.pk='$pk' ";
 
   // Connect to the Database
-  if (!($link=mysql_pconnect($hostName, $userName, $password))) {
+  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
      DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
      exit() ;
   }

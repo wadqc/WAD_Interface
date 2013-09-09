@@ -11,7 +11,7 @@ $config_file_Stmt = "SELECT * from $table_config_file
 order by $table_config_file.omschrijving, $table_config_file.filenaam";
 
 // Connect to the Database
-if (!($link=mysql_pconnect($hostName, $userName, $password))) {
+if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
    DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
                              $hostName, $userName)) ;
    exit();

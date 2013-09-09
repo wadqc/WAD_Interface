@@ -26,7 +26,7 @@ if(!empty($_POST['action']))
   $delStmt = "delete from  $table_test_file where $table_test_file.pk='%d'";
 
   // Connect to the Database
-  if (!($link=mysql_pconnect($hostName, $userName, $password))) {
+  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
   exit() ;
   }
@@ -99,7 +99,7 @@ if ($test_file_ref>0)
   $table_test_file.school='$school'";
 
   // Connect to the Database
-  if (!($link=mysql_pconnect($hostName, $userName, $password))) {
+  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
      DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
      exit() ;
   }

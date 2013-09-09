@@ -67,7 +67,9 @@
 						y: 100,
 						borderWidth: 0
 					},
-					series: [{marker: {}},{marker: {}},{marker: {}},{marker: {}},{marker: {}}]
+					//series: [{marker: {}, connectNulls: true},{marker: {},connectNulls: true},{marker: {},connectNulls: true},{marker: {},connectNulls: true},{marker: {},connectNulls: true}],
+                              series: [{marker: {}, connectNulls: false, visible:{/literal}{$grens_kritisch_boven_visible}{literal} },{marker: {},connectNulls: false, visible:{/literal}{$grens_acceptabel_boven_visible}{literal} },{marker: {},connectNulls: false},{marker: {},connectNulls: false, visible:{/literal}{$grens_acceptabel_onder_visible}{literal} },{marker: {},connectNulls: false, visible:{/literal}{$grens_kritisch_onder_visible}{literal} }],
+        
 				}
 				// Load data asynchronously using jQuery. On success, add the data
 				// to the options and initiate the chart.
@@ -138,26 +140,38 @@
                                             date = parseInt(line[0])*1000;
 							  //window.alert(date);
 
-							  traffica.push([
+							  value = parseFloat(line[1].replace(',', ''));
+                                            if (isNaN(value)) {
+                                              value = null;
+                                            }
+                                            traffica.push([
 								date,
-								parseFloat(line[1].replace('',''))
-							  ]);
+								value]);
+                                            value = parseFloat(line[2].replace(',', ''));
+                                            if (isNaN(value)) {
+                                              value = null;
+                                            }
                                             trafficb.push([
 								date,
-								parseFloat(line[2].replace('',''))
-							  ]);
+								value]);
                                             trafficc.push([
 								date,
 								parseFloat(line[3].replace('',''))
 							  ]);
+                                            value = parseFloat(line[4].replace(',', ''));
+                                            if (isNaN(value)) {
+                                              value = null;
+                                            }
                                             trafficd.push([
 								date,
-								parseFloat(line[4].replace('',''))
-							  ]);
-                                            traffice.push([
+								value]);
+                                            value = parseFloat(line[5].replace(',', ''));
+                                            if (isNaN(value)) {
+                                              value = null;
+                                            }
+                              		  traffice.push([
 								date,
-								parseFloat(line[5].replace('',''))
-							  ]);
+								value]);
 
                                           }
 						});

@@ -47,11 +47,7 @@ if (!empty($_GET['omschrijving_char']))
   $omschrijving_char=$_GET['omschrijving_char'];
 }
 
-//$omschrijving_object="%";
-//if (!empty($_GET['omschrijving_object']))
-//{
-//  $omschrijving_object=$_GET['omschrijving_object'];
-//}
+
 
 
 $analyse_level='';
@@ -115,9 +111,6 @@ order by date_time";
 $selector_Stmt="SELECT * from $table_selector
 where $table_selector.pk=$selector_fk"; 
 
-//$gewenste_processen_Stmt="SELECT * from $table_gewenste_processen
-//where $table_gewenste_processen.selector_fk=$selector_fk
-//order by $table_gewenste_processen.pk";
 
 // Connect to the Database
 if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
@@ -134,12 +127,6 @@ if (!mysql_select_db($databaseName, $link)) {
    exit() ;
 }
 
-
-
-//if ($gewenste_processen_id==0) //wildcard on gewenste_processen_id
-//{
-//  $gewenste_processen_id="%";
-//}
 
 
 
@@ -166,6 +153,12 @@ $field_results = mysql_fetch_object($result_selector);
 $header_result=sprintf("Selector: %s, analyse level: %s",$field_results->name,$field_results->analyselevel);
 mysql_free_result($result_selector);  
 
+
+
+$grens_kritisch_boven_visible='false';
+$grens_kritisch_onder_visible='false';
+$grens_acceptabel_boven_visible='false';
+$grens_acceptabel_onder_visible='false';
 
 
 $table_resultaten_floating='';
@@ -198,19 +191,19 @@ while (($field_results = mysql_fetch_object($result_floating)))
    $table_data->assign("waarde",$field_results->waarde);
    $table_data->assign("waarde_class","table_data");
    
-   if ( ($grens_kritisch_boven[$ref_key[$j]]!='') and ($grens_kritisch_onder[$ref_key[$j]]!='') )
+   if ( !is_null($field_results->grens_kritisch_boven) and !is_null($field_results->grens_kritisch_onder) )
    {
      $table_data->assign("waarde_class","table_data_green");
    } 
-   if (  ( ($waarde[$ref_key[$j]] >= $grens_kritisch_boven[$ref_key[$j]]) or ($waarde[$ref_key[$j]] <= $grens_kritisch_onder[$ref_key[$j]]) ) and (($grens_kritisch_boven[$ref_key[$j]]!='') and ($grens_kritisch_onder[$ref_key[$j]]!='')) )
+   if (  ( ($field_results->waarde >= $field_results->grens_kritisch_boven) or ($field_results->waarde <= $field_results->grens_kritisch_onder) ) and (($field_results->grens_kritisch_boven!='') and !is_null($field_results->grens_kritisch_onder) ) )
    {
      $table_data->assign("waarde_class","table_data_red");
    } 
-   if ( ( ($waarde[$ref_key[$j]] >= $grens_acceptabel_boven[$ref_key[$j]]) and ($waarde[$ref_key[$j]] < $grens_kritisch_boven[$ref_key[$j]]) ) and (($grens_acceptabel_boven[$ref_key[$j]]!='') and ($grens_kritisch_boven[$ref_key[$j]]!='')) )
+   if ( ( ($field_results->waarde >= $field_results->grens_acceptabel_boven) and ($field_results->waarde < $field_results->grens_kritisch_boven) ) and (($field_results->grens_acceptabel_boven!='') and !is_null($field_results->grens_kritisch_boven) ) )
    {
      $table_data->assign("waarde_class","table_data_orange");
    }
-   if ( ( ($waarde[$ref_key[$j]] > $grens_kritisch_onder[$ref_key[$j]]) and ($waarde[$ref_key[$j]] <= $grens_acceptabel_onder[$ref_key[$j]]) ) and (($grens_kritisch_onder[$ref_key[$j]]!='') and ($grens_acceptabel_onder[$ref_key[$j]]!='')) ) 
+   if ( ( ($field_results->waarde > $field_results->grens_kritisch_onder) and ($field_results->waarde <= $field_results->grens_acceptabel_onder) ) and (($field_results->grens_kritisch_onder!='') and !is_null($field_results->grens_acceptabel_onder) ) ) 
    {
      $table_data->assign("waarde_class","table_data_orange");
    }
@@ -223,6 +216,26 @@ while (($field_results = mysql_fetch_object($result_floating)))
 
       
    $table_resultaten_floating.=$table_data->fetch("resultaten_floating_value_row.tpl");
+
+   
+   if (!is_null($field_results->grens_kritisch_boven) and ($grens_kritisch_boven_visible=='false') )  
+   {
+      $grens_kritisch_boven_visible='true';
+   }
+   if (!is_null($field_results->grens_kritisch_onder) and ($grens_kritisch_onder_visible=='false') ) 
+   {
+       $grens_kritisch_onder_visible='true';
+   }
+   if (!is_null($field_results->grens_acceptabel_boven) and ($grens_acceptabel_boven_visible=='false') ) 
+   {
+       $grens_acceptabel_boven_visible='true';
+   }
+   if (!is_null($field_results->grens_acceptabel_onder) and ($grens_acceptabel_onder_visible=='false') ) 
+   {
+      $grens_acceptabel_onder_visible='true';
+   }
+
+
 
    $j++;
   
@@ -242,10 +255,15 @@ $data->assign("header_value","Resultaten floating");
 $data->assign("picture_src","./logo_pictures/excel.jpg");
 $export_action=sprintf("export_floating_value.php?selector_fk=%d&status=%d&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$status,$analyse_level,$omschrijving,$grootheid,$eenheid ,time());
 $action_page=sprintf("data_floating.php?selector_fk=%d&status=%s&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$status,$analyse_level,$omschrijving,$grootheid,$eenheid ,time());
-
+//printf("data_floating.php?selector_fk=%d&status=%s&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$status,$analyse_level,$omschrijving,$grootheid,$eenheid ,time());
+//exit();
 
 $data->assign("export_action",$export_action);
 $data->assign("action_page",$action_page);
+$data->assign("grens_kritisch_boven_visible",$grens_kritisch_boven_visible);
+$data->assign("grens_kritisch_onder_visible",$grens_kritisch_onder_visible);
+$data->assign("grens_acceptabel_boven_visible",$grens_acceptabel_boven_visible);
+$data->assign("grens_acceptabel_onder_visible",$grens_acceptabel_onder_visible);
 
 if ($table_resultaten_floating!='')
 {

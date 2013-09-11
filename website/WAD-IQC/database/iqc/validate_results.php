@@ -239,7 +239,7 @@ case Delete:
     }
     $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname($_SERVER['PHP_SELF']));
 
-    $executestring.= sprintf("show_results.php?selector_fk=%d&analyse_level=%s&gewenste_processen_id=-1&v=%d&t=%d",$selector_fk,$analyse_level,$v,time());
+    $executestring.= sprintf("show_results.php?selector_fk=%d&status=%s&analyse_level=%s&gewenste_processen_id=-1&v=%d&t=%d",$selector_fk,$status,$analyse_level,$v,time());
     header($executestring);
     exit();
 
@@ -270,7 +270,7 @@ case Herstel:
   } 
 
   $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname($_SERVER['PHP_SELF']));
-  $executestring.= sprintf("show_results.php?selector_fk=%d&analyse_level=%s&gewenste_processen_id=-1&v=%d&t=%d",$selector_fk,$analyse_level,$v,time());
+  $executestring.= sprintf("show_results.php?selector_fk=%d&status=%s&analyse_level=%s&gewenste_processen_id=-1&v=%d&t=%d",$selector_fk,$status,$analyse_level,$v,time());
   header($executestring);
   exit();
 

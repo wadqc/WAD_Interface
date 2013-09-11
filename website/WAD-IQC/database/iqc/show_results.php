@@ -206,7 +206,7 @@ if (!mysql_select_db($databaseName, $link)) {
 
 
 if (!($result_selector_processen= mysql_query(sprintf($selector_processen_Stmt,$status,$gewenste_processen_id), $link))) {
-    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($selector_processen_Stmt,$gewenste_processen_id) )) ;
+    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($selector_processen_Stmt,$status,$gewenste_processen_id) )) ;
     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
     exit() ;
   }

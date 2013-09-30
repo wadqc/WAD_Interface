@@ -25,7 +25,7 @@ session_start();
   {
     $message=sprintf("Unauthorised visitor!");
     $executestring = sprintf("Location: http://%s/",$_SERVER['HTTP_HOST']);
-    $executestring.= sprintf("database/login/main_login_open_school.php?message=$message");
+    $executestring.= sprintf("WAD-IQC/database/login/main_login_iqc.php?message=$message");
     header($executestring);
     exit();
   }

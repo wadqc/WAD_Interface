@@ -4,10 +4,10 @@
 
 echo "Drop + create IQC database..."
 
-rm source/create_databases/iqc_db/iqc.sql 2> /dev/null
+rm source/WAD_Interface/create_databases/iqc_db/iqc.sql 2> /dev/null
 
-cat source/create_databases/iqc_db/*.sql > source/create_databases/iqc_db/iqc.sql 
-mysql -uroot -p$1  <  source/create_databases/iqc_db/iqc.sql
-rm source/create_databases/iqc_db/iqc.sql
+cat source/WAD_Interface/create_databases/iqc_db/*.sql > source/WAD_Interface/create_databases/iqc_db/iqc.sql 
+mysql -uroot -p$1  <  source/WAD_Interface/create_databases/iqc_db/iqc.sql
+rm source/WAD_Interface/create_databases/iqc_db/iqc.sql
 
-mysql -uroot iqc -p$1 < source/create_databases/iqc_db/data/iqc_interface_data.sql
+mysql -uroot iqc -p$1 < source/WAD_Interface/create_databases/iqc_db/data/iqc_interface_data.sql

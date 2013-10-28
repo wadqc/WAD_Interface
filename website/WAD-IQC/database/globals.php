@@ -25,7 +25,7 @@ session_start();
   {
     $message=sprintf("Unauthorised visitor!");
     $executestring = sprintf("Location: http://%s/",$_SERVER['HTTP_HOST']);
-    $executestring.= sprintf("WAD-IQC/database/login/main_login_iqc.php?message=$message");
+    $executestring.= sprintf("database/login/main_login_open_school.php?message=$message");
     header($executestring);
     exit();
   }
@@ -105,6 +105,15 @@ $analyselevel_list['series']='series';
 $analyselevel_list['instance']='instance';
 
 
+//mail settings
+
+
+$mail_host = "smtp.mz.local";
+$mail_port = "25";
+//als authorisatie bij de mailserver nodig is dan ook onderstaande parameters invullen
+$mail_auth = "0";
+$mail_username = "";
+$mail_password = "";
 
 
 ?>

@@ -3,6 +3,10 @@ require("../globals.php") ;
 require("./common.php") ;
 require("./php/includes/setup.php");
 
+
+
+
+
 $table_study='study';
 $table_series='series';
 $table_instance='instance';
@@ -16,6 +20,10 @@ $table_resultaten_object='resultaten_object';
 $table_gewenste_processen='gewenste_processen';
 $table_selector='selector';
 $table_resultaten_status='resultaten_status';
+
+
+
+
 
 $v=0;
 $v=$_GET['v'];
@@ -52,9 +60,6 @@ if (!empty($_POST['status']))
 {
   $status=$_POST['status'];
 }
-
-
-
 
 
 
@@ -98,16 +103,14 @@ and $table_resultaten_object.niveau like '%s'
 order by $table_gewenste_processen.pk, $table_resultaten_object.volgnummer";
 
 
-$year_Stmt_study="SELECT $table_gewenste_processen.pk as 'pk', $table_study.study_datetime as 'date_time' from $table_gewenste_processen inner join $table_study on $table_gewenste_processen.study_fk=$table_study.pk where $table_gewenste_processen.selector_fk=$selector_fk
+$year_Stmt_study="SELECT $table_gewenste_processen.pk as 'pk', $table_gewenste_processen.status as 'status',$table_study.study_datetime as 'date_time' from $table_gewenste_processen inner join $table_study on $table_gewenste_processen.study_fk=$table_study.pk where $table_gewenste_processen.selector_fk=$selector_fk
 and $table_gewenste_processen.status in (%s)
 order by $table_study.study_datetime desc";
 
-//$year_Stmt_series="SELECT $table_gewenste_processen.pk as 'pk', $table_series.created_time as 'date_time' from $table_gewenste_processen inner join $table_series on $table_gewenste_processen.series_fk=$table_series.pk where $table_gewenste_processen.selector_fk=$selector_fk and $table_gewenste_processen.status in (%s) order by $table_series.created_time desc";
-
 // gebruik study-datetime ipv series-creationtime of pps_start
-$year_Stmt_series="SELECT $table_gewenste_processen.pk as 'pk', $table_study.study_datetime as 'date_time' from $table_gewenste_processen inner join $table_series on $table_gewenste_processen.series_fk=$table_series.pk, study where $table_gewenste_processen.selector_fk=$selector_fk and $table_gewenste_processen.status in (%s) and study.pk=series.study_fk order by $table_series.created_time desc";
+$year_Stmt_series="SELECT $table_gewenste_processen.pk as 'pk', $table_gewenste_processen.status as 'status', $table_study.study_datetime as 'date_time' from $table_gewenste_processen inner join $table_series on $table_gewenste_processen.series_fk=$table_series.pk, study where $table_gewenste_processen.selector_fk=$selector_fk and $table_gewenste_processen.status in (%s) and study.pk=series.study_fk order by $table_series.created_time desc";
 
-$year_Stmt_instance="SELECT $table_gewenste_processen.pk as 'pk', $table_instance.content_datetime as 'date_time' from $table_gewenste_processen inner join $table_instance on $table_gewenste_processen.study_fk=$table_instance.pk where $table_gewenste_processen.selector_fk=$selector_fk
+$year_Stmt_instance="SELECT $table_gewenste_processen.pk as 'pk', $table_gewenste_processen.status as 'status', $table_instance.content_datetime as 'date_time' from $table_gewenste_processen inner join $table_instance on $table_gewenste_processen.study_fk=$table_instance.pk where $table_gewenste_processen.selector_fk=$selector_fk
 and $table_gewenste_processen.status in (%s) 
 order by $table_instance.content_datetime desc";
 
@@ -135,7 +138,7 @@ SELECT $table_resultaten_object.niveau as niveau from $table_resultaten_object i
 
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
+if (!($link=mysql_pconnect($hostName, $userName, $password))) {
    DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
                              $hostName, $userName)) ;
    exit();
@@ -152,7 +155,7 @@ if (!mysql_select_db($databaseName, $link)) {
 
 
   if (!($result_status= mysql_query(sprintf($status_Stmt,$selector_fk), $link))) {
-    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($selector_processen_Stmt,$selector_fk) )) ;
+    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($status_Stmt,$selector_fk) )) ;
     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
     exit() ;
   }
@@ -165,7 +168,7 @@ if (!mysql_select_db($databaseName, $link)) {
     if ($status_select==5)
     {    
       $list_status[5]='Afgerond';
-	  $list_status['5,30']='*';
+      $list_status['5,30']='*';
     }
     if ($status_select==20)
     {    
@@ -217,7 +220,6 @@ if (!($result_selector_processen= mysql_query(sprintf($selector_processen_Stmt,$
    $gewenste_processen_id=-1;
   }
   
-  
   mysql_free_result($result_selector_processen);  
 
 
@@ -230,7 +232,6 @@ $list_year='';
 
 if ($analyse_level=='study')
 {
-  
   if (!($result_year= mysql_query(sprintf($year_Stmt_study,$status), $link))) {
      DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
@@ -238,8 +239,10 @@ if ($analyse_level=='study')
   }
   $counter=0;
 
+  
   while($field = mysql_fetch_object($result_year))
   {
+    
     if (($counter==0)&&($gewenste_processen_id==-1)) //first visit, id will be changed to the id that is linked to the most recent date of study
     {
       $gewenste_processen_id=$field->pk;
@@ -247,11 +250,14 @@ if ($analyse_level=='study')
     if ($field->pk== $gewenste_processen_id)
     {
        $date_result=$field->date_time;
+       $status_select=$field->status; 
     }  
     $list_year["$field->pk"]="$field->date_time";
     $counter++;
-  } 
+   
+  }
   mysql_free_result($result_year);
+  //$status=$status_selected;
   if ($counter==0)
   {
     if (!($result_year= mysql_query(sprintf($year_Stmt_study,$status_select), $link))) {
@@ -300,6 +306,7 @@ if ($analyse_level=='series')
     if ($field->pk== $gewenste_processen_id)
     {
        $date_result=$field->date_time;
+       $status_select=$field->status;
     } 
     $list_year["$field->pk"]="$field->date_time";
     $counter++;
@@ -333,6 +340,7 @@ if ($analyse_level=='series')
 
 }
 
+
 if ($analyse_level=='instance')
 {
   if (!($result_year= mysql_query(sprintf($year_Stmt_instance,$status), $link))) {
@@ -351,6 +359,7 @@ if ($analyse_level=='instance')
     if ($field->pk== $gewenste_processen_id)
     {
        $date_result=$field->date_time;
+       $status_select=$field->status;
     } 
     $list_year["$field->pk"]="$field->date_time";
     $counter++;
@@ -385,6 +394,8 @@ if ($analyse_level=='instance')
 }
 
 
+
+
 if ($counter==0)
 {
   $data = new Smarty_NM();
@@ -407,7 +418,7 @@ $field_results = mysql_fetch_object($result_selector);
 $header_result=sprintf("Selector: %s, analyse level: %s",$field_results->name,$field_results->analyselevel);
 mysql_free_result($result_selector);  
 
-if ($status==20||$status==30)
+if ($status_select==20||$status_select==30)
 {
  
   if (!($result_resultaten_status= mysql_query(sprintf($resultaten_status_Stmt,$gewenste_processen_id), $link))) {
@@ -418,11 +429,11 @@ if ($status==20||$status==30)
 
 
   $field_results = mysql_fetch_object($result_resultaten_status);
-  if ($status==20)
+  if ($status_select==20)
   {  
     $recover_data=sprintf("Verwijderd door: %s, Reden: %s",$field_results->gebruiker,$field_results->omschrijving);
   }
-  if ($status==30)
+  if ($status_select==30)
   {  
     $validate_data=sprintf("Gevalideerd door: %s, Initialen: %s",$field_results->gebruiker,$field_results->initialen);
   }
@@ -448,12 +459,12 @@ while ($field_results = mysql_fetch_object($result_niveaus)) {
 // Dit voor 't geval je een resultaat selecteert in de pulldown, met het niveau van het
 // huidig resultaat dat niet geldig is voor het geselecteerde resultaat.
 // In dat geval het hoogste geldige niveau nemen.
-if(is_array($list_niveau)) {
-	in_array($niveau,$list_niveau)?:$niveau=$list_niveau[1];
+
+if(is_array($list_niveau))
+{
+  in_array($niveau,$list_niveau)?:$niveau=$list_niveau[1];
 }
 
-//$list_niveau[1]='1';
-//$list_niveau[2]='2';
 
 $table_data = new Smarty_NM();
 $table_data->assign("processen_options",$list_year);
@@ -465,20 +476,31 @@ $table_data->assign("niveau_id",$niveau);
 $table_data->assign("status_options",$list_status);
 $table_data->assign("status_id",$status);
 
+
 $table_data->assign("selector_fk",$selector_fk);
 $table_data->assign("analyse_level",$analyse_level);
 $table_data->assign("v",$v);
 
 
+if ($status_select==5)
+{
+  $table_data_valideer = new Smarty_NM();
+  
+  $action_result_validate=sprintf("validate_results.php?selector_fk=%d&analyse_level=%s&v=%d&t=%d",$selector_fk,$analyse_level,$v,time()); 
+  $table_data_valideer->assign("select_validate","Valideer"); 
+  $table_data_valideer->assign("action_result_validate",$action_result_validate); 
+  
+  $menu_valideer=$table_data_valideer->fetch("selector_select_valideer.tpl");
+  
+  
 
-//if ($status==5)
-//{
-//  $table_data->assign("select_value","Delete");
-//}
+  $table_data->assign("row_line",$menu_valideer);
+  
+  $table_data->assign("select_value","Delete");
+}
 
 
-
-if ($status==20)
+if ($status_select==20)
 {
   $table_data_verwijderd = new Smarty_NM();
   $table_data_verwijderd->assign("recover_data",$recover_data); 
@@ -489,7 +511,7 @@ if ($status==20)
 
 }
 
-if ($status==30)
+if ($status_select==30)
 {
   $table_data_verwijderd = new Smarty_NM();
   $table_data_verwijderd->assign("recover_data",$validate_data); 
@@ -497,29 +519,7 @@ if ($status==30)
   $table_data->assign("row_line",$menu_verwijderd);
   
   $table_data->assign("select_value","Delete");
-
 }
-
-
-if ($status==5)
-{
-  $table_data_valideer = new Smarty_NM();
-  
-  $action_result_validate=sprintf("validate_results.php?selector_fk=%d&analyse_level=%s&v=%d&t=%d",$selector_fk,$analyse_level,$v,time()); 
-  $table_data_valideer->assign("select_validate","Valideer"); 
-  $table_data_valideer->assign("action_result_validate",$action_result_validate); 
-  
-  $menu_valideer=$table_data_valideer->fetch("selector_select_valideer.tpl");
-  
-
-
-  $table_data->assign("row_line",$menu_valideer);
-  
-  $table_data->assign("select_value","Delete");
- 
-
-}
-
 
 
 
@@ -695,11 +695,11 @@ while ($j<sizeof($ref_key)) // loop for $ref_keys
      {
        $table_data->assign("waarde_class","table_data_green");
      } 
-     if (  ( ($waarde[$ref_key[$j]] >= $grens_kritisch_boven[$ref_key[$j]]) or ($waarde[$ref_key[$j]] <= $grens_kritisch_onder[$ref_key[$j]]) ) and (($grens_kritisch_boven[$ref_key[$j]]!='') and ($grens_kritisch_onder[$ref_key[$j]]!='')) )
+     if (  ( ($waarde[$ref_key[$j]] > $grens_kritisch_boven[$ref_key[$j]]) or ($waarde[$ref_key[$j]] < $grens_kritisch_onder[$ref_key[$j]]) ) and (($grens_kritisch_boven[$ref_key[$j]]!='') and ($grens_kritisch_onder[$ref_key[$j]]!='')) )
      {
        $table_data->assign("waarde_class","table_data_red");
      } 
-     if ( ( ($waarde[$ref_key[$j]] >= $grens_acceptabel_boven[$ref_key[$j]]) and ($waarde[$ref_key[$j]] < $grens_kritisch_boven[$ref_key[$j]]) ) and (($grens_acceptabel_boven[$ref_key[$j]]!='') and ($grens_kritisch_boven[$ref_key[$j]]!='')) )
+     if ( ( ($waarde[$ref_key[$j]] > $grens_acceptabel_boven[$ref_key[$j]]) and ($waarde[$ref_key[$j]] <= $grens_kritisch_boven[$ref_key[$j]]) ) and (($grens_acceptabel_boven[$ref_key[$j]]!='') and ($grens_kritisch_boven[$ref_key[$j]]!='')) )
      {
        $table_data->assign("waarde_class","table_data_orange");
      }
@@ -891,3 +891,4 @@ $data->display("resultaten_result.tpl");
 
 
 ?>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         

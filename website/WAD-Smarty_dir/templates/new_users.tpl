@@ -17,26 +17,26 @@
 <table>
        
         <tr>
-          <td class="table_data_blue"> Voornaam</td>
+          <td class="table_data_blue"> First Name</td>
           <td class="table_data">
            <input   name="users_firstname" type="text" value="{$default_users_firstname}" size="30"> </input>
           </td>
         </tr>
         <tr>
-          <td class="table_data_blue"> Initialen </td>
+          <td class="table_data_blue"> Initials </td>
           <td class="table_data">
             <input   name="users_initials" type="text" value="{$default_users_initials}" size="30"> </input>
           </td>
         </tr>
         <tr>
-          <td class="table_data_blue"> Achternaam <font class="table_data_red">*</font></td>
+          <td class="table_data_blue"> Last Name <font class="table_data_red">*</font></td>
           <td class="table_data"> 
             <input   name="users_lastname" type="text" value="{$default_users_lastname}" size="30"> </input>
           </td>
           <td class="table_data_blue"> {$message_lastname} </td>
         </tr>
         <tr>
-          <td class="table_data_blue"> Telefoon </td>
+          <td class="table_data_blue"> Phone </td>
           <td class="table_data">
             <input   name="users_phone" type="text" value="{$default_users_phone}" size="30"> </input>
           </td>
@@ -74,17 +74,13 @@
           <td class="table_data"> <input type="checkbox" {$checked_login_level_1} name="login_level_1" value="on"> </td>
           <td class="table_data"> <input type="checkbox" {$checked_login_level_2} name="login_level_2" value="on"> </td>
           <td class="table_data"> <input type="checkbox" {$checked_login_level_3} name="login_level_3" value="on"> </td>
-	    <td class="table_data"> <input type="checkbox" {$checked_login_level_4} name="login_level_4" value="on"> </td>
-          <td class="table_data"> <input type="checkbox" {$checked_login_level_5} name="login_level_5" value="on"> </td>
-          <td class="table_data_blue"> {$message_level} </td>
+	    <td class="table_data_blue"> {$message_level} </td>
         </tr>
         <tr>
           <td class="table_data_blue"> Admin </td>
-		  <td class="table_data_blue"> User level 1 </td>
-		  <td class="table_data_blue"> User level 2 </td>
-		  <td class="table_data_blue"> User level 3 </td>
-          <td class="table_data_blue"> User level 4 </td>
-		</tr>
+	    <td class="table_data_blue"> Technician </td>
+	    <td class="table_data_blue"> Vendor </td>
+	  </tr>
       </table>
     </td>
   </tr>

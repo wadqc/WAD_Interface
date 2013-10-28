@@ -1,9 +1,9 @@
 <tr>
-    <td><font color="blue"><b>Selectie</b></font></td>
+        <td><font color="blue"><b>Selection</b></font></td>
 	<td><font color="blue"><b>Login</b></font></td>
-	<td><font color="blue"><b>Voornaam</b></font></td>
-	<td><font color="blue"><b>Achternaam</b></font></td>
-    <td><font color="blue"><b>Initialen</b></font></td>
-	<td><font color="blue"><b>Telefoon</b></font></td>
-	<td><font color="blue"><b>email</b></font></td>
+	<td><font color="blue"><b>First Name</b></font></td>
+	<td><font color="blue"><b>Last Name</b></font></td>
+        <td><font color="blue"><b>Initialsn</b></font></td>
+	<td><font color="blue"><b>Phone</b></font></td>
+	<td><font color="blue"><b>Email</b></font></td>
 </tr>

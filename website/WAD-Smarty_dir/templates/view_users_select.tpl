@@ -15,19 +15,19 @@
 <table>
        
         <tr>
-         <td class="table_data_blue"> Voornaam  </td>
+         <td class="table_data_blue"> First Name  </td>
          <td class="table_data"> {$default_users_firstname} </td>
         </tr>
         <tr>
-          <td class="table_data_blue"> Initialen </td>
+          <td class="table_data_blue"> Initials </td>
           <td class="table_data"> {$default_users_initials}  </td>
         </tr>
         <tr>
-          <td class="table_data_blue"> Achternaam </td>
+          <td class="table_data_blue"> Last Name </td>
           <td class="table_data"> {$default_users_lastname}  </td>
         </tr>
         <tr>
-          <td class="table_data_blue"> Telefoon </td>
+          <td class="table_data_blue"> Phone </td>
           <td class="table_data"> {$default_users_phone} </td>
         </tr>
         <tr>
@@ -51,15 +51,11 @@
           <td class="table_data"> <input type="radio" {$checked_login_level_1}> </td>
           <td class="table_data"> <input type="radio" {$checked_login_level_2}> </td>
           <td class="table_data"> <input type="radio" {$checked_login_level_3}> </td>
-		  <td class="table_data"> <input type="radio" {$checked_login_level_4}> </td>
-          <td class="table_data"> <input type="radio" {$checked_login_level_5}> </td>
         </tr>
         <tr>
           <td class="table_data"> Admin </td>
-          <td class="table_data"> Management </td>
-          <td class="table_data"> Attendance </td>
-          <td class="table_data"> users </td>
-          <td class="table_data"> Secretary </td>
+          <td class="table_data"> Technician </td>
+          <td class="table_data"> Vendor </td>
         </tr>
       </table>
     </td>

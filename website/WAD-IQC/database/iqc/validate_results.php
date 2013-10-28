@@ -6,6 +6,8 @@ require("./selector_function.php") ;
 
 require("./php/includes/setup.php");
 
+require_once "Mail.php";
+
 
 
 $table_study='study';
@@ -21,6 +23,9 @@ $table_resultaten_object='resultaten_object';
 $table_gewenste_processen='gewenste_processen';
 $table_selector='selector';
 $table_resultaten_status='resultaten_status';
+
+
+$table_users='users';
 
 
 
@@ -89,6 +94,9 @@ and $table_gewenste_processen.pk='%d'";
 $selector_Stmt="SELECT * from $table_selector
 where $table_selector.pk=$selector_fk"; 
 
+//$gewenste_processen_Stmt="SELECT * from $table_gewenste_processen 
+//where $table_gewenste_proecessen.pk=$selector_fk";
+
 $update_Stmt="update $table_gewenste_processen set status='%d' where $table_gewenste_processen.pk='%d'";
 
 $update_resultaten_status_Stmt="update $table_resultaten_status set $table_resultaten_status.gebruiker='%s',$table_resultaten_status.omschrijving='%s',$table_resultaten_status.initialen='%s' where $table_resultaten_status.pk='%d'";
@@ -101,12 +109,13 @@ $select_recover_Stmt= "select * from $table_resultaten_status where $table_resul
 $delete_recover_Stmt = "delete from  $table_resultaten_status where $table_resultaten_status.gewenste_processen_fk='%d'";
 
 
-
+$users_Stmt = "SELECT * from $table_users where 
+$table_users.login='$user'";
 
 
 
 // Connect to the Database
-  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
+  if (!($link=mysql_pconnect($hostName, $userName, $password))) {
      DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
      exit() ;
   }
@@ -119,7 +128,36 @@ $delete_recover_Stmt = "delete from  $table_resultaten_status where $table_resul
   }
 
 
-
+  if ($analyse_level=='study')
+  {
+    if (!($result_year= mysql_query(sprintf($year_Stmt_study,$gewenste_processen_id), $link))) 
+    {
+      DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
+      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      exit() ;
+    }
+  }
+  if ($analyse_level=='series')
+  {
+    if (!($result_year= mysql_query(sprintf($year_Stmt_series,$gewenste_processen_id), $link))) 
+    {
+      DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
+      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      exit() ;
+    }
+  } 
+  if ($analyse_level=='instance')
+  {
+    if (!($result_year= mysql_query(sprintf($year_Stmt_instance,$gewenste_processen_id), $link))) 
+    {
+      DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
+      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      exit() ;
+    }
+  }
+  $field = mysql_fetch_object($result_year);
+  $date_result=$field->date_time;
+  mysql_free_result($result_year);
 
 
 switch ($action_result):
@@ -140,35 +178,6 @@ case Delete:
 
   if ($delete_description=='')
   {
-
-    if ($analyse_level=='study')
-    {
-      if (!($result_year= mysql_query(sprintf($year_Stmt_study,$gewenste_processen_id), $link))) {
-      DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-      exit() ;
-      }
-    }
-    if ($analyse_level=='series')
-    {
-      if (!($result_year= mysql_query(sprintf($year_Stmt_series,$gewenste_processen_id), $link))) {
-      DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-      exit() ;
-      }
-    } 
-    if ($analyse_level=='instance')
-    {
-      if (!($result_year= mysql_query(sprintf($year_Stmt_instance,$gewenste_processen_id), $link))) {
-      DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-      exit() ;
-      }
-    }
-
-    $field = mysql_fetch_object($result_year);
-    $date_result=$field->date_time;
-    mysql_free_result($result_year);
 
     if (!($result_selector= mysql_query($selector_Stmt, $link))) {
     DisplayErrMsg(sprintf("Error in executing %s stmt", $selector_Stmt)) ;
@@ -239,7 +248,7 @@ case Delete:
     }
     $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname($_SERVER['PHP_SELF']));
 
-    $executestring.= sprintf("show_results.php?selector_fk=%d&status=%s&analyse_level=%s&gewenste_processen_id=-1&v=%d&t=%d",$selector_fk,$status,$analyse_level,$v,time());
+    $executestring.= sprintf("show_results.php?selector_fk=%d&analyse_level=%s&gewenste_processen_id=-1&status=%s&v=%d&t=%d",$selector_fk,$analyse_level,$status,$v,time());
     header($executestring);
     exit();
 
@@ -270,7 +279,7 @@ case Herstel:
   } 
 
   $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname($_SERVER['PHP_SELF']));
-  $executestring.= sprintf("show_results.php?selector_fk=%d&status=%s&analyse_level=%s&gewenste_processen_id=-1&v=%d&t=%d",$selector_fk,$status,$analyse_level,$v,time());
+  $executestring.= sprintf("show_results.php?selector_fk=%d&analyse_level=%s&gewenste_processen_id=-1&status=%s&v=%d&t=%d",$selector_fk,$analyse_level,$status,$v,time());
   header($executestring);
   exit();
 
@@ -297,6 +306,67 @@ case Valideer:
       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
       exit() ;
     } 
+
+    if (!empty($user_level_3)) //vendor
+    {
+      if (!($result_users= mysql_query(sprintf($users_Stmt), $link))) {
+      DisplayErrMsg(sprintf("Error in executing %s stmt", $users_Stmt)) ;
+      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      exit() ;
+      }
+      $field_users = mysql_fetch_object($result_users);
+ 
+      $to=$field_users->email;
+      $vendor_name=$field_users->lastname;
+  
+      mysql_free_result($result_users); 
+
+      //////////////////////
+      if (!($result_selector= mysql_query($selector_Stmt, $link))) {
+      DisplayErrMsg(sprintf("Error in executing %s stmt", $selector_Stmt )) ;
+      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      exit() ;
+      }
+      $field_selector = mysql_fetch_object($result_selector);
+ 
+      $selector_name=$field_selector->name;
+  
+      mysql_free_result($result_selector); 
+      
+      
+      $from = "Anne Talsma <talsma.anne@gekooooomail.com>";
+      $subject = sprintf("QC klinische vrijgave %s",$selector_name);
+      
+      $body = sprintf("Toestel %s ,QC datum: %s, is klinisch vrijgegeven door leverancier: %s met initialen: %s",$selector_name, $date_result,$vendor_name,$initialen);
+      
+      
+
+
+      $headers = array ('From' => $from,
+      'To' => $to,
+      'Subject' => $subject);
+      $smtp = Mail::factory('smtp',
+      array ('host' => $mail_host,
+      'port' => $mail_port,
+      'auth' => $mail_auth,
+      'username' => $mail_username,
+      'password' => $mail_password));
+
+      $mail = $smtp->send($to, $headers, $body);
+       
+      //if (PEAR::isError($mail)) {
+      //echo("<p>" . $mail->getMessage() . "</p>");
+      //} else {
+      //echo("<p>Message successfully sent!</p>");
+      //}
+
+      
+
+
+    }
+
+    
+
    
 
   }

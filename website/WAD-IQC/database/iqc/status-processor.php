@@ -80,7 +80,8 @@ ORDER BY 'creation_time'";
 $status_list = "SELECT * from $table_status_omschrijving order by $table_status_omschrijving.nummer"; 
 
 $gewenste_processen_Stmt="Select * from $table_gewenste_processen where $table_gewenste_processen.status!='%d' 
-order by $table_gewenste_processen.creation_time";
+and $table_gewenste_processen.status in ('1','2','3','4','10')
+order by $table_gewenste_processen.status, $table_gewenste_processen.creation_time";
 
 
 
@@ -90,7 +91,7 @@ order by $table_gewenste_processen.creation_time";
 
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
+if (!($link=mysql_pconnect($hostName, $userName, $password))) {
    DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
                              $hostName, $userName)) ;
    exit();
@@ -186,7 +187,7 @@ while ($field_gewenste_processen = mysql_fetch_object($result_gewenste_processen
      {
        $processor_status_row=$table_data->fetch("proces_select_header.tpl");
      }
-     if ( (!empty($user_level_2))||(!empty($user_level_5)) ) 
+     if ( (!empty($user_level_2))||(!empty($user_level_3)) ) 
      {
        $processor_status_row=$table_data->fetch("proces_header.tpl");
      }
@@ -217,7 +218,7 @@ while ($field_gewenste_processen = mysql_fetch_object($result_gewenste_processen
        {
         $processor_status_row.=$table_data->fetch("proces_select_row.tpl");
        }
-       if ( (!empty($user_level_2))||(!empty($user_level_5)) )
+       if ( (!empty($user_level_2))||(!empty($user_level_3)) )
        {
        $processor_status_row.=$table_data->fetch("proces_row.tpl");
        }
@@ -254,7 +255,7 @@ while ($field_gewenste_processen = mysql_fetch_object($result_gewenste_processen
        {
         $processor_status_row.=$table_data->fetch("proces_select_row.tpl");
        }
-       if ( (!empty($user_level_2))||(!empty($user_level_5)) )
+       if ( (!empty($user_level_2))||(!empty($user_level_3)) )
        {
        $processor_status_row.=$table_data->fetch("proces_row.tpl");
        }
@@ -310,21 +311,18 @@ mysql_free_result($result_gewenste_processen);
 $data = new Smarty_NM();
 
 
-$data->assign("form_action",sprintf("transfer_users.php?t=%d",time()));
-$data->assign("users_list",$processor_status_row);
+$data->assign("form_action",sprintf("transfer_processor.php?t=%d",time()));
+$data->assign("processor_list",$processor_status_row);
 
-$new_users=sprintf("<a href=\"new_users.php?users_pk=-1&t=%d\">Add new User</a>",time());
-
-$data->assign("new_users",$new_users);
 
 if (!empty($user_level_1))
 {
-  $data->display("users_view.tpl");
+  $data->display("processor_select.tpl");
 }
 
-if ( (!empty($user_level_2))||(!empty($user_level_5)) )
+if ( (!empty($user_level_2))||(!empty($user_level_3)) )
 {
-  $data->display("users_view.tpl");
+  $data->display("processor_view.tpl");
 }
 
 

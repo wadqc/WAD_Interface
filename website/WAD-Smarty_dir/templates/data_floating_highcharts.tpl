@@ -68,7 +68,7 @@
 						borderWidth: 0
 					},
 					//series: [{marker: {}, connectNulls: true},{marker: {},connectNulls: true},{marker: {},connectNulls: true},{marker: {},connectNulls: true},{marker: {},connectNulls: true}],
-                              series: [{marker: {}, connectNulls: false, visible:{/literal}{$grens_kritisch_boven_visible}{literal} },{marker: {},connectNulls: false, visible:{/literal}{$grens_acceptabel_boven_visible}{literal} },{marker: {},connectNulls: false},{marker: {},connectNulls: false, visible:{/literal}{$grens_acceptabel_onder_visible}{literal} },{marker: {},connectNulls: false, visible:{/literal}{$grens_kritisch_onder_visible}{literal} }],
+                              series: [{marker: {}, connectNulls: false, visible:{/literal}{$grens_kritisch_boven_visible}{literal} },{marker: {},connectNulls: false, visible:{/literal}{$grens_acceptabel_boven_visible}{literal} },{marker: {},connectNulls: false},{marker: {},connectNulls: false, visible:{/literal}{$grens_acceptabel_onder_visible}{literal} },{marker: {},connectNulls: false, visible:{/literal}{$grens_kritisch_onder_visible}{literal} }]
         
 				}
 				// Load data asynchronously using jQuery. On success, add the data

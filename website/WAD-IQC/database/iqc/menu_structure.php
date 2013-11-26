@@ -29,10 +29,10 @@ $level['Results']['Selector']=1;
 $action['Results']['Selector']='../iqc/show_selector.php';
 
 
-$level['Status']['Col- Selector']=1;
+$level['Status']['Selector']=1;
 $level['Status']['Processor']=2;
 
-$action['Status']['Col- Selector']='../iqc/status-collector.php';
+$action['Status']['Selector']='../iqc/status-collector.php';
 $action['Status']['Processor']='../iqc/status-processor.php';
 
 
@@ -66,10 +66,10 @@ $level['Results']['Selector']=1;
 $action['Results']['Selector']='../iqc/show_selector.php';
 
 
-$level['Status']['Col- Selector']=1;
+$level['Status']['Selector']=1;
 $level['Status']['Processor']=2;
 
-$action['Status']['Col- Selector']='../iqc/status-collector.php';
+$action['Status']['Selector']='../iqc/status-collector.php';
 $action['Status']['Processor']='../iqc/status-processor.php';
 
 }

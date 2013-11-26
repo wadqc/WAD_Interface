@@ -93,8 +93,9 @@ if(!empty($_POST['action']))
     if ($error==0)    
     {
        $filename=basename( $_FILES['uploadedfile']['name']);
+       $filepath_root="WAD-IQC/uploads/analysemodule_cfg/";
+       $filepath = $filepath_root.basename( $_FILES['uploadedfile']['name']); 
 
-       $filepath = "WAD-IQC/uploads/analysemodule_cfg/".basename( $_FILES['uploadedfile']['name']); 
        $target_path=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath;
   
        if ( move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path) )
@@ -107,7 +108,7 @@ if(!empty($_POST['action']))
        }
 
 
-       if (!(mysql_query(sprintf($update_Stmt,$description,$filename,$filepath,$pk),$link))) 
+       if (!(mysql_query(sprintf($update_Stmt,$description,$filename,$filepath_root,$pk),$link))) 
        {   
         DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
         DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;

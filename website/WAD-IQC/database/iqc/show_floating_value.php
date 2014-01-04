@@ -73,7 +73,7 @@ and $table_gewenste_processen.status in ($status)
 and $table_resultaten_floating.omschrijving like '$omschrijving'
 and $table_resultaten_floating.grootheid like '$grootheid' 
 and $table_resultaten_floating.eenheid like '$eenheid' 
-order by date_time";
+order by date_time desc";
 
 }
 
@@ -81,14 +81,16 @@ order by date_time";
 
 if ($analyse_level=='series')
 {
-  
-$results_floating_Stmt="SELECT $table_series.pps_start as 'date_time', $table_resultaten_floating.omschrijving as 'omschrijving', $table_resultaten_floating.grootheid as 'grootheid', $table_resultaten_floating.eenheid as 'eenheid', $table_resultaten_floating.grens_kritisch_boven as 'grens_kritisch_boven', $table_resultaten_floating.grens_kritisch_onder as 'grens_kritisch_onder', $table_resultaten_floating.grens_acceptabel_boven as 'grens_acceptabel_boven', $table_resultaten_floating.grens_acceptabel_onder as 'grens_acceptabel_onder', $table_resultaten_floating.waarde as 'waarde' from $table_series inner join ($table_gewenste_processen inner join $table_resultaten_floating on $table_gewenste_processen.pk=$table_resultaten_floating.gewenste_processen_fk) on $table_series.pk=$table_gewenste_processen.series_fk 
+
+$results_floating_Stmt="SELECT $table_instance.content_datetime as 'date_time', $table_resultaten_floating.omschrijving as 'omschrijving', $table_resultaten_floating.grootheid as 'grootheid', $table_resultaten_floating.eenheid as 'eenheid', $table_resultaten_floating.grens_kritisch_boven as 'grens_kritisch_boven', $table_resultaten_floating.grens_kritisch_onder as 'grens_kritisch_onder', $table_resultaten_floating.grens_acceptabel_boven as 'grens_acceptabel_boven', $table_resultaten_floating.grens_acceptabel_onder as 'grens_acceptabel_onder', $table_resultaten_floating.waarde as 'waarde' from $table_series inner join ($table_gewenste_processen inner join $table_resultaten_floating on $table_gewenste_processen.pk=$table_resultaten_floating.gewenste_processen_fk) on $table_series.pk=$table_gewenste_processen.series_fk, $table_instance 
 where $table_gewenste_processen.selector_fk=$selector_fk 
+and $table_series.pk=$table_instance.series_fk
 and $table_gewenste_processen.status in ($status) 
 and $table_resultaten_floating.omschrijving like '$omschrijving'
 and $table_resultaten_floating.grootheid like '$grootheid' 
 and $table_resultaten_floating.eenheid like '$eenheid' 
-order by date_time";
+and $table_instance.pk=(select min(pk) from $table_instance where series_fk=$table_series.pk) 
+order by date_time desc";
 
 }
 
@@ -216,7 +218,6 @@ while (($field_results = mysql_fetch_object($result_floating)))
 
       
    $table_resultaten_floating.=$table_data->fetch("resultaten_floating_value_row.tpl");
-
    
    if (!is_null($field_results->grens_kritisch_boven) and ($grens_kritisch_boven_visible=='false') )  
    {
@@ -270,7 +271,6 @@ if ($table_resultaten_floating!='')
   $data->assign("header_value","Resultaten floating");
   $data->assign("resultaten_value_list",$table_resultaten_floating);
 }
-
 
 //$action_result=sprintf("show_results.php?selector_fk=%d&analyse_level=%s&t=%d",$selector_fk,$analyselevel,time()); 
 //$data->assign("action_result",$action_result);

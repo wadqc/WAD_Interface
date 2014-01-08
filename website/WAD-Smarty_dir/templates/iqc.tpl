@@ -37,7 +37,7 @@
   </tr>
   <tr>
 	<td>
-    <a href="./database/login/main_login_open_school.php" class="table_data_select" type="text/html"><br>Login </A></font> </font>
+    <a href="./database/login/main_login_iqc.php" class="table_data_select" type="text/html"><br>Login </A></font> </font>
     </td>
   </tr>
   

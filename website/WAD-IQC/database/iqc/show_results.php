@@ -297,7 +297,7 @@ if ($analyse_level=='series')
      DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
      exit() ;
-  } echo sprintf($year_Stmt_series,$status) . '<br/>';
+  }
   $counter=0;
 
   while($field = mysql_fetch_object($result_year))

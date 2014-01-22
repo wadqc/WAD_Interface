@@ -194,3 +194,9 @@ function selector_drop_list(gewenste_processen_id,niveau,status,selector_fk,anal
   action='show_results.php?selector_fk='+selector_fk+'&analyse_level='+analyse_level+'&gewenste_processen_id='+gewenste_processen_id+'&niveau='+niveau+'&status='+status+'&v='+v;
   self.location.replace(action);
 }
+
+function processor_status_drop_list(date_filter,status)
+{
+  action='status-processor.php?date_filter='+date_filter+'&status='+status;
+  self.location.replace(action);
+}

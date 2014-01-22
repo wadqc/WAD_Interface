@@ -6,12 +6,16 @@
   <link   rel="StyleSheet" href="./css/styles.css" type="text/css">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="GENERATOR" content="Quanta Plus">
+  <script type="text/javascript" language="JavaScript" src="./java/scripts.js"></script> 
 </head>
 <body bgcolor="#F3F6FF">
 <h1 class="table_data_blue" >{$header} </h1>
 
 <form action="{$form_action}" method="POST">
 
+<hr>
+{$selection_list}
+<hr>
 
 <table NOSAVE="true" width="100%" border="true" bgcolor="#f3f6ff" frame="border">
   {$processor_list}

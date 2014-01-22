@@ -11,7 +11,24 @@ if (!empty($_GET['pk']))
   $study_pk=$_GET['pk'];
 }
 
+if (!empty($_GET['status']))
+{
+  $status=$_GET['status'];
+} elseif (!empty($_POST['status']))
+{
+  $status=$_POST['status'];
+}
 
+if (!empty($_GET['date_filter']))
+{
+  $date_filter=$_GET['date_filter'];
+} elseif (!empty($_POST['date_filter']))
+{
+  $date_filter=$_POST['date_filter'];
+} else
+{
+  $date_filter = '100 YEAR';
+}
 
 $table_gewenste_processen='gewenste_processen';
 $table_status_omschrijving='status_omschrijving';
@@ -79,14 +96,17 @@ ORDER BY 'creation_time'";
 
 $status_list = "SELECT * from $table_status_omschrijving order by $table_status_omschrijving.nummer"; 
 
-$gewenste_processen_Stmt="Select * from $table_gewenste_processen where $table_gewenste_processen.status!='%d' 
-and $table_gewenste_processen.status in ('1','2','3','4','10')
-order by $table_gewenste_processen.status, $table_gewenste_processen.creation_time";
 
+//$gewenste_processen_Stmt="Select * from $table_gewenste_processen 
+//where $table_gewenste_processen.status!='%d' 
+//and $table_gewenste_processen.status in ('1','2','3','4','10')
+//order by $table_gewenste_processen.status, $table_gewenste_processen.creation_time";
 
-
-
-
+$gewenste_processen_Stmt="Select * from $table_gewenste_processen 
+where 
+    ($table_gewenste_processen.creation_time > (NOW() - INTERVAL %s))
+and ($table_gewenste_processen.status in (%s))
+order by $table_gewenste_processen.creation_time desc";
 
 
 
@@ -112,36 +132,6 @@ if (!($result_status= mysql_query($status_list, $link))) {
 }
 
 
-
-if (!($result_processor_study= mysql_query(sprintf($processor_study_Stmt,10,8), $link))) {
-   DisplayErrMsg(sprintf("Error in executing %s stmt", $collector_study_Stmt)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
-}
-
-
-if (!($result_processor_series= mysql_query(sprintf($processor_series_Stmt,10,56), $link))) {
-   DisplayErrMsg(sprintf("Error in executing %s stmt", $collector_study_Stmt)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
-}
-
-
-if (!($result_processor_instance= mysql_query(sprintf($processor_instance_Stmt,10,1), $link))) {
-   DisplayErrMsg(sprintf("Error in executing %s stmt", $collector_study_Stmt)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
-}
-
-
-if (!($result_gewenste_processen= mysql_query(sprintf($gewenste_processen_Stmt,5), $link))) {
-   DisplayErrMsg(sprintf("Error in executing %s stmt", $collector_study_Stmt)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
-}
-
-
-
 $list_status='';
 $counter=0;
 
@@ -155,15 +145,59 @@ while($field = mysql_fetch_object($result_status))
   $counter++;
 } 
 
+$list_all = implode(",", array_keys($list_status));
+$list_status = array( $list_all => '*' ) + $list_status;
+
+if(empty($status))
+{
+  $status=$list_all;
+}
+
 mysql_free_result($result_status);
+
+$list_date['100 YEAR'] = '*';
+$list_date['24 HOUR'] = 'afgelopen 24 uur';
+$list_date['1 WEEK'] = 'afgelopen week';
+$list_date['1 MONTH'] = 'afgelopen maand';
+$list_date['1 YEAR'] = 'afgelopen jaar';
+
+
+if (!($result_processor_study= mysql_query(sprintf($processor_study_Stmt,10,8), $link))) {
+   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($processor_study_Stmt,10,8))) ;
+   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   exit() ;
+}
+
+
+if (!($result_processor_series= mysql_query(sprintf($processor_series_Stmt,10,56), $link))) {
+   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($processor_series_Stmt,10,56))) ;
+   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   exit() ;
+}
+
+
+if (!($result_processor_instance= mysql_query(sprintf($processor_instance_Stmt,10,1), $link))) {
+   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($processor_instance_Stmt,10,1))) ;
+   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   exit() ;
+}
+
+
+if (!($result_gewenste_processen= mysql_query(sprintf($gewenste_processen_Stmt,$date_filter,$status), $link))) {
+   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($gewenste_processen_Stmt,$date_filter,$status))) ;
+   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   exit() ;
+}
+
 
 
 $table_data = new Smarty_NM();
 $table_data->assign("status_options",$list_status);
-$table_data->assign("status_id",$gewenste_processen_id);
+$table_data->assign("status_id",$status);
+$table_data->assign("date_options",$list_date);
+$table_data->assign("date_select",$date_filter);
 
 $selector_list=$table_data->fetch("status_select.tpl");
-
 
 
 
@@ -312,6 +346,7 @@ $data = new Smarty_NM();
 
 
 $data->assign("form_action",sprintf("transfer_processor.php?t=%d",time()));
+$data->assign("selection_list",$selector_list);
 $data->assign("processor_list",$processor_status_row);
 
 

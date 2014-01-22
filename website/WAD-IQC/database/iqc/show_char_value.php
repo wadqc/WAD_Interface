@@ -138,7 +138,7 @@ while (($field_results = mysql_fetch_object($result_char)))
 
 
 $data = new Smarty_NM();
-$data->assign("Title","results Results");
+$data->assign("Title","Results");
 
 $data->assign("header_result",$header_result);
 

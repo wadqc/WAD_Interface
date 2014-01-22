@@ -305,7 +305,7 @@ while (($field_results = mysql_fetch_object($result_char)))
 
 
 $data = new Smarty_NM();
-$data->assign("Title","results Results");
+$data->assign("Title","Results");
 $data->assign("selection_list",$selector_list);
 $data->assign("header_result",$header_result);
 $data->assign("header_floating","Resultaten floating");

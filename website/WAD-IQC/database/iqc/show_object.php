@@ -167,7 +167,7 @@ mysql_free_result($result_object);
 
 
 $data = new Smarty_NM();
-$data->assign("Title","results Results");
+$data->assign("Title","Results");
 $data->assign("header_result","Object file");
 $data->assign("header_object","Resultaten Object");
 $data->assign("resultaten_object_list",$table_resultaten_object);

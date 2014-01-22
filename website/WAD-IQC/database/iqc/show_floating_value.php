@@ -249,7 +249,7 @@ mysql_free_result($result_floating);
 
 
 $data = new Smarty_NM();
-$data->assign("Title","results Results");
+$data->assign("Title","Results");
 $data->assign("selection_list",$selector_list);
 $data->assign("header_result",$header_result);
 $data->assign("header_value","Resultaten floating");

@@ -6,6 +6,7 @@
   <title>Image Quality Control</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="GENERATOR" content="Quanta Plus">
+  <link rel="shortcut icon" href="{$favicon}">
 </head>
 <body onLoad="javascript:document.first.user_name.focus();" bgcolor="#F3F6FF">
 <img src="{$login_picure_src}" border="0">

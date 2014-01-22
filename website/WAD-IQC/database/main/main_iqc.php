@@ -38,6 +38,7 @@ $top_frame=sprintf("../iqc/menu_row.php?top_menu=$top_menu&bottom_menu=$bottom_m
 
 $start_page->assign("top_frame",$top_frame);
 $start_page->assign("bottom_frame",$bottom_frame);
+$start_page->assign("favicon","../../../WAD-logo_pictures/favicon.ico");
 
 $start_page->display("start_page.tpl");
 

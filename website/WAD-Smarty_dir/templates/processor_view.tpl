@@ -9,13 +9,18 @@
   <script type="text/javascript" language="JavaScript" src="./java/scripts.js"></script> 
 </head>
 <body bgcolor="#F3F6FF">
-<h1 class="table_data_blue" >{$header} </h1>
 
-<hr>
+<br>
+<br>
+
+<!-- <h1 class="table_data_blue" >{$header} </h1> -->
+
 {$selection_list}
-<hr>
 
-<table NOSAVE="true" width="100%" border="true" bgcolor="#f3f6ff" frame="border">
+<br>
+<br>
+
+<table NOSAVE="true" class="table_general">
   {$processor_list}
 </table>
 

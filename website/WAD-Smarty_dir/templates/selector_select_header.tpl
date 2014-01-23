@@ -1,6 +1,6 @@
 <tr>
-      <td><font color="blue"><b>Selection</b></font></td>
-      <td><font color="blue"><b>Name</b></font></td>
-      <td><font color="blue"><b>Analysemodule</b></font></td>
-      <td><font color="blue"><b>Analysemodule config</b></font></td>
+      <td class="table_data_header_bold">&nbsp;&nbsp;</td>
+      <td class="table_data_header_bold">Naam&nbsp;&nbsp;</td>
+      <td class="table_data_header_bold">Analyse module&nbsp;&nbsp;</td>
+      <td class="table_data_header_bold">Module configuratie&nbsp;&nbsp;</td>
 </tr>

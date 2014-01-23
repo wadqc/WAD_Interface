@@ -11,7 +11,7 @@
 <h1 class="table_data_blue" >{$header} </h1>
 
 
-<table NOSAVE="true" width="100%" border="true" bgcolor="#f3f6ff" frame="border">
+<table NOSAVE="true" class="table_general">
   {$selector_list}
 </table>
 

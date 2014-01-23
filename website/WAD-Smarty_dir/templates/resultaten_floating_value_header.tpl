@@ -1,11 +1,9 @@
 <tr>
-      <td><font color="blue"><b>Datum</b></font></td>
-      <td><font color="blue"><b>Omschrijving</b></font></td>
-      <td><font color="blue"><b>Grootheid</b></font></td>
-      <td><font color="blue"><b>Eenheid</b></font></td>
-      <td><font color="blue"><b>Waarde</b></font></td>
-      <td><font color="blue"><b>Grens kritisch onder</b></font></td>
-      <td><font color="blue"><b>Grens kritisch boven</b></font></td>
-      <td><font color="blue"><b>Grens acceptabel onder</b></font></td>
-      <td><font color="blue"><b>Grens acceptabel boven</b></font></td>
+      <td class="table_data_header_bold">Datum&nbsp;&nbsp;</td>
+      <td class="table_data_header_bold">Omschrijving&nbsp;&nbsp;</td>
+      <td class="table_data_header_bold">Grootheid&nbsp;&nbsp;</td>
+      <td class="table_data_header_bold">Waarde&nbsp;&nbsp;</td>
+      <td class="table_data_header_bold">Eenheid&nbsp;&nbsp;</td>
+      <td class="table_data_header_bold" colspan=2>&nbsp;&nbsp;Acceptabele grens&nbsp;&nbsp;</td>
+      <td class="table_data_header_bold" colspan=2>&nbsp;&nbsp;Kritische grens&nbsp;&nbsp;</td>
 </tr>

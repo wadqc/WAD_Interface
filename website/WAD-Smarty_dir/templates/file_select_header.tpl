@@ -1,5 +1,5 @@
 <tr>
-      <td><font color="blue"><b>Selection</b></font></td>
-	<td><font color="blue"><b>description</b></font></td>
-	<td><font color="blue"><b>filename</b></font></td>
+      <td class="table_data_header_bold">&nbsp;&nbsp;</td>
+      <td class="table_data_header_bold">Omschrijving&nbsp;&nbsp;</td>
+      <td class="table_data_header_bold">Bestandsnaam&nbsp;&nbsp;</td>
 </tr>

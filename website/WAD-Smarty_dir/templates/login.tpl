@@ -3,7 +3,7 @@
 <html>
   <head >
   <link   rel="StyleSheet" href="../iqc/css/styles.css" type="text/css">
-  <title>Image Quality Control</title>
+  <title>WAD-QC</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="GENERATOR" content="Quanta Plus">
   <link rel="shortcut icon" href="{$favicon}">
@@ -33,7 +33,7 @@
 </tr>
 
 <tr>
-  <td class="table_data"><br><br><a href="{$application_link}" name="about" target="_blank">About Image Quality Control</a></td>
+  <td class="table_data"><br><br><a href="{$application_link}" name="about" target="_blank">About WAD-QC</a></td>
 </tr>
 </table>
 

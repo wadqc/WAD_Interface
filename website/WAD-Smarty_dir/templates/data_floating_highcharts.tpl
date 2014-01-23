@@ -194,10 +194,11 @@
 
 <div id="container" style="width: 100%; height: 60%; margin: 0 auto"></div>  
 <h1 class="table_data_blue" >{$header_result} </h1>
-<hr>
-<h1 class="table_data_blue" >{$header_value} </h1>
+
+<!-- <h1 class="table_data_blue" >{$header_value} </h1> -->
+
 <a href="{$export_action}" target="_blank"><img src="{$picture_src}" border=0></a>
-<table NOSAVE="true" width="100%" border="true" bgcolor="#f3f6ff" frame="border">
+<table NOSAVE="true" class="table_general">
   {$resultaten_value_list}
 </table>
  

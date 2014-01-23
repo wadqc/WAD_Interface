@@ -1,4 +1,4 @@
-<tr>
-      <td><font color="blue"><b>Name</b></font></td>
-      <td><font color="blue"><b>Description</b></font></td>
-</tr>
+<tr><b>
+      <td class="table_data_header_bold">Selector&nbsp;&nbsp;</td>
+      <td class="table_data_header_bold">Beschrijving&nbsp;&nbsp;</td>
+</b></tr>

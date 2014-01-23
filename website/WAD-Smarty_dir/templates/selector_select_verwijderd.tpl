@@ -1,4 +1,4 @@
-<td bgcolor="#F3F6FF" class="template_data" colspan="6">{$recover_data} </td>
+<td>&nbsp; {$recover_data} &nbsp;</td>
 
 
 

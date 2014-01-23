@@ -10,37 +10,19 @@
 <body bgcolor="#f3f6ff">
 
 
-<table cellspacing="0" cellpadding="0" align="left">
+<table cellspacing="0" cellpadding="0" border="0" align="left">
   <tr>
-    <td>
-      <table cellspacing="4" cellpadding="0" align="left">
-        <tr>
-          <td> <a href="{$application_link}" name="about" type="image/jpeg" target="_blank"><img src="{$application_picture}"  border="0"></a> </td>
-          <td valign="top">
-            <table align="left">
-              <tr>
-                <td nowrap>
-				  <font class="table_data_user">{$user}</font>
-				</td>
-                <td>
-			      <a href="logout.php" class="table_data_select" type="text/html" target="_parent" class="href_table_data">Logout</A>
-				</td>
-              </tr>
-            </table>
-          </td>
-      	  <td><font class="normal_data">{$version}</td>
+          <td width="70"><a href="{$application_link}" name="about" type="image/jpeg" target="_blank"><img src="{$application_picture}"  border="0"></a> </td>
+      	  <td align="left"><font class="normal_data">WAD-QC &nbsp;&nbsp; | &nbsp;&nbsp; Version {$version} &nbsp;&nbsp; | &nbsp;&nbsp; User {$user}</td>
         </tr>
-      </table>
-    </td>
-  </tr>
   <tr>
-    <td>
+    <td colspan="2">
       <table>
         <tr>
           {$top_row}
+          <td><a href="logout.php" type="text/html" target="_parent" class="menu_top">Logout</A></td>
+          <td nowrap align="center"><font class="table_data_user"></font></td>
 		</tr>
-	  </table>
-	  <table>
         <tr>
           {$bottom_row}
 		</tr>

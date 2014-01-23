@@ -1,3 +1,54 @@
+/* WAD-QC CSS style sheet */
+
+/* algemene tabelopmaak
+   NB: <tr> propery bgcolor wordt in PHP code gezet voor alternerende rij kleuren */
+.table_general {
+ background-color: "#f3f6ff";
+ border: 0px solid #B8E7FF;
+ border-collapse: separate;
+ border-spacing: 2px 0px;
+ padding: 2px;
+ ;
+}
+.table_general td { 
+ padding: 2px;
+}
+
+/* tabel met selectiebox boven resultaten
+   NB: <tr> propery bgcolor wordt in PHP code gezet voor alternerende rij kleuren */
+.table_selectorbar {
+ background-color: "#B8E7FF";
+ border: 0px solid #f3f6ff;
+ border-collapse: separate;
+ border-spacing: 2px 0px;
+ /*padding: 6px;*/
+ 
+ font-family: arial;
+ font-size: 12px;
+ font-style: normal;
+ font-variant: normal;
+ font-weight: normal;
+ color: black;
+ text-decoration: none;
+ ;
+}
+.table_selectorbar td {
+ padding: 2px;
+}
+
+
+
+.table_data_header_bold {
+ font-family: arial;
+ font-size: 14px;
+ font-style: normal;
+ font-variant: normal;
+ font-weight: bold;
+ color: "#B8E7FF";
+ text-decoration: bold;
+ ;
+}
+
 .table_data {
  font-family: arial;
  font-size: 12px;
@@ -105,7 +156,7 @@ display:none;}
  font-style: normal;
  font-variant: normal;
  font-weight: normal;
- color: blue;
+ color: black;
  text-decoration: none; 
  white-space:nowrap;
 }
@@ -499,7 +550,7 @@ a.menu_top{
 border: 2px solid #ccc;
 padding: 0px;
 width:75px;
-background-color: #1E8BFF;
+background-color: #B8E7FF;
 display: block;
 font-family: arial;
 font-size: 12px;
@@ -508,7 +559,7 @@ font-variant: normal;
 font-weight: normal;
 color: black;
 text-decoration: none;
-text-align: middle;
+text-align: center;
 }
 
 a:hover.menu_top{
@@ -526,7 +577,7 @@ a.menu_top_selected{
 border: 2px solid #ff5c30;
 padding: 0px;
 width:75px;
-background-color: #1E8BFF;
+background-color: #B8E7FF;
 display: block;
 font-family: arial;
 font-size: 12px;
@@ -535,11 +586,11 @@ font-variant: normal;
 font-weight: normal;
 color: black;
 text-decoration: none;
-text-align: middle;
+text-align: center;
 }
 
 a:hover.menu_top_selected{
-background-color: #1E8BFF;
+background-color: #B8E7FF;
 background-repeat: no-repeat;
 } 
 
@@ -547,7 +598,7 @@ a.menu_bottom{
 border: 2px solid #ccc;
 padding: 0px;
 width:75px;
-background-color: #9AC7FF;
+background-color: #B8E7FF;
 display: block;
 font-family: arial;
 font-size: 12px;
@@ -556,7 +607,7 @@ font-variant: normal;
 font-weight: normal;
 color: black;
 text-decoration: none;
-text-align: middle;
+text-align: center;
 }
 
 a:hover.menu_bottom{
@@ -573,7 +624,7 @@ a.menu_bottom_selected{
 border: 2px solid #ff5c30;
 padding: 0px;
 width:75px;
-background-color: #9AC7FF;
+background-color: #B8E7FF;
 display: block;
 font-family: arial;
 font-size: 12px;
@@ -582,10 +633,10 @@ font-variant: normal;
 font-weight: normal;
 color: black;
 text-decoration: none;
-text-align: middle;
+text-align: center;
 }
 
 a:hover.menu_bottom_selected{
-background-color: #9AC7FF;
+background-color: #B8E7FF;
 background-repeat: no-repeat;
 } 

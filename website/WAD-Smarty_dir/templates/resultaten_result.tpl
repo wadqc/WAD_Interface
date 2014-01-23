@@ -10,16 +10,20 @@
 </head>
 <body bgcolor="#F3F6FF">
 <form action="{$action_result}" method="POST" >
-<h1 class="table_data_blue" >{$header_result} </h1>
-<hr>
+<h1 class="table_data_blue" >&nbsp;&nbsp; {$header_result} </h1>
+
 {$selection_list}
-<hr>
-<h1 class="table_data_blue" >{$header_floating} </h1>
-<table NOSAVE="true" width="100%" border="true" bgcolor="#f3f6ff" frame="border">
+
+<!-- <h1 class="table_data_blue" >{$header_floating} </h1> -->
+<br>
+
+<table NOSAVE="true" class="table_general">
   {$resultaten_floating_list}
 </table>
+
 <h1 class="table_data_blue" >{$header_object} </h1>
-<table NOSAVE="true" width="100%" bgcolor="#f3f6ff">
+
+<table NOSAVE="true" class="table_general">
    {$resultaten_object_list}
 </table>
 

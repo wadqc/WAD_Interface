@@ -13,7 +13,7 @@
 <form action="{$form_action}" method="POST">
 
 
-<table NOSAVE="true" width="100%" border="true" bgcolor="#f3f6ff" frame="border">
+<table NOSAVE="true" class="table_general">
   {$users_list}
 </table>
 <table bgcolor="#6767ff">

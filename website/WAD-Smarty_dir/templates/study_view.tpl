@@ -8,7 +8,7 @@
   <meta name="GENERATOR" content="Quanta Plus">
 </head>
 <body bgcolor="#F3F6FF">
-<table NOSAVE="true" width="100%" border="true" bgcolor="#f3f6ff" frame="border">
+<table NOSAVE="true" class="table_general">
   {$study_list}
 </table>
 

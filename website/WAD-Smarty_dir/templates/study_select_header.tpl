@@ -1,9 +1,9 @@
 <tr>
-    <td><font color="blue"><b>Selectie</b></font></td>
-    <td><font color="blue"><b>Patient Name</b></font></td>
-    <td><font color="blue"><b>Patient ID</b></font></td>
-    <td><font color="blue"><b>Study Description</b></font></td>
-    <td><font color="blue"><b>Study Datetime</b></font></td>
-    <td><font color="blue"><b>Accession Number</b></font></td>
-    <td><font color="blue"><b>Status</b></font></td>
+    <td class="table_data_header_bold">&nbsp;&nbsp;</td>
+    <td class="table_data_header_bold">&nbsp;&nbsp;Patient naam</td>
+    <td class="table_data_header_bold">&nbsp;&nbsp;Patient ID</td>
+    <td class="table_data_header_bold">&nbsp;&nbsp;Studie omschrijving</td>
+    <td class="table_data_header_bold">&nbsp;&nbsp;Studie datum tijd</td>
+    <td class="table_data_header_bold">&nbsp;&nbsp;Accession number</td>
+    <td class="table_data_header_bold">&nbsp;&nbsp;Status</td>
 </tr>

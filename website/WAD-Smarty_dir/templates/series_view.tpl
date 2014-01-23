@@ -8,9 +8,9 @@
   <meta name="GENERATOR" content="Quanta Plus">
 </head>
 <body bgcolor="#F3F6FF">
-<h1 class="table_data_blue" >Patient:{$patient_name}, Patient ID:{$patient_id}, study description: {$study_description} </h1> 
+<h1 class="table_data_blue" >Patient: {$patient_name}, Patient ID: {$patient_id}, study description: {$study_description} </h1> 
 
-<table NOSAVE="true" width="100%" border="true" bgcolor="#f3f6ff" frame="border">
+<table NOSAVE="true" class="table_general">
   {$series_list}
 </table>
 

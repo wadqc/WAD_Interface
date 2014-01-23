@@ -3,7 +3,7 @@
 <html>
 <head >
   <link   rel="StyleSheet" href="./css/styles.css" type="text/css">
-  <title>Image Qualty Control</title>
+  <title>WAD-QC</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="GENERATOR" content="Quanta Plus">
 </head>
@@ -15,17 +15,17 @@
   </tr>
   <tr>
     <td class="table_data_blue_header">
-      <br>Image Quality Control (IQC)
+      <br>WAD-QC
     </td>
   </tr>
   <tr>
     <td class="table_data">
-      De IQC software is geinitieerd vanuit de <a href="http://www.nvkf.nl" target="_blank" class="table_data_select" type="text/html">NVKF</a>
+      De WAD-QC software is geinitieerd vanuit de <a href="http://www.nvkf.nl" target="_blank" class="table_data_select" type="text/html">NVKF</a>
       Werkgroep Apparatuur in de Diagnostiek (WAD) voor het automatiseren van kwaliteitscontroles voor beeldvormende apparatuur. De software is bedoeld om DICOM beelden
       te ontvangen, deze vervolgens volledig automatisch te analysen door een analyse module, en de resultaten hiervan beschikbaar te maken in een database.
       
       <br>Deze web interface maakt het mogelijk om enerzijds een analyse module te koppelen aan DICOM beelden met een bepaald kenmerk, en anderzijds de resultaten van de 
-      analyses te bekijken. De analyse modules zelf moeten worden geupload als executable file, deze zijn strikt genomen geen onderdeel van de WAD IQC software.
+      analyses te bekijken. De analyse modules zelf moeten worden geupload als executable file, deze zijn strikt genomen geen onderdeel van de WAD-QC software.
     </td>
   </tr>
   <tr>
@@ -41,7 +41,7 @@
 
 <tr>
     <td class="table_data_blue_header">
-      <br>Image Quality Control - Copyright (C) 2012-2013 - NVKF Werkgroep Apparatuur in de Diagnostiek
+      <br>WAD-QC - Copyright (C) 2012-2013 - NVKF Werkgroep Apparatuur in de Diagnostiek
     </td>
   </tr>
   <tr>

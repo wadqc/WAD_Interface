@@ -26,7 +26,7 @@ Indien beelden en of studies voldoen aan de gestelde voorwaarden zullen de analy
   </tr>
   <tr>
     <td>
-      <a href="./WAD-IQC/database/login/main_login_iqc.php" class="table_data_select" type="text/html"><br>Image Quality Control </A></font> </font>
+      <a href="./WAD-IQC/database/login/main_login_iqc.php" class="table_data_select" type="text/html"><br>WAD-QC</A></font> </font>
     </td>
   </tr>
   

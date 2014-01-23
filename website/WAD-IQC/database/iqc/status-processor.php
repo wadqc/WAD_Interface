@@ -11,10 +11,10 @@ if (!empty($_GET['pk']))
   $study_pk=$_GET['pk'];
 }
 
-if (!empty($_GET['status']))
+if (isset($_GET['status']))
 {
   $status=$_GET['status'];
-} elseif (!empty($_POST['status']))
+} elseif (isset($_POST['status']))
 {
   $status=$_POST['status'];
 }
@@ -148,7 +148,7 @@ while($field = mysql_fetch_object($result_status))
 $list_all = implode(",", array_keys($list_status));
 $list_status = array( $list_all => '*' ) + $list_status;
 
-if(empty($status))
+if(!isset($status))
 {
   $status=$list_all;
 }

@@ -81,7 +81,7 @@ $userName="iqc";
 $password="TY8BqYRdn3Uhzq8T";	
 
 $databaseName = "iqc"; 	   
-
+$version = "0.9";
 
 
 $picture_root="./../../";

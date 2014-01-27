@@ -16,19 +16,25 @@
 <table NOSAVE="true" class="table_general">
   {$users_list}
 </table>
-<table bgcolor="#6767ff">
-<tr>
-  <td bgcolor="#F3F6FF" class="template_data">Selection</td>
-  <td bgcolor="#f3f6ff" class="template_data"> <select name="transfer_action">
-    <option value="reset_pwd" >reset_pwd</option>
-    <option value="delete" >delete</option>
-    </select><input type="submit" value="Go!">
+
+<br>
+<br>
+
+<table class="table_selectorbar">
+<tr bgcolor="#B8E7FF">
+  <td>&nbsp;&nbsp;Selectie
+    &nbsp;&nbsp;<select name="transfer_action">
+      <option value="reset_pwd">Wachtwoord reset</option>
+      <option value="delete">User verwijderen</option></select>
+    &nbsp;&nbsp;<input type="submit" value="Go!">
+  </td>
+</tr>
+<tr bgcolor="#B8E7FF">
+  <td colspan="2" align="left">
+     &nbsp;&nbsp;{$new_users}&nbsp;&nbsp;
   </td>
 </tr>
 </table>
-
-
-{$new_users}
 
 
 </form>

@@ -95,7 +95,7 @@ $data = new Smarty_NM();
 $data->assign("form_action",sprintf("transfer_users.php?t=%d",time()));
 $data->assign("users_list",$users_row);
 
-$new_users=sprintf("<a href=\"new_users.php?users_pk=-1&t=%d\">Add new User</a>",time());
+$new_users=sprintf("<a href=\"new_users.php?users_pk=-1&t=%d\">Toevoegen nieuwe gebruiker</a>",time());
 
 $data->assign("new_users",$new_users);
 

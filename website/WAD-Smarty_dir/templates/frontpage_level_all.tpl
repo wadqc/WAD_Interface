@@ -13,7 +13,7 @@
 <table cellspacing="0" cellpadding="0" border="0" align="left">
   <tr>
           <td width="70"><a href="{$application_link}" name="about" type="image/jpeg" target="_blank"><img src="{$application_picture}"  border="0"></a> </td>
-      	  <td align="left"><font class="normal_data"><b>WAD-QC</b> &nbsp;&nbsp; | &nbsp;&nbsp; Version {$version} &nbsp;&nbsp; | &nbsp;&nbsp; User {$user}</td>
+      	  <td align="left"><font class="normal_data"><b>WAD-QC</b> &nbsp;&nbsp; | &nbsp;&nbsp; Versie {$version} &nbsp;&nbsp; | &nbsp;&nbsp; User {$user} </font></td>
         </tr>
   <tr>
     <td colspan="2">

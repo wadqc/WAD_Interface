@@ -14,7 +14,7 @@
 <br>
 
 <!-- <h1 class="table_data_blue" >{$header} </h1> -->
-
+<form action="{$form_action}" method="POST">
 {$selection_list}
 
 <br>
@@ -23,5 +23,7 @@
 <table NOSAVE="true" class="table_general">
   {$processor_list}
 </table>
+
+</form>
 
 </html>

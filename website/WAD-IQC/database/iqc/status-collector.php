@@ -3,6 +3,11 @@ require("../globals.php") ;
 require("./common.php") ;
 require("./php/includes/setup.php");
 
+// tbv filter op series-niveau (doorgeven van studie-info bij onchange); date_filter en status komen dan uit de selectieboxes ipv $_GET
+$GET=$_GET;
+unset($GET['status']);
+unset($GET['date_filter']);
+$querystring = http_build_query($GET, '', '&');;
 
 $study_pk=-1;
 
@@ -24,12 +29,32 @@ if (!empty($_GET['study_description']))
   $study_description=$_GET['study_description'];
 }
 
+if (isset($_GET['status']))
+{
+  $status=$_GET['status'];
+} elseif (isset($_POST['status']))
+{
+  $status=$_POST['status'];
+}
+
+if (!empty($_GET['date_filter']))
+{
+  $date_filter=$_GET['date_filter'];
+} elseif (!empty($_POST['date_filter']))
+{
+  $date_filter=$_POST['date_filter'];
+} else
+{
+  $date_filter = '100 YEAR';
+}
 
 $table_patient='patient';
 $table_study='study';
 $table_series='series';
+$table_instance='instance';
 $table_study_status='collector_study_status';
 $table_series_status='collector_series_status';
+$table_collector_status_omschrijving='collector_status_omschrijving';
 $table_omschrijving='collector_status_omschrijving';
 
 
@@ -43,29 +68,35 @@ INNER JOIN
    inner join collector_status_omschrijving on collector_study_status.study_status=collector_status_omschrijving.nummer
  ) ON study.pk = collector_study_status.study_fk
 ) ON patient.pk = study.patient_fk
-ORDER BY study_datetime";
+WHERE collector_study_status.study_status in (%s)
+AND ( study.study_datetime > (NOW() - INTERVAL %s)) 
+ORDER BY study_datetime desc";
 
 
-$collector_series_Stmt = "SELECT distinct series.series_no as 'series_number', series.modality as 'modality', series.series_desc as 'series_description', series.station_name as 'station_name', series.pps_start as 'series_datetime', collector_status_omschrijving.veld_omschrijving as 'omschrijving'
+$collector_series_Stmt = "SELECT distinct series.series_no as 'series_number', series.modality as 'modality', series.series_desc as 'series_description', series.station_name as 'station_name', $table_instance.content_datetime as 'series_datetime', collector_status_omschrijving.veld_omschrijving as 'omschrijving', series.pk as 'series_pk'
 FROM 
-series
+instance, series
 INNER JOIN 
  ( collector_series_status
    inner join collector_status_omschrijving on collector_series_status.series_status=collector_status_omschrijving.nummer
  ) ON series.pk = collector_series_status.series_fk
 where 
 series.study_fk='%d'
-ORDER BY series_datetime";
+AND collector_series_status.series_status in (%s)
+AND ( $table_instance.content_datetime > (NOW() - INTERVAL %s)) 
+AND series.pk=instance.series_fk
+AND $table_instance.pk=(select min(pk) from $table_instance where series_fk=$table_series.pk)
+ORDER BY series_datetime desc";
 
 
-
+$status_list = "SELECT * from $table_collector_status_omschrijving order by $table_collector_status_omschrijving.nummer"; 
 
 
 
 
 
 // Connect to the Database
-if (!($link=mysql_pconnect($hostName, $userName, $password))) {
+if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
    DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
                              $hostName, $userName)) ;
    exit();
@@ -79,17 +110,53 @@ if (!mysql_select_db($databaseName, $link)) {
    exit() ;
 }
 
-if (!($result_collector_study= mysql_query($collector_study_Stmt, $link))) {
-   DisplayErrMsg(sprintf("Error in executing %s stmt", $collector_study_Stmt)) ;
+if (!($result_status= mysql_query($status_list, $link))) {
+   DisplayErrMsg(sprintf("Error in executing %s stmt", $status_list)) ;
    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
    exit() ;
+}
+
+
+$list_status='';
+$counter=0;
+
+while($field = mysql_fetch_object($result_status))
+{
+  if (($counter==0)&&($status_id==-1)) //first visit, id will be changed to the id that is linked to the most recent date of study
+  {
+    $status_id=$field->nummer;
+  }   
+  $list_status["$field->nummer"]="$field->veld_omschrijving";
+  $counter++;
+} 
+
+$list_all = implode(",", array_keys($list_status));
+$list_status = array( $list_all => '*' ) + $list_status;
+
+if(!isset($status))
+{
+  $status=$list_all;
+}
+
+mysql_free_result($result_status);
+
+$list_date['100 YEAR'] = '*';
+$list_date['24 HOUR'] = 'afgelopen 24 uur';
+$list_date['1 WEEK'] = 'afgelopen week';
+$list_date['1 MONTH'] = 'afgelopen maand';
+$list_date['1 YEAR'] = 'afgelopen jaar';
+
+if (!($result_collector_study= mysql_query(sprintf($collector_study_Stmt,$status,$date_filter), $link))) {
+   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($collector_study_Stmt,$status,$date_filter))) ;
+   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   exit();
 }
 
 
 if ($study_pk>0)
 {
-   if (!($result_collector_series= mysql_query(sprintf($collector_series_Stmt,$study_pk), $link))) {
-   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($collector_study_Stmt,$pk_study) )) ;
+   if (!($result_collector_series= mysql_query(sprintf($collector_series_Stmt,$study_pk,$status,$date_filter), $link))) {
+   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($collector_series_Stmt,$study_pk,$status,$date_filter) )) ;
    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
    exit() ;
 }
@@ -97,6 +164,14 @@ if ($study_pk>0)
 
 }
 
+
+$table_data = new Smarty_NM();
+$table_data->assign("status_options",$list_status);
+$table_data->assign("status_id",$status);
+$table_data->assign("date_options",$list_date);
+$table_data->assign("date_select",$date_filter);
+$table_data->assign("querystring",$querystring);
+$selector_list=$table_data->fetch("status_filter_selector.tpl");
 
 
 if ($study_pk<0)
@@ -121,15 +196,15 @@ while ($field_collector_study = mysql_fetch_object($result_collector_study))
    
    if ($k==0) //define header data
    {
-     //if (!empty($user_level_1))
-     //{
-     //  $collector_study_row=$table_data->fetch("study_select_header.tpl");
-     //}
-     //if ( (!empty($user_level_2))||(!empty($user_level_5)) ) 
-     //{
-     //  $collector_study_row=$table_data->fetch("study_header.tpl");
-     //}
-     $collector_study_row=$table_data->fetch("study_header.tpl");
+     if (!empty($user_level_1))
+     {
+       $collector_study_row=$table_data->fetch("study_select_header.tpl");
+     }
+     if ( (!empty($user_level_2))||(!empty($user_level_5)) ) 
+     {
+       $collector_study_row=$table_data->fetch("study_header.tpl");
+     }
+     //$collector_study_row=$table_data->fetch("study_header.tpl");
      $pat_id=$field_collector_study->pat_id;
      $k++;
    }
@@ -147,15 +222,15 @@ while ($field_collector_study = mysql_fetch_object($result_collector_study))
 
    
    $table_data->assign("action",$action);
-   //if (!empty($user_level_1))
-   //{
-   //  $collector_study_row.=$table_data->fetch("study_select_row.tpl");
-   //}
-   //if ( (!empty($user_level_2))||(!empty($user_level_5)) )
-   //{
-   //  $collector_study_row.=$table_data->fetch("study_row.tpl");
-   //}
-   $collector_study_row.=$table_data->fetch("study_row.tpl");
+   if (!empty($user_level_1))
+   {
+     $collector_study_row.=$table_data->fetch("study_select_row.tpl");
+   }
+   if ( (!empty($user_level_2))||(!empty($user_level_5)) )
+   {
+     $collector_study_row.=$table_data->fetch("study_row.tpl");
+   }
+   //$collector_study_row.=$table_data->fetch("study_row.tpl");
    //if ($pat_id!=$field_collector_study->pat_id)
    //{ 
    //   $pat_id=$field_collector_study->pat_id;
@@ -173,10 +248,20 @@ mysql_free_result($result_collector_study);
 
 $data = new Smarty_NM();
 
-
+$data->assign("selection_list",$selector_list);
 $data->assign("study_list",$collector_study_row);
-$data->display("study_view.tpl");
+$data->assign("form_action",sprintf("transfer_selector.php?t=%d",time()));
 
+
+if (!empty($user_level_1))
+{
+  $data->display("study_select.tpl");
+}
+
+if ( (!empty($user_level_2))||(!empty($user_level_3)) )
+{
+  $data->display("study_view.tpl");
+}
 
 }  // end study_pk<0
 
@@ -204,18 +289,18 @@ $b=($j%2);
    
    if ($j==0) //define header data
    {
-     //if (!empty($user_level_1))
-     //{
-     //  $collector_series_row=$table_data->fetch("series_select_header.tpl");
-     //}
-     //if ( (!empty($user_level_2))||(!empty($user_level_5)) ) 
-     //{
-     //  $collector_series_row=$table_data->fetch("series_header.tpl");
-     //}
-     $collector_series_row=$table_data->fetch("series_header.tpl");
+     if (!empty($user_level_1))
+     {
+       $collector_series_row=$table_data->fetch("series_select_header.tpl");
+     }
+     if ( (!empty($user_level_2))||(!empty($user_level_5)) ) 
+     {
+       $collector_series_row=$table_data->fetch("series_header.tpl");
+     }
+     //$collector_series_row=$table_data->fetch("series_header.tpl");
    }
    $checkbox_name=sprintf("series[%d]",$field_collector_series->series_pk);
-   //$action=sprintf("status-collector.php?pk=%s&t=%d",$field_collector_study->study_pk,time());
+   $action=sprintf("status-collector.php?pk=%s&t=%d",$field_collector_study->study_pk,time());
    $table_data->assign("bgcolor",$bgcolor);
    $table_data->assign("checkbox_name",$checkbox_name);
    $table_data->assign("series_number",$field_collector_series->series_number);
@@ -226,16 +311,16 @@ $b=($j%2);
    $table_data->assign("status",$field_collector_series->omschrijving);
 
    
-   //$table_data->assign("action",$action);
-   //if (!empty($user_level_1))
-   //{
-   //  $collector_series_row.=$table_data->fetch("series_select_row.tpl");
-   //}
-   //if ( (!empty($user_level_2))||(!empty($user_level_5)) )
-   //{
-   //  $collector_series_row.=$table_data->fetch("series_row.tpl");
-   //}
-   $collector_series_row.=$table_data->fetch("series_row.tpl");
+   $table_data->assign("action",$action);
+   if (!empty($user_level_1))
+   {
+     $collector_series_row.=$table_data->fetch("series_select_row.tpl");
+   }
+   if ( (!empty($user_level_2))||(!empty($user_level_5)) )
+   {
+     $collector_series_row.=$table_data->fetch("series_row.tpl");
+   }
+   //$collector_series_row.=$table_data->fetch("series_row.tpl");
    $j++;
    
 }
@@ -252,23 +337,23 @@ $data = new Smarty_NM();
 $data->assign("patient_name",$patient_name);
 $data->assign("patient_id",$patient_id);
 $data->assign("study_description",$study_description);
-
+$data->assign("selection_list",$selector_list);
 $data->assign("series_list",$collector_series_row);
+$data->assign("form_action",sprintf("transfer_selector.php?t=%d",time()));
 
-$data->display("series_view.tpl");
+if (!empty($user_level_1))
+{
+  $data->display("series_select.tpl");
+}
 
-
-
+if ( (!empty($user_level_2))||(!empty($user_level_3)) )
+{
+  $data->display("series_view.tpl");
 }
 
 
 
-
-
-
-
-
-
+}
 
 
 

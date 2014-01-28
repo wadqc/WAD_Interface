@@ -17,8 +17,18 @@
 
 <br>
 <br>
+
 <table NOSAVE="true" class="table_general">
   {$study_list}
+</table>
+
+<table class="table_selectorbar">
+<tr bgcolor="#B8E7FF">
+  <td>&nbsp;&nbsp;Selectie
+    &nbsp;&nbsp;<select name="transfer_action"><option value="reset">reset</option></select>
+    &nbsp;&nbsp;<input type="submit" value="Go!">
+  </td>
+</tr>
 </table>
 </form>
 </html>

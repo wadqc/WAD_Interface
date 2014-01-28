@@ -9,16 +9,33 @@
   <script type="text/javascript" language="JavaScript" src="./java/scripts.js"></script> 
 </head>
 <body bgcolor="#F3F6FF">
+
+<button onclick="location.href='status-collector.php';">Ga terug</button>
+
 <form action="{$form_action}" method="POST">
-<br>
+
 <br>
 
 {$selection_list}
 
 <br>
 <br>
+
+<h1 class="table_data_blue" >Patient: {$patient_name}, Patient ID: {$patient_id}, study description: {$study_description} </h1> 
+
 <table NOSAVE="true" class="table_general">
-  {$study_list}
+  {$series_list}
 </table>
+
+<table class="table_selectorbar">
+<tr bgcolor="#B8E7FF">
+  <td>&nbsp;&nbsp;Selectie
+    &nbsp;&nbsp;<select name="transfer_action"><option value="reset">reset</option></select>
+    &nbsp;&nbsp;<input type="submit" value="Go!">
+  </td>
+</tr>
+</table>
+
 </form>
+
 </html>

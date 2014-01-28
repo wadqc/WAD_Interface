@@ -183,12 +183,6 @@ return true;
 
 }
 
-function period_list(term,school,department,school_year,grade,klas,v)
-{
-  action='subject.php?term='+term+'&school='+school+'&department='+department+'&school_year='+school_year+'&grade='+grade+'&class='+klas+'&v='+v;
-  self.location.replace(action);
-}
-
 function selector_drop_list(gewenste_processen_id,niveau,status,selector_fk,analyse_level,v) 
 {
   action='show_results.php?selector_fk='+selector_fk+'&analyse_level='+analyse_level+'&gewenste_processen_id='+gewenste_processen_id+'&niveau='+niveau+'&status='+status+'&v='+v;
@@ -198,5 +192,11 @@ function selector_drop_list(gewenste_processen_id,niveau,status,selector_fk,anal
 function processor_status_drop_list(date_filter,status)
 {
   action='status-processor.php?date_filter='+date_filter+'&status='+status;
+  self.location.replace(action);
+}
+
+function selector_status_drop_list(date_filter,status,querystring)
+{
+  action='status-collector.php?date_filter='+date_filter+'&status='+status+'&'+querystring;
   self.location.replace(action);
 }

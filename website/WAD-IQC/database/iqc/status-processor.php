@@ -111,7 +111,7 @@ order by $table_gewenste_processen.creation_time desc";
 
 
 // Connect to the Database
-if (!($link=mysql_pconnect($hostName, $userName, $password))) {
+if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
    DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
                              $hostName, $userName)) ;
    exit();
@@ -197,7 +197,7 @@ $table_data->assign("status_id",$status);
 $table_data->assign("date_options",$list_date);
 $table_data->assign("date_select",$date_filter);
 
-$selector_list=$table_data->fetch("status_select.tpl");
+$selector_list=$table_data->fetch("status_filter_processor.tpl");
 
 
 

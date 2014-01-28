@@ -47,7 +47,7 @@ $table_study='study';
 $table_collector_study_status='collector_study_status';
 $table_series='series';
 $table_collector_series_status='collector_series_status';
-$reset_status=0;
+$reset_status=1;
 
 
 //$del_studies_Stmt=''; 

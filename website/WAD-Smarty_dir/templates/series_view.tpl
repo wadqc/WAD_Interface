@@ -10,7 +10,7 @@
 </head>
 <body bgcolor="#F3F6FF">
 
-<button onclick="location.href='status-collector.php';">Ga terug</button>
+<button onclick="location.href='status-collector.php';">Terug</button>
 
 <form action="{$form_action}" method="POST">
 

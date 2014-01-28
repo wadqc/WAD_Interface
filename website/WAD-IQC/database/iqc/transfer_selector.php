@@ -24,6 +24,24 @@ if (isset($_POST['series'])) {
    $selected_series=implode(",", array_keys($_POST['series']));
 }
 
+$querystring='';
+
+if (!empty($_GET['pk']))
+{
+  $querystring .= 'pk=' . $_GET['pk'] . '&';
+}
+if (!empty($_GET['patient_name']))
+{
+  $querystring .= 'patient_name=' . $_GET['patient_name'] . '&';
+}
+if (!empty($_GET['patient_id']))
+{
+  $querystring .= 'patient_id=' . $_GET['patient_id'] . '&';
+}
+if (!empty($_GET['study_description']))
+{
+  $querystring .= 'study_description=' . $_GET['study_description'] . '&';
+}
 
 $table_study='study';
 $table_collector_study_status='collector_study_status';
@@ -76,7 +94,7 @@ if($level=='study' && $transfer_action='reset'){
 
 $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname($_SERVER['PHP_SELF']));
   
-$executestring.= sprintf("status-collector.php?t=%d",time());
+$executestring.= sprintf("status-collector.php?t=%d&%s",time(),$querystring);
 header($executestring);
 exit();
 

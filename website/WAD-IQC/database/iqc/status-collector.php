@@ -3,12 +3,6 @@ require("../globals.php") ;
 require("./common.php") ;
 require("./php/includes/setup.php");
 
-// tbv filter op series-niveau (doorgeven van studie-info bij onchange); date_filter en status komen dan uit de selectieboxes ipv $_GET
-$GET=$_GET;
-unset($GET['status']);
-unset($GET['date_filter']);
-$querystring = http_build_query($GET, '', '&');;
-
 $study_pk=-1;
 
 if (!empty($_GET['pk']))
@@ -164,6 +158,11 @@ if ($study_pk>0)
 
 }
 
+// tbv filter op series-niveau (doorgeven van studie-info bij onchange); date_filter en status komen dan uit de selectieboxes ipv $_GET
+$GET=$_GET;
+unset($GET['status']);
+unset($GET['date_filter']);
+$querystring = http_build_query($GET, '', '&');;
 
 $table_data = new Smarty_NM();
 $table_data->assign("status_options",$list_status);
@@ -250,7 +249,8 @@ $data = new Smarty_NM();
 
 $data->assign("selection_list",$selector_list);
 $data->assign("study_list",$collector_study_row);
-$data->assign("form_action",sprintf("transfer_selector.php?t=%d",time()));
+$data->assign("form_action",sprintf("transfer_selector.php?t=%d&%s",time(),$querystring));
+
 
 
 if (!empty($user_level_1))
@@ -339,7 +339,7 @@ $data->assign("patient_id",$patient_id);
 $data->assign("study_description",$study_description);
 $data->assign("selection_list",$selector_list);
 $data->assign("series_list",$collector_series_row);
-$data->assign("form_action",sprintf("transfer_selector.php?t=%d",time()));
+$data->assign("form_action",sprintf("transfer_selector.php?t=%d&%s",time(),$querystring));
 
 if (!empty($user_level_1))
 {

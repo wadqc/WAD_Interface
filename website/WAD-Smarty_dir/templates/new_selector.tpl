@@ -11,7 +11,7 @@
 
 <form action="{$action_new_selector}" method="POST" >
 
-<font class="table_data_blue_header">New Selector</font>
+<font class="table_data_blue_header">{$title}</font>
 <hr>
 <table>
   <tr>

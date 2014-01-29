@@ -7,7 +7,7 @@ require("./selector_function.php") ;
 require("./php/includes/setup.php");
 
 $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname($_SERVER['PHP_SELF']));
- 
+$title = "New Selector"; 
 
 
 // Connect to the Database
@@ -384,7 +384,8 @@ $table_selector_buttons=$buttons->fetch("pssi_buttons.tpl");
 $selector->assign("submit_value","Insert");
 
 if ($pk>0)
-{
+{ 
+  $title = "Edit Selector";
   if ( ($selector_patient_fk>0)||($selector_study_fk>0)||($selector_series_fk>0)||($selector_instance_fk>0))  //get selector data
   {
      selector_function_pssi($pk,$selector_patient_fk,$selector_study_fk,$selector_series_fk,$selector_instance_fk,$table_pssi);
@@ -451,7 +452,7 @@ $selector->assign("action_new_selector",sprintf("new_selector.php?pk=$pk&selecto
   }
   mysql_free_result($result_analysemodule_cfg);
   $selector->assign("analysemodule_cfg_options",$analysemodule_cfg_list);
-
+  $selector->assign("title",$title);
     
   $selector->display("new_selector.tpl");
     

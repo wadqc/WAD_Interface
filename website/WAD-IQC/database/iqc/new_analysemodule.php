@@ -127,7 +127,8 @@ if(!empty($_POST['action']))
 
 
     $filename_strippedzip=basename($filename, '.zip');     // strip de zip-extensie om de executable naam te extraheren
-    
+    chmod($target_folder . '/' . $filename_strippedzip, 0755);    // maak de module executable voor compatibiliteit met Linux (u=rwx,go=rx)
+	
 	if (!(mysql_query(sprintf($addStmt,$description,$filename_strippedzip,$filepath_root . '/'),$link))) 
 	{
 		DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
@@ -199,7 +200,8 @@ if(!empty($_POST['action']))
 		rename($target_folder_tmp,$target_folder);		
 		
 		$filename_strippedzip=basename($filename, '.zip');     // strip de zip-extensie om de executable naam te extraheren
-
+		chmod($target_folder . '/' . $filename_strippedzip, 0755);    // maak de module executable voor compatibiliteit met Linux (u=rwx,go=rx)
+		
 		if (!(mysql_query(sprintf($update_Stmt,$description,$filename_strippedzip,$filepath_root . '/',$pk),$link))) 
 		{   
 			DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;

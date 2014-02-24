@@ -22,6 +22,9 @@
   {$study_list}
 </table>
 
+<br>
+<br>
+
 <table class="table_selectorbar">
 <tr bgcolor="#B8E7FF">
   <td>&nbsp;&nbsp;Selectie

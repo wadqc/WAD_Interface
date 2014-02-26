@@ -8,11 +8,15 @@
   <meta name="GENERATOR" content="Quanta Plus">
 </head>
 <body bgcolor="#F3F6FF">
-<h1 class="table_data_blue" >{$header_result} </h1>
-<hr>
+<h1 class="table_data_blue" >&nbsp;&nbsp; {$header_result} </h1>
+<br>
 <h1 class="table_data_blue" >{$header_value} </h1>
+
+<!-- Export to excel not supported for char type data
 <a href="{$export_action}" target="_blank"><img src="{$picture_src}" border=0></a>
-<table NOSAVE="true" width="100%" border="true" bgcolor="#f3f6ff" frame="border">
+-->
+
+<table NOSAVE="true" class="table_general">
   {$resultaten_value_list}
 </table>
 

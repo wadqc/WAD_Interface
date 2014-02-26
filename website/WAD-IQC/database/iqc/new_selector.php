@@ -192,7 +192,7 @@ if( (!empty($_POST['action']))||(!empty($_POST['selector'])) )
     $i++;
   }
 
-  $executestring.=sprintf("create_Selector.php?t=%d",time());
+  $executestring.=sprintf("create_selector.php?t=%d",time());
   header($executestring);
   exit();
   } 

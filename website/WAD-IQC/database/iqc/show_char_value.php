@@ -3,6 +3,10 @@ require("../globals.php") ;
 require("./common.php") ;
 require("./php/includes/setup.php");
 
+$table_study='study';
+$table_series='series';
+$table_instance='instance';
+
 $table_resultaten_floating='resultaten_floating';
 $table_resultaten_char='resultaten_char';
 $table_resultaten_object='resultaten_object';
@@ -41,13 +45,72 @@ if (!empty($_POST['status']))
   $status=$_POST['status'];
 }
 
+if ($analyse_level=='study')
+{
+$results_char_Stmt="SELECT  
+$table_study.study_datetime as 'date_time',
+$table_resultaten_char.omschrijving as 'omschrijving',
+$table_resultaten_char.volgnummer as 'volgnummer',
+$table_resultaten_char.waarde as 'waarde'
+from $table_study inner join (
+  $table_gewenste_processen inner join $table_resultaten_char 
+  on $table_gewenste_processen.pk=$table_resultaten_char.gewenste_processen_fk
+) on $table_study.pk=$table_gewenste_processen.study_fk 
+where 
+$table_gewenste_processen.selector_fk=$selector_fk 
+and $table_gewenste_processen.status in ($status) 
+and $table_resultaten_char.omschrijving like '$omschrijving_char' 
+order by date_time desc, $table_resultaten_char.volgnummer asc";
+}
+
+if ($analyse_level=='series')
+{
+$results_char_Stmt="SELECT  
+$table_instance.content_datetime as 'date_time',
+$table_resultaten_char.omschrijving as 'omschrijving',
+$table_resultaten_char.volgnummer as 'volgnummer',
+$table_resultaten_char.waarde as 'waarde'
+from 
+$table_instance inner join (
+  $table_series inner join (
+    $table_gewenste_processen inner join $table_resultaten_char 
+    on $table_gewenste_processen.pk=$table_resultaten_char.gewenste_processen_fk
+  ) on $table_series.pk=$table_gewenste_processen.series_fk
+) on series.pk=$table_instance.series_fk
+where 
+$table_gewenste_processen.selector_fk=$selector_fk 
+and $table_gewenste_processen.status in ($status) 
+and $table_resultaten_char.omschrijving like '$omschrijving_char' 
+and $table_instance.pk=(select min(pk) from $table_instance where series_fk=series.pk)
+order by date_time desc, $table_resultaten_char.volgnummer asc";
+}
+
+if ($analyse_level=='instance')
+{
+$results_char_Stmt="SELECT  
+$table_instance.content_datetime as 'date_time',
+$table_resultaten_char.omschrijving as 'omschrijving',
+$table_resultaten_char.volgnummer as 'volgnummer',
+$table_resultaten_char.waarde as 'waarde'
+from 
+$table_instance inner join (
+    $table_gewenste_processen inner join $table_resultaten_char 
+    on $table_gewenste_processen.pk=$table_resultaten_char.gewenste_processen_fk
+  ) on $table_instance.pk=$table_gewenste_processen.instance_fk
+where 
+$table_gewenste_processen.selector_fk=$selector_fk 
+and $table_gewenste_processen.status in ($status) 
+and $table_resultaten_char.omschrijving like '$omschrijving_char' 
+order by date_time desc";
+}
+
   
-$results_char_Stmt="SELECT  * from $table_gewenste_processen inner join $table_resultaten_char on $table_gewenste_processen.pk=$table_resultaten_char.gewenste_processen_fk 
+/*$results_char_Stmt="SELECT  * from $table_gewenste_processen inner join $table_resultaten_char on $table_gewenste_processen.pk=$table_resultaten_char.gewenste_processen_fk 
 where $table_gewenste_processen.selector_fk=$selector_fk
 and $table_gewenste_processen.status in ($status)
 and $table_resultaten_char.omschrijving like '$omschrijving_char'
 order by $table_gewenste_processen.pk, $table_resultaten_char.volgnummer";
-
+*/
 
 
 $selector_Stmt="SELECT * from $table_selector
@@ -124,7 +187,7 @@ while (($field_results = mysql_fetch_object($result_char)))
 
      
    $table_data->assign("bgcolor",$bgcolor);
-   $table_data->assign("datum",$field_results->creation_time);
+   $table_data->assign("datum",$field_results->date_time);
    $table_data->assign("omschrijving",$field_results->omschrijving);
    $table_data->assign("waarde",$field_results->waarde);
    

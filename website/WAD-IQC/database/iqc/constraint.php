@@ -337,8 +337,21 @@ if ( ($constraint=='Delete_Patient')||($constraint=='Delete_Study')||($constrain
     if (!($result_analysemodule= mysql_query($del_Stmt,$link))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $del_Stmt)) ;
       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-      exit() ;}
+      exit() ;
+	}
 
+	//update selector table with new links to selector_patient, selector_study, selector_series and selector_instance 
+	$table_selector="selector";
+
+	$update_Stmt = "update $table_selector set selector_patient_fk='%d',selector_study_fk='%d',selector_series_fk='%d',selector_instance_fk='%d' where pk='%d' ";
+  
+	if(!(mysql_query(sprintf($update_Stmt,$selector_patient_fk,$selector_study_fk,$selector_series_fk,$selector_instance_fk,$pk),$link))) 
+	{
+      DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($update_Stmt,$selector_patient_fk,$selector_study_fk,$selector_series_fk,$selector_instance_fk,$pk) )) ;
+      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      exit() ;
+	}
+	  
     $executestring.=sprintf("new_selector.php?pk=$pk&selector_patient_fk=$selector_patient_fk&selector_study_fk=$selector_study_fk&selector_series_fk=$selector_series_fk&selector_instance_fk=$selector_instance_fk&t=%d",time() );
 
     header($executestring);

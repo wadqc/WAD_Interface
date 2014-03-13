@@ -23,7 +23,7 @@ session_start();
   }
   if ($user=='0')
   {
-    $message=sprintf("Unauthorised visitor!");
+    $message=sprintf("Uw sessie is verlopen.");
     $executestring = sprintf("Location: http://%s/",$_SERVER['HTTP_HOST']);
     $executestring.= sprintf("WAD-IQC/database/login/main_login_iqc.php?message=$message");
     header($executestring);

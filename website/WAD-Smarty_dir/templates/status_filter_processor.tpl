@@ -2,7 +2,10 @@
 var reloading;
 
 function checkReloading() {
-    if (window.location.hash=="#autoreload") {
+    if (window.location.hash=="#noautoreload") {
+        clearTimeout(reloading);
+        document.getElementById("refresh").checked=false;
+    } else {
         reloading=setTimeout("window.location.reload();", 5000);
         document.getElementById("refresh").checked=true;
     }
@@ -10,10 +13,10 @@ function checkReloading() {
 
 function toggleAutoRefresh(cb) {
     if (cb.checked) {
-        window.location.replace("#autoreload");
+        window.location.replace("#");
         reloading=setTimeout("window.location.reload();", 5000);
     } else {
-        window.location.replace("#");
+        window.location.replace("#noautoreload");
         clearTimeout(reloading);
     }
 }

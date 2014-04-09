@@ -579,6 +579,7 @@ $grens_kritisch_boven='';
 $grens_kritisch_onder='';
 $grens_acceptabel_boven='';
 $grens_acceptabel_onder='';
+$criterium = '';
 $type='';
 
 
@@ -598,6 +599,7 @@ while (($field_results = mysql_fetch_object($result_floating)))
    $grens_kritisch_onder[$field_results->volgnummer]=$field_results->grens_kritisch_onder;
    $grens_acceptabel_boven[$field_results->volgnummer]=$field_results->grens_acceptabel_boven;
    $grens_acceptabel_onder[$field_results->volgnummer]=$field_results->grens_acceptabel_onder;
+   $criterium[$field_results->volgnummer]='na';
    $type[$field_results->volgnummer]='floating';
 
 }
@@ -618,6 +620,7 @@ while (($field_results = mysql_fetch_object($result_char)))
    $grens_kritisch_onder[$field_results->volgnummer]='na';
    $grens_acceptabel_boven[$field_results->volgnummer]='na';
    $grens_acceptabel_onder[$field_results->volgnummer]='na';
+   $criterium[$field_results->volgnummer]=$field_results->criterium;
    $type[$field_results->volgnummer]='char';
       
 }
@@ -639,6 +642,7 @@ while (($field_results = mysql_fetch_object($result_boolean)))
    $grens_kritisch_onder[$field_results->volgnummer]='na';
    $grens_acceptabel_boven[$field_results->volgnummer]='na';
    $grens_acceptabel_onder[$field_results->volgnummer]='na';
+   $criterium[$field_results->volgnummer]='na';
    $type[$field_results->volgnummer]='boolean';
       
 }
@@ -659,6 +663,7 @@ ksort($grens_kritisch_boven);
 ksort($grens_kritisch_onder);
 ksort($grens_acceptabel_boven);
 ksort($grens_acceptabel_onder);
+ksort($criterium);
 ksort($type);
 }
 
@@ -720,19 +725,42 @@ while ($j<sizeof($ref_key)) // loop for $ref_keys
       
      $table_resultaten_floating.=$table_data->fetch("resultaten_floating_row.tpl");
    } 
+//   if ($type[$ref_key[$j]]=="char")   
+//   {
+//     $table_data->assign("bgcolor",$bgcolor);
+//     $table_data->assign("datum",$datum[$ref_key[$j]]);
+//     $table_data->assign("type",$type[$ref_key[$j]]);
+//     $table_data->assign("omschrijving",$omschrijving[$ref_key[$j]]);
+//     //$table_data->assign("grootheid",$grootheid[$ref_key[$j]]);
+//     //$table_data->assign("eenheid",$eenheid[$ref_key[$j]]);
+//     $table_data->assign("waarde",$waarde[$ref_key[$j]]);
+//     $table_data->assign("waarde_class","table_data");
+//     $table_data->assign("action_floating",$action[$ref_key[$j]]);
+//      
+//     $table_resultaten_floating.=$table_data->fetch("resultaten_floating_row.tpl");
+//   }
    if ($type[$ref_key[$j]]=="char")   
    {
      $table_data->assign("bgcolor",$bgcolor);
      $table_data->assign("datum",$datum[$ref_key[$j]]);
      $table_data->assign("type",$type[$ref_key[$j]]);
      $table_data->assign("omschrijving",$omschrijving[$ref_key[$j]]);
-     //$table_data->assign("grootheid",$grootheid[$ref_key[$j]]);
-     //$table_data->assign("eenheid",$eenheid[$ref_key[$j]]);
      $table_data->assign("waarde",$waarde[$ref_key[$j]]);
      $table_data->assign("waarde_class","table_data");
-     $table_data->assign("action_floating",$action[$ref_key[$j]]);
+     $table_data->assign("action_char",$action[$ref_key[$j]]);
+     $table_data->assign("criterium",$criterium[$ref_key[$j]]);
+
+     $table_data->assign("waarde_class","table_data_green"); // default is green
+     if ( ($criterium[$ref_key[$j]]=='') and ($waarde[$ref_key[$j]]!=$criterium[$ref_key[$j]]) )
+     {
+       $table_data->assign("waarde_class","table_data_orange"); // assign is criterium not given, but value is
+     } 
+     if ( ($criterium[$ref_key[$j]]!='') and ($waarde[$ref_key[$j]]!=$criterium[$ref_key[$j]]) )
+     {
+       $table_data->assign("waarde_class","table_data_red");
+     } 
       
-     $table_resultaten_floating.=$table_data->fetch("resultaten_floating_row.tpl");
+     $table_resultaten_floating.=$table_data->fetch("resultaten_char_row.tpl");
    }
    if ($type[$ref_key[$j]]=="boolean")   
    {

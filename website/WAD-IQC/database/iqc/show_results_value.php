@@ -293,15 +293,24 @@ while (($field_results = mysql_fetch_object($result_char)))
    $table_data->assign("datum",$field_results->creation_time);
    $table_data->assign("omschrijving",$field_results->omschrijving);
    $table_data->assign("waarde",$field_results->waarde);
-   
+   $table_data->assign("waarde_class","table_data");
+   $table_data->assign("criterium",$field_results->criterium);
    $table_data->assign("action_char",$action_char);
       
+   $table_data->assign("waarde_class","table_data_green"); // default is green
+   if ( ($field_results->criterium=='') and ($field_results->waarde!=$field_results->criterium) )
+   {
+     $table_data->assign("waarde_class","table_data_orange"); // assign is criterium not given, but value is
+   } 
+   if ( ($field_results->criterium!='') and ($field_results->waarde!=$field_results->criterium) )
+   {
+     $table_data->assign("waarde_class","table_data_red");
+   } 
+
    $table_resultaten_char.=$table_data->fetch("resultaten_char_row.tpl");
 
    $j++;
 }
-
-
 
 
 $data = new Smarty_NM();

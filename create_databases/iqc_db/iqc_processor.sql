@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `resultaten_char` (
   `volgnummer` int(11) DEFAULT NULL,
   `niveau` int(11) DEFAULT NULL,
   `waarde` varchar(100) DEFAULT NULL,
+  `criterium` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`pk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 

@@ -80,8 +80,10 @@ $hostName="localhost";
 $userName="iqc";	
 $password="TY8BqYRdn3Uhzq8T";	
 
+//version of WAD_Interface
+$version = "1.0.0";
+
 $databaseName = "iqc"; 	   
-$version = "0.9";
 
 
 $picture_root="./../../";

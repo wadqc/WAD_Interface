@@ -16,7 +16,7 @@ UNIQUE KEY (property)
 ) ENGINE=InnoDB;
 
 INSERT INTO config (property,value,date_modified) VALUES 
-('Version_Database','0.9.0','2013-10-04'),
+('Version_Database','1.0.0','2014-04-08'),
 ('Version_Collector','',''),
 ('Version_Selector','',''),
 ('Version_Processor','','');

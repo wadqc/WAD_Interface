@@ -51,6 +51,7 @@ $results_char_Stmt="SELECT
 $table_study.study_datetime as 'date_time',
 $table_resultaten_char.omschrijving as 'omschrijving',
 $table_resultaten_char.volgnummer as 'volgnummer',
+$table_resultaten_char.criterium as 'criterium',
 $table_resultaten_char.waarde as 'waarde'
 from $table_study inner join (
   $table_gewenste_processen inner join $table_resultaten_char 
@@ -69,6 +70,7 @@ $results_char_Stmt="SELECT
 $table_instance.content_datetime as 'date_time',
 $table_resultaten_char.omschrijving as 'omschrijving',
 $table_resultaten_char.volgnummer as 'volgnummer',
+$table_resultaten_char.criterium as 'criterium',
 $table_resultaten_char.waarde as 'waarde'
 from 
 $table_instance inner join (
@@ -91,6 +93,7 @@ $results_char_Stmt="SELECT
 $table_instance.content_datetime as 'date_time',
 $table_resultaten_char.omschrijving as 'omschrijving',
 $table_resultaten_char.volgnummer as 'volgnummer',
+$table_resultaten_char.criterium as 'criterium',
 $table_resultaten_char.waarde as 'waarde'
 from 
 $table_instance inner join (
@@ -189,8 +192,19 @@ while (($field_results = mysql_fetch_object($result_char)))
    $table_data->assign("bgcolor",$bgcolor);
    $table_data->assign("datum",$field_results->date_time);
    $table_data->assign("omschrijving",$field_results->omschrijving);
+   $table_data->assign("criterium",$field_results->criterium);
+   $table_data->assign("waarde_class","table_data");
    $table_data->assign("waarde",$field_results->waarde);
    
+   $table_data->assign("waarde_class","table_data_green"); // default is green
+   if ( ($field_results->criterium=='') and ($field_results->waarde!=$field_results->criterium) )
+   {
+     $table_data->assign("waarde_class","table_data_orange"); // assign is criterium not given, but value is
+   } 
+   if ( ($field_results->criterium!='') and ($field_results->waarde!=$field_results->criterium) )
+   {
+     $table_data->assign("waarde_class","table_data_red");
+   } 
          
    $table_resultaten_char.=$table_data->fetch("resultaten_char_value_row.tpl");
 

@@ -23,9 +23,9 @@ session_start();
   }
   if ($user=='0')
   {
-    $message=sprintf("Uw sessie is verlopen.");
-    $executestring = sprintf("Location: http://%s/",$_SERVER['HTTP_HOST']);
-    $executestring.= sprintf("WAD-IQC/database/login/main_login_iqc.php?message=$message");
+    $message=sprintf("Unauthorised visitor!");
+    //$executestring = sprintf("Location: http://%s/",$_SERVER['HTTP_HOST'].$_SERVER['CONTEXT_PREFIX']);
+    $executestring.= sprintf("Location: ../../../WAD-IQC/database/login/main_login_iqc.php?message=$message");
     header($executestring);
     exit();
   }
@@ -80,10 +80,8 @@ $hostName="localhost";
 $userName="iqc";	
 $password="TY8BqYRdn3Uhzq8T";	
 
-//version of WAD_Interface
-$version = "1.0.0";
-
 $databaseName = "iqc"; 	   
+
 
 
 $picture_root="./../../";

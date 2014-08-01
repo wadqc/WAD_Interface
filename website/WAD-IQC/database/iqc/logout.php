@@ -10,7 +10,8 @@ session_unset();
 session_destroy();
 
 
-$executestring = sprintf("Location:http://%s/%s/%s",$_SERVER['HTTP_HOST'],$site_dir,'database/login/main_login_iqc.php?default_login=');
+//$executestring = sprintf("Location:http://%s/%s/%s",$_SERVER['HTTP_HOST'],$site_dir,'database/login/main_login_iqc.php?default_login=');
+$executestring = "Location: ../../../".$site_dir."/database/login/main_login_iqc.php?default_login=";
 $executestring.= sprintf("%s",$default_login);
 
 //printf("%s",$executestring);

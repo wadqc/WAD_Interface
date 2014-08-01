@@ -1,9 +1,9 @@
 <?php
 
-$home_path=$_SERVER['DOCUMENT_ROOT'];
+//$home_path=$_SERVER['DOCUMENT_ROOT'];
+$home_path="../../..";
 $SMARTY_folder=sprintf("%s/WAD-Smarty",$home_path);
-$logo_log_file="/logo_pictures/log_file.jpg";
-
+$logo_log_file="%s/logo_pictures/log_file.jpg";
 
 // load Smarty library files
 
@@ -22,7 +22,9 @@ class Smarty_NM extends Smarty
    function __construct()
    {
    
-               $home_path=$_SERVER['DOCUMENT_ROOT'];
+                //$home_path=$_SERVER['CONTEXT_DOCUMENT_ROOT'];
+                $home_path="../../..";
+
    		// Class Constructor. These automatically get set with each new instance.
 
 		//$this->Smarty();

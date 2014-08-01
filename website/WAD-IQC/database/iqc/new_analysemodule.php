@@ -88,7 +88,8 @@ if(!empty($_POST['action']))
     $filename_ext=strrchr($filename,'.');								// '.jar'
     $filepath_root="WAD-IQC/uploads/analysemodule/".$filename_noext;	// WAD-IQC/uploads/analysemodule/module
     $filepath = $filepath_root.'/'.$filename; 							// WAD-IQC/uploads/analysemodule/module/module.jar
-    $target_folder=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath_root;		// /C:/xampp/htdocs/WAD-IQC/uploads/analysemodule/module
+    $target_folder=__DIR__ . '/../../../' . $filepath_root;                           // C:/xampp/htdocs/WAD-IQC/database/iqc/../../../WAD-IQC/uploads/analysemodule/module
+                                                                                      // NB: WAD-IQC hoeft niet perse in DOCUMENT_ROOT te staan!
     $target_path=$target_folder.'/'.$filename;							// /C:/xampp/htdocs/WAD-IQC/uploads/analysemodule/module/module.jar
     $source_path=$_FILES['uploadedfile']['tmp_name'];					// /C:/xampp/tmp/file.tmp  
 	
@@ -160,9 +161,9 @@ if(!empty($_POST['action']))
 		$filename_ext=strrchr($filename,'.');									// '.jar'
 		$filepath_root="WAD-IQC/uploads/analysemodule/".$filename_noext;		// WAD-IQC/uploads/analysemodule/module
 		$filepath = $filepath_root.'/'.$filename; 								// WAD-IQC/uploads/analysemodule/module/module.jar
-		$target_folder=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath_root;			// /C:/xampp/htdocs/WAD-IQC/uploads/analysemodule/module
-		$target_folder_tmp=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath_root.'.tmp';	// /C:/xampp/htdocs/WAD-IQC/uploads/analysemodule/module.tmp
-		$target_path_tmp=$target_folder_tmp.'/'.$filename;						// /C:/xampp/htdocs/WAD-IQC/uploads/analysemodule/module.tmp/module.jar
+		$target_folder=__DIR__ . '/../../../' . $filepath_root;			// /C:/xampp/htdocs/WAD-IQC/database/iqc/../../../WAD-IQC/uploads/analysemodule/module
+		$target_folder_tmp=__DIR__ . '/../../../' . $filepath_root . '.tmp';	// /C:/xampp/htdocs/WAD-IQC/database/iqc/../../../WAD-IQC/uploads/analysemodule/module.tmp
+		$target_path_tmp=$target_folder_tmp.'/'.$filename;			// /C:/xampp/htdocs/WAD-IQC/database/iqc/../../../WAD-IQC/uploads/analysemodule/module.tmp/module.jar
 		$source_path=$_FILES['uploadedfile']['tmp_name'];						// /C:/xampp/tmp/file.tmp
 		
 		// tijdelijke modulefolder aanmaken tbv nieuwe upload
@@ -199,7 +200,7 @@ if(!empty($_POST['action']))
 		$field_analysemodule = mysql_fetch_object($result_analysemodule);
 		$db_filepath=$field_analysemodule->filepath;
 		mysql_free_result($result_analysemodule);
-		rrmdir($_SERVER['DOCUMENT_ROOT'].'/'.$db_filepath);
+		rrmdir(__DIR__ . '/../../../' . $db_filepath);
 		
 		// succesvolle upload dus oude folder met identieke naam weghalen (indien deze bestaat) en tijdelijke folder hernoemen
 		rrmdir($target_folder);
@@ -289,7 +290,7 @@ if ($pk==-1)         //delete
         //printf("target=%s",$target_path);
         //exit();
         //unlink($target_path);
-        $target_path=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath;
+	$target_path=__DIR__ . '/../../../' . $filepath;
         rrmdir($target_path);
       } 
       if (!($result_analysemodule= mysql_query(sprintf($del_analysemodule_Stmt,$analysemodule_ref_key[$i]),$link))) {

@@ -58,8 +58,7 @@ if(!empty($_POST['action']))
     $filepath_root="WAD-IQC/uploads/analysemodule_cfg/";
     $filepath = $filepath_root.basename( $_FILES['uploadedfile']['name']); 
 
-    $target_path=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath;
-
+    $target_path=__DIR__ . '/../../../' . $filepath;
 
     if ( move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path) )
     {
@@ -96,7 +95,7 @@ if(!empty($_POST['action']))
        $filepath_root="WAD-IQC/uploads/analysemodule_cfg/";
        $filepath = $filepath_root.basename( $_FILES['uploadedfile']['name']); 
 
-       $target_path=$_SERVER['DOCUMENT_ROOT'].'/'.$filepath;
+       $target_path=__DIR__ . '/../../../' . $filepath;
   
        if ( move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path) )
        {

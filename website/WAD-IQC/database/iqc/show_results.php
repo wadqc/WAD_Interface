@@ -750,11 +750,14 @@ while ($j<sizeof($ref_key)) // loop for $ref_keys
      $table_data->assign("action_char",$action[$ref_key[$j]]);
      $table_data->assign("criterium",$criterium[$ref_key[$j]]);
 
-     $table_data->assign("waarde_class","table_data_green"); // default is green
-     if ( ($criterium[$ref_key[$j]]=='') and ($waarde[$ref_key[$j]]!=$criterium[$ref_key[$j]]) )
+     if ($criterium[$ref_key[$j]] != '')
      {
-       $table_data->assign("waarde_class","table_data_orange"); // assign is criterium not given, but value is
-     } 
+         $table_data->assign("waarde_class","table_data_green"); // default is green if criterium is defined
+     }
+     //if ( ($criterium[$ref_key[$j]]=='') and ($waarde[$ref_key[$j]]!=$criterium[$ref_key[$j]]) )
+     //{
+     //  $table_data->assign("waarde_class","table_data_orange"); // assign is criterium not given, but value is
+     //} 
      if ( ($criterium[$ref_key[$j]]!='') and ($waarde[$ref_key[$j]]!=$criterium[$ref_key[$j]]) )
      {
        $table_data->assign("waarde_class","table_data_red");

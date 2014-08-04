@@ -297,11 +297,14 @@ while (($field_results = mysql_fetch_object($result_char)))
    $table_data->assign("criterium",$field_results->criterium);
    $table_data->assign("action_char",$action_char);
       
-   $table_data->assign("waarde_class","table_data_green"); // default is green
-   if ( ($field_results->criterium=='') and ($field_results->waarde!=$field_results->criterium) )
+   if ($field_results->criterium != '')
    {
-     $table_data->assign("waarde_class","table_data_orange"); // assign is criterium not given, but value is
-   } 
+     $table_data->assign("waarde_class","table_data_green"); // default is green if criterium is defined
+   }
+   //if ( ($field_results->criterium=='') and ($field_results->waarde!=$field_results->criterium) )
+   //{
+   //  $table_data->assign("waarde_class","table_data_orange"); // assign is criterium not given, but value is
+   //} 
    if ( ($field_results->criterium!='') and ($field_results->waarde!=$field_results->criterium) )
    {
      $table_data->assign("waarde_class","table_data_red");

@@ -809,66 +809,67 @@ $b=0;
 $j=0;
 while (($field_results = mysql_fetch_object($result_object)))
 {
-  
-   $b=($j%2);
-   $bgcolor=''; 
-   if ($b==0)
-   {
-     $bgcolor='#B8E7FF';
-   }   
-
-   
-
-
-   $picture = new Smarty_NM();
-   $description_name = new Smarty_NM();
-
-   
-
-   $filename=$field_results->object_naam_pad;
-   $object_type="image";
-   
-   $finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
-   if (finfo_file($finfo, $filename)=='text/plain')
-   {
-     $object_type='text';
-   }
-   finfo_close($finfo);
-
-  
-  if ($object_type=='image')
+  $b=($j%2);
+  $bgcolor=''; 
+  if ($b==0)
   {
-    $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
-    $picture_src=sprintf("image_resize.php?f_name=$field_results->object_naam_pad&height=120");
+   $bgcolor='#B8E7FF';
+  }   
+
+  $picture = new Smarty_NM();
+  $description_name = new Smarty_NM();
+
+  $filename=$field_results->object_naam_pad;
+  $object_type="None";
+
+  $finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
+  $object_type=finfo_file($finfo, $filename);
+  finfo_close($finfo);
+
+
+  switch ( $object_type )
+  {
+    case "image/jpeg":
+      $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
+      $picture_src=sprintf("image_resize.php?f_name=$field_results->object_naam_pad&height=120");
+      break;
+
+    case "text/plain":
+      $picture_log_file = sprintf("%s%s%s",$home_path,dirname($_SERVER['PHP_SELF']),$logo_log_file);
+      $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
+      $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$picture_log_file);
+      break;
+
+    case "application/pdf":
+      $picture_log_file = sprintf("%s%s%s",$home_path,dirname($_SERVER['PHP_SELF']),$logo_pdf_file);
+      $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
+      $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$picture_log_file);
+      break;
+
+    default:
+      $picture_log_file = sprintf("%s%s%s",$home_path,dirname($_SERVER['PHP_SELF']),$logo_obj_file);
+      $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
+      $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$picture_log_file);
   }  
 
-  if ($object_type=="text")
+  $picture->assign("picture_src",$picture_src);
+  $picture->assign("picture_action",$action_object);
+  $picture_row.=$picture->fetch("insert_picture_row.tpl");
+
+
+  $description_name->assign("picture_name",$field_results->omschrijving);
+  $name_row.=$description_name->fetch("insert_picture_name_row.tpl");
+
+
+  $j++;
+  $b=($j%8);
+  if (($b==0)&&($j>0))
   {
-    $picture_log_file = sprintf("%s%s%s",$home_path,dirname($_SERVER['PHP_SELF']),$logo_log_file);
-
-    $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
-    $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$picture_log_file);
-  }  
-
-   $picture->assign("picture_src",$picture_src);
-   $picture->assign("picture_action",$action_object);
-   $picture_row.=$picture->fetch("insert_picture_row.tpl");
-   
-
-   $description_name->assign("picture_name",$field_results->omschrijving);
-   $name_row.=$description_name->fetch("insert_picture_name_row.tpl");
-
-
-   $j++;
-   $b=($j%8);
-   if (($b==0)&&($j>0))
-   {
-     $table_resultaten_object.=sprintf("<tr>%s</tr>",$picture_row);
-     $table_resultaten_object.=sprintf("<tr>%s</tr>",$name_row);
-     $picture_row='';
-     $name_row='';
-   }
-      
+   $table_resultaten_object.=sprintf("<tr>%s</tr>",$picture_row);
+   $table_resultaten_object.=sprintf("<tr>%s</tr>",$name_row);
+   $picture_row='';
+   $name_row='';
+  }
 
 }
 
@@ -887,8 +888,6 @@ if ($b!=0)
   $table_resultaten_object.=sprintf("<tr>%s</tr>",$picture_row);
   $table_resultaten_object.=sprintf("<tr>%s</tr>",$name_row);
 }
-
-
 
 
 

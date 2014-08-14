@@ -82,6 +82,9 @@ $password="TY8BqYRdn3Uhzq8T";
 
 $databaseName = "iqc"; 	   
 
+// Version of WAD_Interface
+$version = "1.0.1";
+
 
 
 $picture_root="./../../";

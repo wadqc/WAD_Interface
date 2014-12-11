@@ -3,7 +3,7 @@
     {$type} # was {$datum} 
   </td> -->
   <td class="table_data">
-    <a href="{$action_char}" class="table_data_select">{$omschrijving}</a> 
+    <a href="{$action_char}" class="table_data_select" target="_blank">{$omschrijving}</a> 
   </td>
   <td class="table_data">
     {$grootheid}

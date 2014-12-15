@@ -67,7 +67,7 @@ AND ( study.study_datetime > (NOW() - INTERVAL %s))
 ORDER BY study_datetime desc";
 
 
-$collector_series_Stmt = "SELECT distinct series.series_no as 'series_number', series.modality as 'modality', series.series_desc as 'series_description', series.station_name as 'station_name', $table_instance.content_datetime as 'series_datetime', collector_status_omschrijving.veld_omschrijving as 'omschrijving', series.pk as 'series_pk'
+$collector_series_Stmt = "SELECT distinct series.series_no as 'series_number', series.modality as 'modality', series.series_desc as 'series_description', series.station_name as 'station_name', coalesce(series.pps_start,instance.content_datetime) as 'series_datetime', collector_status_omschrijving.veld_omschrijving as 'omschrijving', series.pk as 'series_pk'
 FROM 
 instance, series
 INNER JOIN 

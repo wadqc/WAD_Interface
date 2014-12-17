@@ -1,3 +1,4 @@
+<!-- source template: study_row.tpl -->
 <tr bgcolor="{$bgcolor}">
   <td>
      <a href="{$action}" class="table_data_select">{$patient_name}</a>

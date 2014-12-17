@@ -1,3 +1,4 @@
+<!-- source template: resultaten_floating_header.tpl -->
 <tr><b>
       <!-- <td class="table_data_header">Type</td> -->
       <td class="table_data_header_bold">Omschrijving&nbsp;&nbsp;</td>

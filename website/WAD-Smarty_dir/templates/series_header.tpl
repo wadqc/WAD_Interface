@@ -1,3 +1,4 @@
+<!-- source template: series_header.tpl -->
 <tr>
     <td class="table_data_header_bold">&nbsp;&nbsp;Serie nummer</td>
     <td class="table_data_header_bold">&nbsp;&nbsp;Modaliteit</td>

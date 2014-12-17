@@ -1,3 +1,4 @@
+<!-- source template: constraint_series.tpl -->
  <table>
 	    <tr>
           <td colspan="2" align="center" class="table_data_blue"> Series </td>

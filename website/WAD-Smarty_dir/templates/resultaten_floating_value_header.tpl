@@ -1,3 +1,4 @@
+<!-- source template: resultaten_floating_value_header.tpl -->
 <tr>
       <td class="table_data_header_bold">Datum&nbsp;&nbsp;</td>
       <td class="table_data_header_bold">Omschrijving&nbsp;&nbsp;</td>

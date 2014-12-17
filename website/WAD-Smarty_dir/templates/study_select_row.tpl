@@ -1,3 +1,4 @@
+<!-- source template: study_select_row.tpl -->
 <tr bgcolor="{$bgcolor}">
   <td>
     <input type="checkbox" name="{$checkbox_name}" value="on">

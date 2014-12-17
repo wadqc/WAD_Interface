@@ -1,3 +1,4 @@
+<!-- source template: pssi_buttons.tpl -->
 <table>
   <tr>
     <td>

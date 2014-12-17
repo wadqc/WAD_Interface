@@ -1,3 +1,4 @@
+<!-- source template: constraint_study.tpl -->
 
 <table>
 	    <tr>

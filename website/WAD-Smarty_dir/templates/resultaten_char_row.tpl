@@ -1,3 +1,4 @@
+<!-- source template: resultaten_char_row.tpl -->
 <tr bgcolor="{$bgcolor}">
 <!--  <td class="table_data">
     {$type} # was {$datum} 

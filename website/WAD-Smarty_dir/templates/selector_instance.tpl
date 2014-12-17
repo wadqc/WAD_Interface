@@ -1,3 +1,4 @@
+<!-- source template: selector_instance.tpl -->
 <table>
 	    <tr>
           <td colspan="2" align="center" class="table_data_blue"> Instance </td>

@@ -1,3 +1,4 @@
+<!-- source template: resultaten_char_header.tpl -->
 <tr><b>
       <!-- <td class="table_data_header">Type</td> -->
       <td class="table_data_header_bold">Datum&nbsp;&nbsp;</td>

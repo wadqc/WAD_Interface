@@ -1,3 +1,4 @@
+<!-- source template: selector_select.tpl -->
 <table class="table_selectorbar">
 <tr bgcolor="#B8E7FF">
   <td>&nbsp;

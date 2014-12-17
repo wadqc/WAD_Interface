@@ -1,3 +1,4 @@
+<!-- source template: status_filter_selector.tpl -->
 <script language="javascript" type="text/javascript">
 var reloading;
 

@@ -1,3 +1,4 @@
+<!-- source template: resultaten_floating_high_charts.tpl -->
 <!DOCTYPE HTML>
 <html>
 	<head>

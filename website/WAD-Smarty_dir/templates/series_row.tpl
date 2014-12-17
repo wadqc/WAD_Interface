@@ -1,3 +1,4 @@
+<!-- source template: series_row.tpl -->
 <tr bgcolor="{$bgcolor}">
    <td class="table_data">
     {$series_number}

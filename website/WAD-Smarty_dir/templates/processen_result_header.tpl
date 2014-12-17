@@ -1,3 +1,4 @@
+<!-- source template: processen_result_header.tpl -->
 <tr>
       <td><font color="blue"><b>Station Name</b></font></td>
       <td><font color="blue"><b>Modality</b></font></td>

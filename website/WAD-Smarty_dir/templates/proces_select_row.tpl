@@ -1,3 +1,4 @@
+<!-- source template: proces_select_row.tpl -->
 <tr bgcolor="{$bgcolor}">
   <td class="table_data">
     <input type="checkbox" name="{$checkbox_name}" value="on">

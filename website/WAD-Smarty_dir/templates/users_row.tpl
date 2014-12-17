@@ -1,3 +1,4 @@
+<!-- source template: users_row.tpl -->
 <tr bgcolor="{$bgcolor}">
   <td class="table_data">
     {$login}

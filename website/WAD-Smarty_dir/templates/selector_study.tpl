@@ -1,3 +1,4 @@
+<!-- source template: selector_study.tpl -->
 <table>
 	    <tr>
           <td colspan="2" align="center" class="table_data_blue"> Study </td>

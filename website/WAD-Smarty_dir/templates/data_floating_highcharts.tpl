@@ -1,3 +1,4 @@
+<!-- source template: data_floating_highcharts.tpl -->
 
 
 

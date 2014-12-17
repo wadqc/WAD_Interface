@@ -1,3 +1,4 @@
+<!-- source template: selector_select_valideer.tpl -->
   <td>&nbsp;
     Initialen&nbsp;
     <input type="text" name="initialen" value="{$default_initialen}" size="30" maxlength="30">

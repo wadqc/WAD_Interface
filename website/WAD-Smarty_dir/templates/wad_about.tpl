@@ -40,7 +40,7 @@
     </td>
   </tr>
 
-<tr>
+  <tr>
     <td class="table_data_blue_header">
       <br>WAD-QC - Copyright (C) 2012-2013 - NVKF Werkgroep Apparatuur in de Diagnostiek
     </td>
@@ -59,8 +59,16 @@
       <br>Dit programma is gedistribueerd in de hoop dat het bruikbaar is, maar ZONDER ENIGE GARANTIE; zonder maar ook de geimpliceerde garantie van VERKOOP, of DEGELIJKHEID VOOR EEN BEPAALD DOELEIND. Zie de <a href="http://www.gnu.org/licenses/">GNU General Public License</a> voor meer details.
     </td>
   </tr>
-  
-   
+  <tr>
+    <td class="table_data_blue_header">
+      <br>Ge&iuml;nstalleerde versies van Java services en WAD-QC Database:
+    </td>
+  </tr>
+  <tr><td>&nbsp;</td></tr>
+</table>
+
+<table>
+  {$versions_list}
 </table>
    
 </body>

@@ -10,6 +10,6 @@
       <td class="table_data_header_bold">Serie datum&nbsp;&nbsp;</td>
       <td class="table_data_header_bold">Instance datum&nbsp;&nbsp;</td>
       <td class="table_data_header_bold">Selector naam&nbsp;&nbsp;</td>
-      <td class="table_data_header_bold">Analyse datum&nbsp;&nbsp;</td>
+      <td class="table_data_header_bold sortasc">Analyse datum&nbsp;&nbsp;</td>
       <td class="table_data_header_bold">Analyse status&nbsp;&nbsp;</td>
  </tr>

@@ -1,0 +1,24 @@
+tr.rowodd {
+        background-color: #B8E7FF;
+}
+
+tr.roweven {
+        background-color: #F3F6FF;
+}
+.sortcol {
+        cursor: pointer;
+        padding-right: 20px;
+        background-repeat: no-repeat;
+        background-position: right center;
+}
+.sortasc {
+        background-color: #DDFFAC;
+        background-image: url(up.gif);
+}
+.sortdesc {
+        background-color: #FFD4AA;
+        background-image: url(down.gif);
+}
+.nosort {
+        cursor: default;
+}

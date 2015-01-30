@@ -192,13 +192,8 @@ if (!mysql_select_db($databaseName, $link)) {
 
 
 
-
-
-
-
-
-
-
+// geeft anders problemen met selectoren die alleen gewneste processen hebben met status!=5
+$status_select=5;
 
 
 
@@ -227,7 +222,6 @@ if (!($result_selector_processen= mysql_query(sprintf($selector_processen_Stmt,$
 
 
 //end of definition of gewenste_processen_id
-
 
 
 
@@ -287,7 +281,6 @@ if ($analyse_level=='study')
   }
 
 }
-
 
 
 
@@ -835,19 +828,20 @@ while (($field_results = mysql_fetch_object($result_object)))
       break;
 
     case "text/plain":
-      $picture_log_file = sprintf("%s%s%s",$home_path,dirname($_SERVER['PHP_SELF']),$logo_log_file);
+    case "text/x-c":
+      $picture_log_file = sprintf("%s%s%s",$home_path."/..",dirname($_SERVER['PHP_SELF']),$logo_log_file);
       $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
       $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$picture_log_file);
       break;
 
     case "application/pdf":
-      $picture_log_file = sprintf("%s%s%s",$home_path,dirname($_SERVER['PHP_SELF']),$logo_pdf_file);
+      $picture_log_file = sprintf("%s%s%s",$home_path."/..",dirname($_SERVER['PHP_SELF']),$logo_pdf_file);
       $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
       $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$picture_log_file);
       break;
 
     default:
-      $picture_log_file = sprintf("%s%s%s",$home_path,dirname($_SERVER['PHP_SELF']),$logo_obj_file);
+      $picture_log_file = sprintf("%s%s%s",$home_path."/..",dirname($_SERVER['PHP_SELF']),$logo_obj_file);
       $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
       $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$picture_log_file);
   }  
@@ -903,7 +897,7 @@ if ($table_resultaten_floating!='')
 
 if ($table_resultaten_object!='')
 {
-  $data->assign("header_object","Afbeeldingen");
+  $data->assign("header_object","Objecten");
   $data->assign("resultaten_object_list",$table_resultaten_object);
 }
 

@@ -829,21 +829,18 @@ while (($field_results = mysql_fetch_object($result_object)))
 
     case "text/plain":
     case "text/x-c":
-      $picture_log_file = sprintf("%s%s%s",$home_path."/..",dirname($_SERVER['PHP_SELF']),$logo_log_file);
       $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
-      $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$picture_log_file);
+      $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$logo_log_file);
       break;
 
     case "application/pdf":
-      $picture_log_file = sprintf("%s%s%s",$home_path."/..",dirname($_SERVER['PHP_SELF']),$logo_pdf_file);
       $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
-      $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$picture_log_file);
+      $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$logo_pdf_file);
       break;
 
     default:
-      $picture_log_file = sprintf("%s%s%s",$home_path."/..",dirname($_SERVER['PHP_SELF']),$logo_obj_file);
       $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
-      $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$picture_log_file);
+      $picture_src=sprintf("image_resize.php?f_name=%s&height=120",$logo_obj_file);
   }  
 
   $picture->assign("picture_src",$picture_src);

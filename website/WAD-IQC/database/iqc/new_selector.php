@@ -181,7 +181,8 @@ if( (!empty($_POST['action']))||(!empty($_POST['selector'])) )
         exit() ;}
       }
     
-      $result_selector->close();
+      
+      //$result_selector->close();
 
 
     }

@@ -22,16 +22,12 @@ $select_Stmt1= "select * from $table_analysemodule_cfg where $table_analysemodul
 $del_analysemodule_cfg_Stmt = "delete from  $table_analysemodule_cfg where $table_analysemodule_cfg.pk='%d'";
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-exit() ;
-}
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
 
@@ -71,10 +67,10 @@ if(!empty($_POST['action']))
 
 
 
-    if (!(mysql_query(sprintf($addStmt,$description,$filename,$filepath_root),$link))) 
+    if (!($link->query(sprintf($addStmt,$description,$filename,$filepath_root)))) 
     {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
     }
   }
@@ -82,10 +78,10 @@ if(!empty($_POST['action']))
   { 
     if ($error==4)    
     {
-      if (!(mysql_query(sprintf($update_Stmt1,$description,$pk),$link)))  
+      if (!($link->query(sprintf($update_Stmt1,$description,$pk))))  
       {
         DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-        DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+        DisplayErrMsg(sprintf("error: %s", $link->error)) ;
         exit() ;
       }
     }
@@ -107,10 +103,10 @@ if(!empty($_POST['action']))
        }
 
 
-       if (!(mysql_query(sprintf($update_Stmt,$description,$filename,$filepath_root,$pk),$link))) 
+       if (!($link->query(sprintf($update_Stmt,$description,$filename,$filepath_root,$pk)))) 
        {   
         DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-        DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+        DisplayErrMsg(sprintf("error: %s", $link->error)) ;
         exit() ;
        }
 
@@ -156,26 +152,26 @@ if ($pk==-1)         //delete
     if ($analysemodule_cfg[$analysemodule_cfg_ref_key[$i]]=='on')
     {
     
-      if (!($result_analysemodule_cfg= mysql_query(sprintf($select_Stmt,$analysemodule_cfg_ref_key[$i]), $link))) {
+      if (!($result_analysemodule_cfg= $link->query(sprintf($select_Stmt,$analysemodule_cfg_ref_key[$i])))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
       }
-      $field_analysemodule_cfg = mysql_fetch_object($result_analysemodule_cfg);
+      $field_analysemodule_cfg = $result_analysemodule_cfg->fetch_object();
       $filepath=$field_analysemodule_cfg->filepath;
-      mysql_free_result($result_analysemodule_cfg);
+      $result_analysemodule_cfg->close();
 
-      if (!($result_analysemodule_cfg= mysql_query(sprintf($select_Stmt1,$filepath), $link))) {
+      if (!($result_analysemodule_cfg= $link->query(sprintf($select_Stmt1,$filepath)))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
       }
       $counter=0;
-      while ($field_analysemodule_cfg = mysql_fetch_object($result_analysemodule_cfg) )
+      while ($field_analysemodule_cfg = $result_analysemodule_cfg->fetch_object() )
       {
         $counter++;
       }
-      mysql_free_result($result_analysemodule_cfg);
+      $result_analysemodule_cfg->close();
       if ($counter==1) //only 1 row that contains filepath
       {
         $target_path=$target_path.$filepath;
@@ -183,9 +179,9 @@ if ($pk==-1)         //delete
         //exit();
         unlink($target_path);
       } 
-      if (!($result_analysemodule_cfg= mysql_query(sprintf($del_analysemodule_cfg_Stmt,$analysemodule_cfg_ref_key[$i]),$link))) {
+      if (!($result_analysemodule_cfg= $link->query(sprintf($del_analysemodule_cfg_Stmt,$analysemodule_cfg_ref_key[$i])))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($del_analysemodule_cfg_Stmt,$analysemodule_cfg_ref_key[$i]) ) ) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;}
     }
     $i++;
@@ -214,25 +210,21 @@ if ($pk>0)   //insert part of update
   $table_analysemodule_cfg.pk='$pk' ";
 
   // Connect to the Database
-  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-     DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-     exit() ;
-  }
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-  // Select the Database
-  if (!mysql_select_db($databaseName, $link)) {
-    DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-    exit() ;
-  }
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
+}
   
-  if (!($result_analysemodule_cfg= mysql_query($analysemodule_cfg_Stmt, $link))) {
+  if (!($result_analysemodule_cfg= $link->query($analysemodule_cfg_Stmt))) {
      DisplayErrMsg(sprintf("Error in executing %s stmt", $mpc_class_Stmt)) ;
-     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+     DisplayErrMsg(sprintf("error: %s", $link->error)) ;
      exit() ;
   }
     
-  $new = mysql_fetch_object($result_analysemodule_cfg);
+  $new = $result_analysemodule_cfg->fetch_object();
 
   $analysemodule_cfg->assign("title","Config file");
   $analysemodule_cfg->assign("header","Config file");
@@ -243,7 +235,7 @@ if ($pk>0)   //insert part of update
   $analysemodule_cfg->assign("default_filepath",$new->filepath);
   
   
-  mysql_free_result($result_analysemodule_cfg);
+  $result_analysemodule_cfg->close();
   
   $analysemodule_cfg->assign("submit_value","Update");
 }

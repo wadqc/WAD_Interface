@@ -84,17 +84,13 @@ values ('%d','%s','%s')";
 
 
 // Connect to the Database
-  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-     DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-     exit() ;
-  }
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-// Select the Database
-  if (!mysql_select_db($databaseName, $link)) {
-    DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-    exit() ;
-  }
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
+}
 
 
 
@@ -119,43 +115,43 @@ values ('%d','%s','%s')";
 
     if ($analyse_level=='study')
     {
-      if (!($result_year= mysql_query(sprintf($year_Stmt_study,$gewenste_processen_id), $link))) {
+      if (!($result_year= $link->query(sprintf($year_Stmt_study,$gewenste_processen_id)))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
       }
     }
     if ($analyse_level=='series')
     {
-      if (!($result_year= mysql_query(sprintf($year_Stmt_series,$gewenste_processen_id), $link))) {
+      if (!($result_year= $link->query(sprintf($year_Stmt_series,$gewenste_processen_id)))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
       }
     } 
     if ($analyse_level=='instance')
     {
-      if (!($result_year= mysql_query(sprintf($year_Stmt_instance,$gewenste_processen_id), $link))) {
+      if (!($result_year= $link->query(sprintf($year_Stmt_instance,$gewenste_processen_id)))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
       }
     }
 
-    $field = mysql_fetch_object($result_year);
+    $field = $result_year->fetch_object();
     $date_result=$field->date_time;
-    mysql_free_result($result_year);
+    $result_year->close();
 
-    if (!($result_selector= mysql_query($selector_Stmt, $link))) {
+    if (!($result_selector= $link->query($selector_Stmt))) {
     DisplayErrMsg(sprintf("Error in executing %s stmt", $selector_Stmt)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    DisplayErrMsg(sprintf("error: %s", $link->error)) ;
     exit() ;
     }
 
 
-    $field_results = mysql_fetch_object($result_selector);
+    $field_results = $result_selector->fetch_object();
     $header_delete_result=sprintf("Verwijderen resultaat van Selector: %s, analyse level: %s datum: %s",$field_results->name,$field_results->analyselevel,$date_result);
-    mysql_free_result($result_selector);  
+    $result_selector->close();  
 
     $data= new Smarty_NM();
     $data->assign("header_delete_result",$header_delete_result);
@@ -170,16 +166,16 @@ values ('%d','%s','%s')";
     $status=20;
     
     //update 
-    if (!mysql_query(sprintf($update_Stmt,$status,$gewenste_processen_id),$link)) {
+    if (!$link->query(sprintf($update_Stmt,$status,$gewenste_processen_id))) {
     DisplayErrMsg(sprintf("Error in executing %s stmt", $update_Stmt)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    DisplayErrMsg(sprintf("error: %s", $link->error)) ;
     exit() ;
     }
     //add
-    if(!mysql_query(sprintf($add_Stmt,$gewenste_processen_id,$user,$delete_description),$link)) 
+    if(!$link->query(sprintf($add_Stmt,$gewenste_processen_id,$user,$delete_description))) 
     {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $addStmt_class)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
     } 
 

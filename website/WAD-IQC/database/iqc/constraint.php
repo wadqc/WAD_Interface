@@ -21,17 +21,13 @@ $selector_instance_fk=$_GET['selector_instance_fk'];
 $pk=$_GET['pk'];  
 
 // Connect to the Database
-  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-     DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-     exit() ;
-  }
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-  // Select the Database
-  if (!mysql_select_db($databaseName, $link)) {
-     DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-     exit() ;
-  }
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
+}
 
 
 if( (!empty($_POST['action'])))
@@ -72,15 +68,15 @@ if( (!empty($_POST['action'])))
     $qStmt=str_replace("''","NULL",$qStmt);
 
     if
-    (!(mysql_query($qStmt,$link))) 
+    (!($link->query($qStmt))) 
     {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $qStmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
     }
     if ($constraint=='Add_Patient')
     {
-      $selector_patient_fk=mysql_insert_id();
+      $selector_patient_fk=->insert_id();
     }
   }
 
@@ -137,16 +133,16 @@ if( (!empty($_POST['action'])))
     $qStmt=str_replace("''","NULL",$qStmt);     
 
     if
-    (!(mysql_query($qStmt,$link))) 
+    (!($link->query($qStmt))) 
     {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $qStmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
     }
     if ($constraint=='Add_Study')
     {
       
-      $selector_study_fk=mysql_insert_id();
+      $selector_study_fk=->insert_id();
     }
   }
 
@@ -207,15 +203,15 @@ if( (!empty($_POST['action'])))
     $qStmt=str_replace("''","NULL",$qStmt);
 
     if
-    (!(mysql_query($qStmt,$link))) 
+    (!($link->query($qStmt))) 
     {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $qStmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
     }
     if ($constraint=='Add_Series')
     {
-      $selector_series_fk=mysql_insert_id();
+      $selector_series_fk=->insert_id();
     }
   }
 
@@ -262,15 +258,15 @@ if( (!empty($_POST['action'])))
     $qStmt=str_replace("''","NULL",$qStmt);
     
     if
-    (!(mysql_query($qStmt,$link))) 
+    (!($link->query($qStmt))) 
     {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $qStmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
     }
     if ($constraint=='Add_Instance')
     {
-      $selector_instance_fk=mysql_insert_id();
+      $selector_instance_fk=->insert_id();
     }
   }
 
@@ -279,10 +275,10 @@ if( (!empty($_POST['action'])))
 
   $update_Stmt = "update $table_selector set selector_patient_fk='%d',selector_study_fk='%d',selector_series_fk='%d',selector_instance_fk='%d' where pk='%d' ";
   
-  if(!(mysql_query(sprintf($update_Stmt,$selector_patient_fk,$selector_study_fk,$selector_series_fk,$selector_instance_fk,$pk),$link))) 
+  if(!($link->query(sprintf($update_Stmt,$selector_patient_fk,$selector_study_fk,$selector_series_fk,$selector_instance_fk,$pk)))) 
   {
       DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($update_Stmt,$selector_patient_fk,$selector_study_fk,$selector_series_fk,$selector_instance_fk,$pk) )) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
   }
 
@@ -334,9 +330,9 @@ if ( ($constraint=='Delete_Patient')||($constraint=='Delete_Study')||($constrain
    
 
    
-    if (!($result_analysemodule= mysql_query($del_Stmt,$link))) {
+    if (!($result_analysemodule= $link->query($del_Stmt))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $del_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
 	}
 
@@ -345,10 +341,10 @@ if ( ($constraint=='Delete_Patient')||($constraint=='Delete_Study')||($constrain
 
 	$update_Stmt = "update $table_selector set selector_patient_fk='%d',selector_study_fk='%d',selector_series_fk='%d',selector_instance_fk='%d' where pk='%d' ";
   
-	if(!(mysql_query(sprintf($update_Stmt,$selector_patient_fk,$selector_study_fk,$selector_series_fk,$selector_instance_fk,$pk),$link))) 
+	if(!($link->query(sprintf($update_Stmt,$selector_patient_fk,$selector_study_fk,$selector_series_fk,$selector_instance_fk,$pk)))) 
 	{
       DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($update_Stmt,$selector_patient_fk,$selector_study_fk,$selector_series_fk,$selector_instance_fk,$pk) )) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
 	}
 	  
@@ -385,13 +381,13 @@ if ( ($constraint=='Add_Patient')||($constraint=='Modify_Patient') )
     $table_patient.pk='$selector_patient_fk'";
 
    
-    if (!($result_patient= mysql_query($patient_Stmt,$link))) {
+    if (!($result_patient= $link->query($patient_Stmt))) {
        DisplayErrMsg(sprintf("Error in executing %s stmt", $student_Stmt)) ;
-       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+       DisplayErrMsg(sprintf("error: %s", $link->error)) ;
        exit() ;
     }
 
-    if (!($field_patient = mysql_fetch_object($result_patient)))
+    if (!($field_patient = $result_patient->fetch_object()))
     {
        DisplayErrMsg("Internal error: the entry does not exist") ;
        exit() ;
@@ -411,7 +407,7 @@ if ( ($constraint=='Add_Patient')||($constraint=='Modify_Patient') )
     $patient->assign("default_pat_custom1",$field_patient->pat_custom1);
     $patient->assign("default_pat_custom2",$field_patient->pat_custom2);
     $patient->assign("default_pat_custom3",$field_patient->pat_custom3);
-    mysql_free_result($result_patient);
+    $result_patient->close();
 
     $table_patient=$patient->fetch("constraint_patient.tpl");
   } 
@@ -453,13 +449,13 @@ if ( ($constraint=='Add_Study')||($constraint=='Modify_Study') )
     $table_study.pk='$selector_study_fk'";
 
    
-    if (!($result_study= mysql_query($study_Stmt,$link))) {
+    if (!($result_study= $link->query($study_Stmt))) {
        DisplayErrMsg(sprintf("Error in executing %s stmt", $student_Stmt)) ;
-       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+       DisplayErrMsg(sprintf("error: %s", $link->error)) ;
        exit() ;
     }
 
-    if (!($field_study = mysql_fetch_object($result_study)))
+    if (!($field_study = $result_study->fetch_object()))
     {
        DisplayErrMsg("Internal error: the entry does not exist") ;
        exit() ;
@@ -497,7 +493,7 @@ if ( ($constraint=='Add_Study')||($constraint=='Modify_Study') )
     $study->assign("default_updated_time",$field_study->updated_time);
     $study->assign("default_study_attrs",$field_study->study_attrs);    
 
-    mysql_free_result($result_study);
+    $result_study->close();
 
     $table_study=$study->fetch("constraint_study.tpl");
   } 
@@ -536,13 +532,13 @@ if ( ($constraint=='Add_Series')||($constraint=='Modify_Series') )
     $table_series.pk='$selector_series_fk'";
 
    
-    if (!($result_series= mysql_query($series_Stmt,$link))) {
+    if (!($result_series= $link->query($series_Stmt))) {
        DisplayErrMsg(sprintf("Error in executing %s stmt", $student_Stmt)) ;
-       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+       DisplayErrMsg(sprintf("error: %s", $link->error)) ;
        exit() ;
     }
 
-    if (!($field_series = mysql_fetch_object($result_series)))
+    if (!($field_series = $result_series->fetch_object()))
     {
        DisplayErrMsg("Internal error: the entry does not exist") ;
        exit() ;
@@ -581,7 +577,7 @@ if ( ($constraint=='Add_Series')||($constraint=='Modify_Series') )
     $series->assign("default_updated_time",$field_series->updated_time);
     $series->assign("default_series_attrs",$field_series->series_attrs);   
 
-    mysql_free_result($result_series);
+    $result_series->close();
 
     $table_series=$series->fetch("constraint_series.tpl");
   } 
@@ -620,13 +616,13 @@ if ( ($constraint=='Add_Instance')||($constraint=='Modify_Instance') )
     $table_instance.pk='$selector_instance_fk'";
 
    
-    if (!($result_instance= mysql_query($instance_Stmt,$link))) {
+    if (!($result_instance= $link->query($instance_Stmt))) {
        DisplayErrMsg(sprintf("Error in executing %s stmt", $student_Stmt)) ;
-       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+       DisplayErrMsg(sprintf("error: %s", $link->error)) ;
        exit() ;
     }
 
-    if (!($field_instance = mysql_fetch_object($result_instance)))
+    if (!($field_instance = $result_instance->fetch_object()))
     {
        DisplayErrMsg("Internal error: the entry does not exist") ;
        exit() ;
@@ -654,7 +650,7 @@ if ( ($constraint=='Add_Instance')||($constraint=='Modify_Instance') )
     $instance->assign("default_created_time",$field_instance->created_time);
     $instance->assign("default_inst_attrs",$field_instance->inst_attrs);  
 
-    mysql_free_result($result_instance);
+    $result_instance->close();
 
     $table_instance=$instance->fetch("constraint_instance.tpl");
   } 

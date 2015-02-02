@@ -35,17 +35,12 @@ password='%s' where
 $table_users.pk='%d'";
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit() ;
-}
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
 
@@ -76,17 +71,17 @@ while ($i<$limit) // loop for $users_ref_key
 {
   if (($transfer_action=='delete')&&($users[$users_ref_key[$i]]=='on'))
   {    
-    if (!(mysql_query(sprintf($del_users,$users_ref_key[$i]), $link))) {
+    if (!($link->query(sprintf($del_users,$users_ref_key[$i])))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt",sprintf($del_users,$users_ref_key[$i]) )) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;}
   } // end delete action and users=on
   
   if (($transfer_action=='reset_pwd')&&($users[$users_ref_key[$i]]=='on'))
   {
-    if (!(mysql_query(sprintf($updateStmt_users,md5($first_login),$users_ref_key[$i]), $link))) {
+    if (!($link->query(sprintf($updateStmt_users,md5($first_login),$users_ref_key[$i])))) {
     DisplayErrMsg(sprintf("Error in executing %s stmt",sprintf($updateStmt_users,md5($first_login),$users_ref_key[$i])  )) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    DisplayErrMsg(sprintf("error: %s", $link->error)) ;
     exit() ;}
   } // end reset action and users = on
 

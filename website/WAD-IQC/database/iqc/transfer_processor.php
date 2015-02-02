@@ -35,17 +35,12 @@ status='%d' where
 $table_gewenste_processen.pk='%d'";
 
 // Connect to the Database
-if (!($link=mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit() ;
-}
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
 
@@ -73,17 +68,17 @@ while ($i<$limit) // loop for $gewenste_processen_ref_key
 {
   if (($transfer_action=='delete')&&($gewenste_processen[$gewenste_processen_ref_key[$i]]=='on'))
   {    
-    if (!(mysql_query(sprintf($del_gewenste_processen,$gewenste_processen_ref_key[$i]), $link))) {
+    if (!($link->query(sprintf($del_gewenste_processen,$gewenste_processen_ref_key[$i])))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt",sprintf($del_gewenste_processen,$gewenste_processen_ref_key[$i]) )) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;}
   } // end delete action and users=on
   
   if (($transfer_action=='reset')&&($gewenste_processen[$gewenste_processen_ref_key[$i]]=='on'))
   {
-    if (!(mysql_query(sprintf($updateStmt_gewenste_processen,$reset_status,$gewenste_processen_ref_key[$i]), $link))) {
+    if (!($link->query(sprintf($updateStmt_gewenste_processen,$reset_status,$gewenste_processen_ref_key[$i])))) {
     DisplayErrMsg(sprintf("Error in executing %s stmt",sprintf($updateStmt_gewenste_processen,md5($first_login),$gewenste_processen_ref_key[$i])  )) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    DisplayErrMsg(sprintf("error: %s", $link->error)) ;
     exit() ;}
   } // end reset action and users = on
 

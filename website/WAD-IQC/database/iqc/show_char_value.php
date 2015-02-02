@@ -124,40 +124,34 @@ where $table_gewenste_processen.selector_fk=$selector_fk
 order by $table_gewenste_processen.pk";
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit();
-}
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
 
 
 
-if (!($result_char= mysql_query(sprintf($results_char_Stmt,$gewenste_processen_id), $link))) {
+if (!($result_char= $link->query(sprintf($results_char_Stmt,$gewenste_processen_id)))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($results_char_Stmt,$gewenste_processen_id)) );
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
 
-if (!($result_selector= mysql_query($selector_Stmt, $link))) {
+if (!($result_selector= $link->query($selector_Stmt))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", $selector_Stmt)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
 
-$field_results = mysql_fetch_object($result_selector);
+$field_results = $result_selector->fetch_object();
 $header_result=sprintf("Selector: %s, analyse level: %s",$field_results->name,$field_results->analyselevel);
-mysql_free_result($result_selector);  
+$result_selector->close();  
 
 
 
@@ -169,7 +163,7 @@ $table_resultaten_char='';
 
 
 $j=0;
-while (($field_results = mysql_fetch_object($result_char)))
+while (($field_results = $result_char->fetch_object()))
 {
   
    $b=($j%2);

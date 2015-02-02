@@ -24,16 +24,12 @@ $select_Stmt1= "select * from $table_test_file where $table_test_file.filenaam_p
 $del_test_file_Stmt = "delete from  $table_test_file where $table_test_file.pk='%d'";
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-exit() ;
-}
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
 
@@ -71,10 +67,10 @@ if(!empty($_POST['action']))
 
 
 
-    if (!(mysql_query(sprintf($addStmt,$omschrijving,$filenaam,$filenaam_pad),$link))) 
+    if (!($link->query(sprintf($addStmt,$omschrijving,$filenaam,$filenaam_pad)))) 
     {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
     }
   }
@@ -82,10 +78,10 @@ if(!empty($_POST['action']))
   { 
     if ($error==4)    
     {
-      if (!(mysql_query(sprintf($update_Stmt1,$omschrijving,$pk),$link)))  
+      if (!($link->query(sprintf($update_Stmt1,$omschrijving,$pk))))  
       {
         DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-        DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+        DisplayErrMsg(sprintf("error: %s", $link->error)) ;
         exit() ;
       }
     }
@@ -106,10 +102,10 @@ if(!empty($_POST['action']))
        }
 
 
-       if (!(mysql_query(sprintf($update_Stmt,$omschrijving,$filenaam,$filenaam_pad,$pk),$link))) 
+       if (!($link->query(sprintf($update_Stmt,$omschrijving,$filenaam,$filenaam_pad,$pk)))) 
        {   
         DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-        DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+        DisplayErrMsg(sprintf("error: %s", $link->error)) ;
         exit() ;
        }
 
@@ -155,26 +151,26 @@ if ($pk==-1)         //delete
     if ($test_file[$test_file_ref_key[$i]]=='on')
     {
     
-      if (!($result_test_file= mysql_query(sprintf($select_Stmt,$test_file_ref_key[$i]), $link))) {
+      if (!($result_test_file= $link->query(sprintf($select_Stmt,$test_file_ref_key[$i])))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
       }
-      $field_test_file = mysql_fetch_object($result_test_file);
+      $field_test_file = $result_test_file->fetch_object();
       $filenaam_pad=$field_test_file->filenaam_pad;
-      mysql_free_result($result_test_file);
+      $result_test_file->close();
 
-      if (!($result_test_file= mysql_query(sprintf($select_Stmt1,$filenaam_pad), $link))) {
+      if (!($result_test_file= $link->query(sprintf($select_Stmt1,$filenaam_pad)))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
       }
       $counter=0;
-      while ($field_test_file = mysql_fetch_object($result_test_file) )
+      while ($field_test_file = $result_test_file->fetch_object() )
       {
         $counter++;
       }
-      mysql_free_result($result_test_file);
+      $result_test_file->close();
       if ($counter==1) //only 1 row that contains filenaam_pad
       {
         $target_path=$target_path.$filenaam_pad;
@@ -182,9 +178,9 @@ if ($pk==-1)         //delete
         //exit();
         unlink($target_path);
       } 
-      if (!($result_test_file= mysql_query(sprintf($del_test_file_Stmt,$test_file_ref_key[$i]),$link))) {
+      if (!($result_test_file= $link->query(sprintf($del_test_file_Stmt,$test_file_ref_key[$i])))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;}
     
     }
@@ -214,25 +210,21 @@ if ($pk>0)   //insert part of update
   $table_test_file.pk='$pk' ";
 
   // Connect to the Database
-  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-     DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-     exit() ;
-  }
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-  // Select the Database
-  if (!mysql_select_db($databaseName, $link)) {
-    DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-    exit() ;
-  }
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
+}
   
-  if (!($result_test_file= mysql_query($test_file_Stmt, $link))) {
+  if (!($result_test_file= $link->query($test_file_Stmt))) {
      DisplayErrMsg(sprintf("Error in executing %s stmt", $mpc_class_Stmt)) ;
-     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+     DisplayErrMsg(sprintf("error: %s", $link->error)) ;
      exit() ;
   }
     
-  $new = mysql_fetch_object($result_test_file);
+  $new = $result_test_file->fetch_object();
 
   $test_file->assign("title","Test file");
   $test_file->assign("header","Test file");
@@ -243,7 +235,7 @@ if ($pk>0)   //insert part of update
   $test_file->assign("default_filenaam_pad",$new->filenaam_pad);
   
   
-  mysql_free_result($result_test_file);
+  $result_test_file->close();
   
   $test_file->assign("submit_value","Update");
 }

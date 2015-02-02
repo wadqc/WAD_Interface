@@ -51,32 +51,28 @@ $update_Stmt = "update $table_gewenste_processen set status='%d' where pk='%d'";
 
 
 // Connect to the Database
-  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-     DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-     exit() ;
-  }
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-// Select the Database
-  if (!mysql_select_db($databaseName, $link)) {
-    DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-    exit() ;
-  }
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
+}
 
   
 
-  if (!($result_select= mysql_query(sprintf($select_Stmt,$gewenste_processen_id), $link))) {
+  if (!($result_select= $link->query(sprintf($select_Stmt,$gewenste_processen_id)))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($select_Stmt,$gewenste_processen_id) )) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
   }
   
-  if (!($field_results = mysql_fetch_object($result_select) ))
+  if (!($field_results = $result_select->fetch_object() ))
   {
    $initialen=$field_results->initialen;
   }
    
-  mysql_free_result($result_select);  
+  $result_select->close();  
  
 
   
@@ -84,17 +80,17 @@ $update_Stmt = "update $table_gewenste_processen set status='%d' where pk='%d'";
   $status=5;
   
   //update 
-  if (!mysql_query(sprintf($update_Stmt,$status,$gewenste_processen_id),$link)) {
+  if (!$link->query(sprintf($update_Stmt,$status,$gewenste_processen_id))) {
   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($update_Stmt,$status,$gewenste_processen_id)  )) ;
-  DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+  DisplayErrMsg(sprintf("error: %s", $link->error)) ;
   exit() ;
   }
 
   //delete
-  if(!mysql_query(sprintf($delete_Stmt,$gewenste_processen_id),$link)) 
+  if(!$link->query(sprintf($delete_Stmt,$gewenste_processen_id))) 
   {
     DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($delete_Stmt,$gewenste_processen_id) )) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    DisplayErrMsg(sprintf("error: %s", $link->error)) ;
     exit() ;
   } 
 

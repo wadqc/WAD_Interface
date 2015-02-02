@@ -123,18 +123,12 @@ where $table_gewenste_processen.selector_fk=$selector_fk
 order by $table_gewenste_processen.pk";
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit();
-}
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
 
@@ -146,18 +140,18 @@ if ($gewenste_processen_id==0) //wildcard on gewenste_processen_id
 
 
 
-if (!($result_floating= mysql_query($results_floating_Stmt, $link))) {
+if (!($result_floating= $link->query($results_floating_Stmt))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", $results_floating_Stmt) );
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
 
 
 
-if (!($result_selector= mysql_query($selector_Stmt, $link))) {
+if (!($result_selector= $link->query($selector_Stmt))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", $selector_Stmt)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
@@ -165,9 +159,9 @@ if (!($result_selector= mysql_query($selector_Stmt, $link))) {
 
 
 
-$field_results = mysql_fetch_object($result_selector);
+$field_results = $result_selector->fetch_object();
 $header_result=sprintf("Selector: %s, analyse level: %s",$field_results->name,$field_results->analyselevel);
-mysql_free_result($result_selector);  
+$result_selector->close();  
 
 
 
@@ -178,7 +172,7 @@ $value="Meetwaarde";
 
 
 $j=0;
-while (($field_results = mysql_fetch_object($result_floating)))
+while (($field_results = $result_floating->fetch_object()))
 {
   $grens_kritisch_boven=$field_results->grens_kritisch_boven;
   $grens_kritisch_onder=$field_results->grens_kritisch_onder;
@@ -206,7 +200,7 @@ while (($field_results = mysql_fetch_object($result_floating)))
 }
 
 
-mysql_free_result($result_floating); 
+$result_floating->close(); 
 
 
 

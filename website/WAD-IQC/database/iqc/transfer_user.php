@@ -124,18 +124,12 @@ $update_Stmt_department = "Update $table_department_student set
 department_out='%s' where $table_department_student.department_ref='%d'";
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit() ;
-}
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
 
@@ -198,27 +192,27 @@ while ($i<$limit) // loop for $class_ref
 
    
     //select old class values
-    if (!($result_student= mysql_query(sprintf($selectStmt_student,$class_ref_key[$i]),$link))) {
+    if (!($result_student= $link->query(sprintf($selectStmt_student,$class_ref_key[$i])))) {
     DisplayErrMsg(sprintf("Error in executing %s stmt", $selectStmt_student)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    DisplayErrMsg(sprintf("error: %s", $link->error)) ;
     exit() ;
     }
-    $student_field = mysql_fetch_object($result_student);
+    $student_field = $result_student->fetch_object();
     
     $current_department_ref=$student_field->department_ref;   
 
     // verify if this student already excists for this class
-    if (!($result_class= mysql_query(sprintf($verify_class_Stmt,$student_field->student_ref,$year_t,$school_t,$department_t,$class_t,$grade_t),$link))) {
+    if (!($result_class= $link->query(sprintf($verify_class_Stmt,$student_field->student_ref,$year_t,$school_t,$department_t,$class_t,$grade_t)))) {
     DisplayErrMsg(sprintf("Error in executing %s stmt", $mpc_class_Stmt)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    DisplayErrMsg(sprintf("error: %s", $link->error)) ;
     exit() ;
     }
     $class_counter=0;
-    while ($class_search = mysql_fetch_object($result_class))
+    while ($class_search = $result_class->fetch_object())
     {
       $class_counter++;
     }
-    mysql_free_result($result_class);
+    $result_class->close();
     
     if ($class_counter>0) //Same student already at class
     {
@@ -230,17 +224,17 @@ while ($i<$limit) // loop for $class_ref
     }
     
     //verify if a student with same name excists for this class
-    if (!($result_class= mysql_query(sprintf($verify_student_Stmt,$student_field->student_ref,$student_field->firstname,$student_field->lastname,$year_t,$school_t,$department_t,$class_t,$grade_t),$link))) {
+    if (!($result_class= $link->query(sprintf($verify_student_Stmt,$student_field->student_ref,$student_field->firstname,$student_field->lastname,$year_t,$school_t,$department_t,$class_t,$grade_t)))) {
     DisplayErrMsg(sprintf("Error in executing %s stmt", $mpc_class_Stmt)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    DisplayErrMsg(sprintf("error: %s", $link->error)) ;
     exit() ;
     }
     $name_counter=0;
-    while ($class_search = mysql_fetch_object($result_class))
+    while ($class_search = $result_class->fetch_object())
     {
       $name_counter++;
     }
-    mysql_free_result($result_class);
+    $result_class->close();
     if ($name_counter>0) //Another student with same first and last name at class
     {
       if ($message=='')
@@ -255,19 +249,19 @@ while ($i<$limit) // loop for $class_ref
     {
      
       // verify if department excists  
-      if (!($result_department= mysql_query(sprintf($verify_department_Stmt,$student_field->student_ref,$school_t,$department_t),$link))) {
+      if (!($result_department= $link->query(sprintf($verify_department_Stmt,$student_field->student_ref,$school_t,$department_t)))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $mpc_class_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
       }
    
      $department_counter=0;
-      while ($department_search = mysql_fetch_object($result_department))
+      while ($department_search = $result_department->fetch_object())
       {
         $department_counter++;
         $student_department_ref=$department_search->department_ref;
       }
-      mysql_free_result($result_department);
+      $result_department->close();
       if ($department_counter>0) // same department; different class
       {
         //add new class
@@ -278,26 +272,26 @@ while ($i<$limit) // loop for $class_ref
       if ($department_counter==0)
       {
         // verify if school excists  
-        if (!($result_school= mysql_query(sprintf($verify_school_Stmt,$student_field->student_ref,$school_t),$link))) {
+        if (!($result_school= $link->query(sprintf($verify_school_Stmt,$student_field->student_ref,$school_t)))) {
         DisplayErrMsg(sprintf("Error in executing %s stmt", $mpc_class_Stmt)) ;
-        DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+        DisplayErrMsg(sprintf("error: %s", $link->error)) ;
         exit() ;
         }
         $school_counter=0;
-        while ($school_search = mysql_fetch_object($result_school))
+        while ($school_search = $result_school->fetch_object())
         {
           $school_counter++;
         }
-        mysql_free_result($result_school);
+        $result_school->close();
                 
         if ($school_counter>0) // same school; different department, different class
         {
           //update current department
           if (!($result_department=
-          mysql_query(sprintf($update_Stmt_department,$current_date,$current_department_ref),$link)))
+          $link->query(sprintf($update_Stmt_department,$current_date,$current_department_ref))))
           {
             DisplayErrMsg(sprintf("Error in executing %s stmt", $mpc_class_Stmt)) ;
-            DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+            DisplayErrMsg(sprintf("error: %s", $link->error)) ;
             exit() ;
           }
           //add new department
@@ -326,58 +320,58 @@ while ($i<$limit) // loop for $class_ref
     }
     
     // query the old subject table
-    if (!($result_subject= mysql_query(sprintf($queryStmt_subject,$class_ref_key[$i]),$link))) {
+    if (!($result_subject= $link->query(sprintf($queryStmt_subject,$class_ref_key[$i])))) {
     DisplayErrMsg(sprintf("Error in executing %s stmt", $queryStmt_subject_exam)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    DisplayErrMsg(sprintf("error: %s", $link->error)) ;
     exit() ;
     }
     //$specific_subject="";
-    while ($field_subject=mysql_fetch_object($result_subject))
+    while ($field_subject=$result_subject->fetch_object())
     {
       // query the old exam table
-      if (!($result_exam= mysql_query(sprintf($queryStmt_exam,$field_subject->subjects_ref),$link))) {
+      if (!($result_exam= $link->query(sprintf($queryStmt_exam,$field_subject->subjects_ref)))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $queryStmt_subject_exam)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
       }
       $exam_counter=0;
-      while ($field_exam=mysql_fetch_object($result_exam))
+      while ($field_exam=$result_exam->fetch_object())
       {
         if ($exam_counter==0)
         {
           // copy old subject into new field for class_ref
-          if (!(mysql_query(sprintf($add_Stmt_subject,$field_subject->subject,$field_subject->teacher,$field_subject->cluster,$class_ref_t),$link))) {
+          if (!($link->query(sprintf($add_Stmt_subject,$field_subject->subject,$field_subject->teacher,$field_subject->cluster,$class_ref_t)))) {
           DisplayErrMsg(sprintf("Error in executing %s stmt", $add_Stmt_subject)) ;
-          DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+          DisplayErrMsg(sprintf("error: %s", $link->error)) ;
           exit() ;
           }
       
           // trace the new subjects_ref
       
-          if (!($result_query_subject= mysql_query(sprintf($queryStmt_subject_ref,$field_subject->subject,$field_subject->teacher,$field_subject->cluster,$class_ref_t),$link))) {
+          if (!($result_query_subject= $link->query(sprintf($queryStmt_subject_ref,$field_subject->subject,$field_subject->teacher,$field_subject->cluster,$class_ref_t)))) {
           DisplayErrMsg(sprintf("Error in executing %s stmt", $queryStmt_klas)) ;
-          DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+          DisplayErrMsg(sprintf("error: %s", $link->error)) ;
           exit() ;
           }
-          $field_query_subject=mysql_fetch_object($result_query_subject);
+          $field_query_subject=$result_query_subject->fetch_object();
           $new_subjects_ref=$field_query_subject->subjects_ref;
-          mysql_free_result($result_query_subject);
+          $result_query_subject->close();
               
           $exam_counter++;
         }
 
         // copy old exam into new field for new_subjects_ref
-        if (!(mysql_query(sprintf($add_Stmt_exam,$field_exam->description,$field_exam->date,$field_exam->mark,$field_exam->mark_r,$field_exam->weigth,$field_exam->report,$field_exam->average,$new_subjects_ref),$link))) {
+        if (!($link->query(sprintf($add_Stmt_exam,$field_exam->description,$field_exam->date,$field_exam->mark,$field_exam->mark_r,$field_exam->weigth,$field_exam->report,$field_exam->average,$new_subjects_ref)))) {
         DisplayErrMsg(sprintf("Error in executing %s stmt", $add_Stmt_subject)) ;
-        DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+        DisplayErrMsg(sprintf("error: %s", $link->error)) ;
         exit() ;
         }
       }
-      mysql_free_result($result_exam);
+      $result_exam->close();
     }
-    mysql_free_result($result_subject);
+    $result_subject->close();
 
-    mysql_free_result($result_student);
+    $result_student->close();
     
   } //end transfer
   
@@ -416,30 +410,30 @@ if ($message!='')
 //lock all
 if ($transfer_action=='lock all')
 {
-  if (!($result_student_all= mysql_query($student_all,$link))) {
+  if (!($result_student_all= $link->query($student_all))) {
   DisplayErrMsg(sprintf("Error in executing %s stmt", $selectStmt_student)) ;
-  DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+  DisplayErrMsg(sprintf("error: %s", $link->error)) ;
   exit() ;
   }
-  while ($field_student_all=mysql_fetch_object($result_student_all))
+  while ($field_student_all=$result_student_all->fetch_object())
   {
     lock_student($field_student_all->class_ref,'on');
   }
-  mysql_free_result($result_student_all);
+  $result_student_all->close();
 }
 //unlock all
 if ($transfer_action=='unlock all')
 {
-  if (!($result_student_all= mysql_query($student_all,$link))) {
+  if (!($result_student_all= $link->query($student_all))) {
   DisplayErrMsg(sprintf("Error in executing %s stmt", $selectStmt_student)) ;
-  DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+  DisplayErrMsg(sprintf("error: %s", $link->error)) ;
   exit() ;
   }
-  while ($field_student_all=mysql_fetch_object($result_student_all))
+  while ($field_student_all=$result_student_all->fetch_object())
   {
     lock_student($field_student_all->class_ref,'');
   }
-  mysql_free_result($result_student_all);
+  $result_student_all->close();
 }
 
 if ($transfer_action!='print')

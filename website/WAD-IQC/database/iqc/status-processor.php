@@ -112,23 +112,17 @@ order by $table_gewenste_processen.creation_time desc";
 
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit();
+$link = new mysqli($hostName, $userName, $password, $databaseName);
+
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
-
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
-}
-
-if (!($result_status= mysql_query($status_list, $link))) {
+if (!($result_status= $link->query($status_list))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", $collector_study_Stmt)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
@@ -136,7 +130,7 @@ if (!($result_status= mysql_query($status_list, $link))) {
 $list_status='';
 $counter=0;
 
-while($field = mysql_fetch_object($result_status))
+while($field = $result_status->fetch_object())
 {
   if (($counter==0)&&($status_id==-1)) //first visit, id will be changed to the id that is linked to the most recent date of study
   {
@@ -154,7 +148,7 @@ if(!isset($status))
   $status=$list_all;
 }
 
-mysql_free_result($result_status);
+$result_status->close();
 
 $list_date['100 YEAR'] = '*';
 $list_date['24 HOUR'] = 'afgelopen 24 uur';
@@ -163,30 +157,30 @@ $list_date['1 MONTH'] = 'afgelopen maand';
 $list_date['1 YEAR'] = 'afgelopen jaar';
 
 
-if (!($result_processor_study= mysql_query(sprintf($processor_study_Stmt,10,8), $link))) {
+if (!($result_processor_study= $link->query(sprintf($processor_study_Stmt,10,8)))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($processor_study_Stmt,10,8))) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
 
-if (!($result_processor_series= mysql_query(sprintf($processor_series_Stmt,10,56), $link))) {
+if (!($result_processor_series= $link->query(sprintf($processor_series_Stmt,10,56)))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($processor_series_Stmt,10,56))) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
 
-if (!($result_processor_instance= mysql_query(sprintf($processor_instance_Stmt,10,1), $link))) {
+if (!($result_processor_instance= $link->query(sprintf($processor_instance_Stmt,10,1)))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($processor_instance_Stmt,10,1))) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
 
-if (!($result_gewenste_processen= mysql_query(sprintf($gewenste_processen_Stmt,$date_filter,$status), $link))) {
+if (!($result_gewenste_processen= $link->query(sprintf($gewenste_processen_Stmt,$date_filter,$status)))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($gewenste_processen_Stmt,$date_filter,$status))) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
@@ -205,7 +199,7 @@ $selector_list=$table_data->fetch("status_filter_processor.tpl");
 $processor_status_row='';
 
 $j=0;
-while ($field_gewenste_processen = mysql_fetch_object($result_gewenste_processen))
+while ($field_gewenste_processen = $result_gewenste_processen->fetch_object())
 {
    $b=($j%2);
    $bgcolor=''; 
@@ -230,12 +224,12 @@ while ($field_gewenste_processen = mysql_fetch_object($result_gewenste_processen
    
    if (!($field_gewenste_processen->study_fk == NULL))
    {
-     if (!($result_processor_study= mysql_query(sprintf($processor_study_Stmt,$field_gewenste_processen->pk), $link))) {
+     if (!($result_processor_study= $link->query(sprintf($processor_study_Stmt,$field_gewenste_processen->pk)))) {
      DisplayErrMsg(sprintf("Error in executing %s stmt", $collector_study_Stmt)) ;
-     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+     DisplayErrMsg(sprintf("error: %s", $link->error)) ;
      exit() ;
      }
-     while ($field_processor_study = mysql_fetch_object($result_processor_study))
+     while ($field_processor_study = $result_processor_study->fetch_object())
      {
        $checkbox_name=sprintf("gewenste_processen[%d]",$field_gewenste_processen->pk);
        $table_data->assign("bgcolor",$bgcolor);
@@ -263,17 +257,17 @@ while ($field_gewenste_processen = mysql_fetch_object($result_gewenste_processen
        }
        $j++;
      }
-     mysql_free_result($result_processor_study); 
+     $result_processor_study->close(); 
    }
 
    if (!($field_gewenste_processen->series_fk == NULL))
    {
-     if (!($result_processor_series= mysql_query(sprintf($processor_series_Stmt,$field_gewenste_processen->pk), $link))) {
+     if (!($result_processor_series= $link->query(sprintf($processor_series_Stmt,$field_gewenste_processen->pk)))) {
      DisplayErrMsg(sprintf("Error in executing %s stmt", $collector_study_Stmt)) ;
-     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+     DisplayErrMsg(sprintf("error: %s", $link->error)) ;
      exit() ;
      }
-     while ($field_processor_series = mysql_fetch_object($result_processor_series))
+     while ($field_processor_series = $result_processor_series->fetch_object())
      {
        $checkbox_name=sprintf("gewenste_processen[%d]",$field_gewenste_processen->pk);
        $table_data->assign("bgcolor",$bgcolor);
@@ -303,17 +297,17 @@ while ($field_gewenste_processen = mysql_fetch_object($result_gewenste_processen
        }
        $j++;
      }
-     mysql_free_result($result_processor_series); 
+     $result_processor_series->close(); 
    }
 
    if (!($field_gewenste_processen->instance_fk == NULL))
    {
-     if (!($result_processor_instance= mysql_query(sprintf($processor_instance_Stmt,$field_gewenste_processen->pk), $link))) {
+     if (!($result_processor_instance= $link->query(sprintf($processor_instance_Stmt,$field_gewenste_processen->pk)))) {
      DisplayErrMsg(sprintf("Error in executing %s stmt", $collector_study_Stmt)) ;
-     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+     DisplayErrMsg(sprintf("error: %s", $link->error)) ;
      exit() ;
      }
-     while ($field_processor_instance = mysql_fetch_object($result_processor_instance))
+     while ($field_processor_instance = $result_processor_instance->fetch_object())
      {
        $checkbox_name=sprintf("gewenste_processen[%d]",$field_gewenste_processen->pk);
        $table_data->assign("bgcolor",$bgcolor);
@@ -344,11 +338,11 @@ while ($field_gewenste_processen = mysql_fetch_object($result_gewenste_processen
        }
        $j++;
      }
-     mysql_free_result($result_processor_instance); 
+     $result_processor_instance->close(); 
    }
 
 }
-mysql_free_result($result_gewenste_processen); 
+$result_gewenste_processen->close(); 
 
 
 

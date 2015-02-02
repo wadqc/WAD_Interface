@@ -22,23 +22,17 @@ where $table_analysemodule_cfg.pk='%d'";
 
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit();
+$link = new mysqli($hostName, $userName, $password, $databaseName);
+
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
-
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
-}
-
-if (!($result_selector= mysql_query($selector_Stmt, $link))) {
+if (!($result_selector= $link->query($selector_Stmt))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
@@ -52,30 +46,30 @@ $table_selector='';
 
  
 $j=0;
-while (($field_selector = mysql_fetch_object($result_selector)))
+while (($field_selector = $result_selector->fetch_object()))
 {
   $selector_patient_fk=$field_selector->selector_patient_fk;
   $selector_study_fk=$field_selector->selector_study_fk;
   $selector_series_fk=$field_selector->selector_series_fk;
   $selector_instance_fk=$field_selector->selector_instance_fk;
 
-  if (!($result_analysemodule= mysql_query(sprintf($testfile_Stmt,$field_selector->analysemodule_fk),$link))) {
+  if (!($result_analysemodule= $link->query(sprintf($testfile_Stmt,$field_selector->analysemodule_fk)))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($testfile_Stmt,$field_selector->analysemodule_fk))) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
   }
-  $field_analysemodule = mysql_fetch_object($result_analysemodule);
+  $field_analysemodule = $result_analysemodule->fetch_object();
   $analysemodule_name=$field_analysemodule->description;
-  mysql_free_result($result_analysemodule);
+  $result_analysemodule->close();
 
-  if (!($result_analysemodule_cfg= mysql_query(sprintf($configfile_Stmt,$field_selector->analysemodule_cfg_fk),$link))) {
+  if (!($result_analysemodule_cfg= $link->query(sprintf($configfile_Stmt,$field_selector->analysemodule_cfg_fk)))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($configfile_Stmt,$field_selector->analysemodule_cfg_fk))) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
   }
-  $field_analysemodule_cfg = mysql_fetch_object($result_analysemodule_cfg);
+  $field_analysemodule_cfg = $result_analysemodule_cfg->fetch_object();
   $analysemodule_cfg_name=$field_analysemodule_cfg->description;
-  mysql_free_result($result_analysemodule_cfg);
+  $result_analysemodule_cfg->close();
 
 
    $b=($j%2);
@@ -108,7 +102,7 @@ while (($field_selector = mysql_fetch_object($result_selector)))
 }
 
 
-mysql_free_result($result_selector);  
+$result_selector->close();  
 
 $data = new Smarty_NM();
 $data->assign("Title","Selector");

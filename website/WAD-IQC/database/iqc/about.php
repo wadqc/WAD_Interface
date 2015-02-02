@@ -10,25 +10,20 @@ $versions_Stmt="SELECT * from $table_config where property like 'Version_%'
                 order by field(property,'Version_Database','Version_Collector','Version_Selector','Version_Processor')";
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit();
+$link = new mysqli($hostName, $userName, $password, $databaseName);
+
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
-}
-
-$result_versions = mysql_query($versions_Stmt, $link);
+$result_versions = $link->query($versions_Stmt);
 
 $table_versions='';
 
 $j=0;
-while (($field_config = mysql_fetch_object($result_versions)))
+while (($field_config = $result_versions->fetch_object()))
 {
 
    $b=($j%2);
@@ -55,7 +50,7 @@ while (($field_config = mysql_fetch_object($result_versions)))
    $j++;
 }
 
-mysql_free_result($result_selector);
+$result_selector->close();
 
 
 

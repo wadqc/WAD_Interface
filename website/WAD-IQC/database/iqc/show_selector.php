@@ -15,23 +15,17 @@ order by $table_selector.name";
 
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit();
+$link = new mysqli($hostName, $userName, $password, $databaseName);
+
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
-
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
-}
-
-if (!($result_selector= mysql_query($selector_Stmt, $link))) {
+if (!($result_selector= $link->query($selector_Stmt))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", $selector_Stmt)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
@@ -41,7 +35,7 @@ $table_selector='';
 $status=5;
 
 $j=0;
-while (($field_selector = mysql_fetch_object($result_selector)))
+while (($field_selector = $result_selector->fetch_object()))
 {
   
    $b=($j%2);
@@ -72,7 +66,7 @@ while (($field_selector = mysql_fetch_object($result_selector)))
 }
 
 
-mysql_free_result($result_selector);  
+$result_selector->close();  
 
 $data = new Smarty_NM();
 $data->assign("Title","Selector Results");

@@ -823,6 +823,10 @@ while (($field_results = mysql_fetch_object($result_object)))
   switch ( $object_type )
   {
     case "image/jpeg":
+    case "image/png":
+    case "image/gif":
+    case "image/bmp":
+    case "image/wbmp":
       $action_object=sprintf("show_object.php?pk=%d&object_type=%s&t=%d",$field_results->pk,$object_type,time()); 
       $picture_src=sprintf("image_resize.php?f_name=$field_results->object_naam_pad&height=120");
       break;

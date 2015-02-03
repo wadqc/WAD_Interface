@@ -240,10 +240,10 @@ while ($field_gewenste_processen = $result_gewenste_processen->fetch_object())
        $table_data->assign("study_date",$field_processor_study->study_datetime);
        $table_data->assign("selector_name",$field_processor_study->selector_name);
        $table_data->assign("proces_date",$field_processor_study->creation_time);
-       if ($field_processor_series->status_omschrijving=="Error") {
+       if ($field_processor_study->status_omschrijving=="Error") {
           $table_data->assign("proces_status","<a target='blank' href='show_processor_log.php?pk=".$field_gewenste_processen->pk."'>Error</a>");
        } else {
-          $table_data->assign("proces_status",$field_processor_series->status_omschrijving);
+          $table_data->assign("proces_status",$field_processor_study->status_omschrijving);
        }
 
        $table_data->assign("action",$action);
@@ -322,10 +322,10 @@ while ($field_gewenste_processen = $result_gewenste_processen->fetch_object())
        $table_data->assign("instance_date",$field_processor_instance->instance_datetime);  
        $table_data->assign("selector_name",$field_processor_instance->selector_name);
        $table_data->assign("proces_date",$field_processor_instance->creation_time);
-       if ($field_processor_series->status_omschrijving=="Error") {
+       if ($field_processor_instance->status_omschrijving=="Error") {
           $table_data->assign("proces_status","<a target='blank' href='show_processor_log.php?pk=".$field_gewenste_processen->pk."'>Error</a>");
        } else {
-          $table_data->assign("proces_status",$field_processor_series->status_omschrijving);
+          $table_data->assign("proces_status",$field_processor_instance->status_omschrijving);
        }
        $table_data->assign("action",$action);
        if (!empty($user_level_1))

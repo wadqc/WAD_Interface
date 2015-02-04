@@ -76,7 +76,7 @@ if( (!empty($_POST['action'])))
     }
     if ($constraint=='Add_Patient')
     {
-      $selector_patient_fk=->insert_id();
+      $selector_patient_fk=$link->insert_id;
     }
   }
 
@@ -142,7 +142,7 @@ if( (!empty($_POST['action'])))
     if ($constraint=='Add_Study')
     {
       
-      $selector_study_fk=->insert_id();
+      $selector_study_fk=$link->insert_id;
     }
   }
 
@@ -211,7 +211,7 @@ if( (!empty($_POST['action'])))
     }
     if ($constraint=='Add_Series')
     {
-      $selector_series_fk=->insert_id();
+      $selector_series_fk=$link->insert_id;
     }
   }
 
@@ -266,7 +266,7 @@ if( (!empty($_POST['action'])))
     }
     if ($constraint=='Add_Instance')
     {
-      $selector_instance_fk=->insert_id();
+      $selector_instance_fk=$link->insert_id;
     }
   }
 

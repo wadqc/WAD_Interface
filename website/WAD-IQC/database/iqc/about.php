@@ -50,7 +50,7 @@ while (($field_config = $result_versions->fetch_object()))
    $j++;
 }
 
-$result_selector->close();
+$result_versions->close();
 
 
 

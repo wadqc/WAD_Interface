@@ -21,6 +21,10 @@ $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname(
 
 
 $table_analysemodule_cfg='analysemodule_cfg';
+$table_selector='selector';
+
+
+
 $addStmt = "Insert into $table_analysemodule_cfg(description,filename,filepath) values ('%s','%s','%s')";
 $update_Stmt = "Update $table_analysemodule_cfg set description='%s',filename='%s',filepath='%s' where $table_analysemodule_cfg.pk='%d'";
 $update_Stmt1 = "Update $table_analysemodule_cfg set description='%s' where $table_analysemodule_cfg.pk='%d'";
@@ -28,6 +32,7 @@ $update_Stmt1 = "Update $table_analysemodule_cfg set description='%s' where $tab
 $select_Stmt= "select * from $table_analysemodule_cfg where $table_analysemodule_cfg.pk='%d'";
 $select_Stmt1= "select * from $table_analysemodule_cfg where $table_analysemodule_cfg.filepath='%s'";
 
+$selector_Stmt= "select * from $table_selector where $table_selector.analysemodule_cfg_fk='%d'";
 
 $del_analysemodule_cfg_Stmt = "delete from  $table_analysemodule_cfg where $table_analysemodule_cfg.pk='%d'";
 
@@ -185,6 +190,26 @@ if ($pk==-1)         //delete
   {
     if ($analysemodule_cfg[$analysemodule_cfg_ref_key[$i]]=='on')
     {
+      // controleer eerst of er nog selectoren zijn gekoppeld aan de config
+      if (!($result_selector=$link->query(sprintf($selector_Stmt,$analysemodule_cfg_ref_key[$i])))) {
+        DisplayErrMsg(sprintf("Error in executing %s stmt", $selector_Stmt));
+        DisplayErrMsg(sprintf("error: %s", $link->error)) ;
+        exit() ;
+      }
+
+      $result_selector->close();
+
+      $count=0; $selectorlist=array();
+      while ($field_selector = $result_selector->fetch_object() )
+      {
+        $count++;
+        array_push($selectorlist,$field_selector->name);
+      }
+      if ($count) {
+         print("Fout: config is in gebruik door de volgende selector(en): ".implode(', ',$selectorlist));
+         exit();
+      }
+
       // haal config filename op uit DB op basis van pk
       if (!($result_analysemodule_cfg= $link->query(sprintf($select_Stmt,$analysemodule_cfg_ref_key[$i])))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;

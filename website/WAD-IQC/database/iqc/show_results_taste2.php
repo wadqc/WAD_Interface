@@ -97,35 +97,29 @@ where $table_gewenste_processen.selector_fk=$selector_fk
 order by $table_gewenste_processen.pk";
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit();
-}
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
 
 if ($gewenste_processen_id==-1) //first visit, id will be changed to most recent id of table_gewenste_processen
 {
 
-  if (!($result_gewenste_processen= mysql_query($gewenste_processen_Stmt, $link))) {
+  if (!($result_gewenste_processen= $link->query($gewenste_processen_Stmt))) {
     DisplayErrMsg(sprintf("Error in executing %s stmt", $gewenste_processen_Stmt)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+    DisplayErrMsg(sprintf("error: %s", $link->error)) ;
     exit() ;
   }
 
-  while (($field_results = mysql_fetch_object($result_gewenste_processen)))
+  while (($field_results = $result_gewenste_processen->fetch_object()))
   {
     $gewenste_processen_id=$field_results->pk;
   }
-  mysql_free_result($result_gewenste_processen); 
+  $result_gewenste_processen->close(); 
 } 
 
 //if ($gewenste_processen_id==0) //wildcard on gewenste_processen_id
@@ -135,53 +129,53 @@ if ($gewenste_processen_id==-1) //first visit, id will be changed to most recent
 //printf($results_floating_Stmt,$gewenste_processen_id);
 
 printf($results_floating_Stmt,$gewenste_processen_id);
-if (!($result_floating= mysql_query(sprintf($results_floating_Stmt,$gewenste_processen_id), $link))) {
+if (!($result_floating= $link->query(sprintf($results_floating_Stmt,$gewenste_processen_id)))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($results_floating_Stmt,$gewenste_processen_id)) );
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
-if (!($result_char= mysql_query(sprintf($results_char_Stmt,$gewenste_processen_id), $link))) {
+if (!($result_char= $link->query(sprintf($results_char_Stmt,$gewenste_processen_id)))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($results_char_Stmt,$gewenste_processen_id)) );
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
-if (!($result_object= mysql_query(sprintf($results_object_Stmt,$gewenste_processen_id), $link))) {
+if (!($result_object= $link->query(sprintf($results_object_Stmt,$gewenste_processen_id)))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($results_object_Stmt,$gewenste_processen_id)) );
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
 
-if (!($result_selector= mysql_query($selector_Stmt, $link))) {
+if (!($result_selector= $link->query($selector_Stmt))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", $selector_Stmt)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
-if (!($result_year= mysql_query($year_Stmt, $link))) {
+if (!($result_year= $link->query($year_Stmt))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", $year_Stmt)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
 
 
-$field_results = mysql_fetch_object($result_selector);
+$field_results = $result_selector->fetch_object();
 $header_result=sprintf("Selector: %s, analyse level: %s",$field_results->name,$field_results->analyselevel);
-mysql_free_result($result_selector);  
+$result_selector->close();  
 
 
 
 
 
 $list_year='';
-while($field = mysql_fetch_object($result_year))
+while($field = $result_year->fetch_object())
 {
   $list_year["$field->pk"]="$field->creation_time";
 } 
-mysql_free_result($result_year);
+$result_year->close();
 
 $table_data = new Smarty_NM();
 $table_data->assign("year_options",$list_year);
@@ -194,7 +188,7 @@ $table_resultaten_floating='';
 
 
 $j=0;
-while (($field_results = mysql_fetch_object($result_floating)))
+while (($field_results = $result_floating->fetch_object()))
 {
   
    $b=($j%2);
@@ -252,13 +246,13 @@ while (($field_results = mysql_fetch_object($result_floating)))
 }
 
 
-mysql_free_result($result_floating);  
+$result_floating->close();  
 
 $table_resultaten_char='';
 
 
 $j=0;
-while (($field_results = mysql_fetch_object($result_char)))
+while (($field_results = $result_char->fetch_object()))
 {
   
    $b=($j%2);
@@ -291,7 +285,7 @@ while (($field_results = mysql_fetch_object($result_char)))
 }
 
 
-mysql_free_result($result_char); 
+$result_char->close(); 
 
 
 
@@ -302,7 +296,7 @@ $picture_row='';
 $b=0;
 
 $j=0;
-while (($field_results = mysql_fetch_object($result_object)))
+while (($field_results = $result_object->fetch_object()))
 {
   
    $b=($j%2);
@@ -345,7 +339,7 @@ while (($field_results = mysql_fetch_object($result_object)))
 }
 
 
-mysql_free_result($result_object); 
+$result_object->close(); 
 
 
 if ($b!=0)

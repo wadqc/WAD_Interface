@@ -90,23 +90,17 @@ $status_list = "SELECT * from $table_collector_status_omschrijving order by $tab
 
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit();
+$link = new mysqli($hostName, $userName, $password, $databaseName);
+
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
-
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
-}
-
-if (!($result_status= mysql_query($status_list, $link))) {
+if (!($result_status= $link->query($status_list))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", $status_list)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
@@ -114,7 +108,7 @@ if (!($result_status= mysql_query($status_list, $link))) {
 $list_status='';
 $counter=0;
 
-while($field = mysql_fetch_object($result_status))
+while($field = $result_status->fetch_object())
 {
   if (($counter==0)&&($status_id==-1)) //first visit, id will be changed to the id that is linked to the most recent date of study
   {
@@ -132,7 +126,7 @@ if(!isset($status))
   $status=$list_all;
 }
 
-mysql_free_result($result_status);
+$result_status->close();
 
 $list_date['100 YEAR'] = '*';
 $list_date['24 HOUR'] = 'afgelopen 24 uur';
@@ -140,18 +134,18 @@ $list_date['1 WEEK'] = 'afgelopen week';
 $list_date['1 MONTH'] = 'afgelopen maand';
 $list_date['1 YEAR'] = 'afgelopen jaar';
 
-if (!($result_collector_study= mysql_query(sprintf($collector_study_Stmt,$status,$date_filter), $link))) {
+if (!($result_collector_study= $link->query(sprintf($collector_study_Stmt,$status,$date_filter)))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($collector_study_Stmt,$status,$date_filter))) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit();
 }
 
 
 if ($study_pk>0)
 {
-   if (!($result_collector_series= mysql_query(sprintf($collector_series_Stmt,$study_pk,$status,$date_filter), $link))) {
+   if (!($result_collector_series= $link->query(sprintf($collector_series_Stmt,$study_pk,$status,$date_filter)))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($collector_series_Stmt,$study_pk,$status,$date_filter) )) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
@@ -181,7 +175,7 @@ $collector_study_row='';
  
 $j=0;
 $k=0;
-while ($field_collector_study = mysql_fetch_object($result_collector_study))
+while ($field_collector_study = $result_collector_study->fetch_object())
 {
     
    $b=($j%2);
@@ -240,7 +234,7 @@ while ($field_collector_study = mysql_fetch_object($result_collector_study))
 }
 
 
-mysql_free_result($result_collector_study);  
+$result_collector_study->close();  
 
 
 
@@ -275,7 +269,7 @@ if ($study_pk>0)
 $collector_series_row='';
  
 $j=0;
-while ($field_collector_series = mysql_fetch_object($result_collector_series))
+while ($field_collector_series = $result_collector_series->fetch_object())
 {
  
 $b=($j%2);
@@ -326,7 +320,7 @@ $b=($j%2);
 }
 
 
-mysql_free_result($result_collector_series);  
+$result_collector_series->close();  
 
 
 

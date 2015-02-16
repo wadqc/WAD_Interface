@@ -28,32 +28,27 @@ $queryStmt_users = "Select * from $table_users where
 $table_users.login='$user'";
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit() ;
-}
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
 
-if (!($result_users= mysql_query($queryStmt_users, $link))) {
+if (!($result_users= $link->query($queryStmt_users))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", $selectStmt_department)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
-$field_users = mysql_fetch_object($result_users);
+$field_users = $result_users->fetch_object();
 
 $users_name=sprintf("%s
 %s",$field_users->firstname,$field_users->lastname);
 
-mysql_free_result($result_users);
+$result_users->close();
 
 
 

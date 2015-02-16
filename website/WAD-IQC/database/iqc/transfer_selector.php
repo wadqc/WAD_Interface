@@ -61,33 +61,28 @@ $update_series_Stmt="update $table_collector_series_status,$table_series set $ta
 
 
 // Connect to the Database
-if (!($link=mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit() ;
-}
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
 
 if($level=='series' && $transfer_action='reset'){
-  if (!(mysql_query(sprintf($update_series_Stmt,$reset_status,$selected_series), $link))) {
+  if (!($link->query(sprintf($update_series_Stmt,$reset_status,$selected_series)))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt",sprintf($update_series_Stmt,$reset_status,$selected_series)) ) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
   }
 }
 
 
 if($level=='study' && $transfer_action='reset'){
-  if (!(mysql_query(sprintf($update_studies_Stmt,$reset_status,$reset_status,$selected_studies), $link))) {
+  if (!($link->query(sprintf($update_studies_Stmt,$reset_status,$reset_status,$selected_studies)))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt",sprintf($update_studies_Stmt,$reset_status,$reset_status,$selected_studies)) ) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
   }
 }

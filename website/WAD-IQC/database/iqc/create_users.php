@@ -13,23 +13,17 @@ order by $table_users.lastname, $table_users.firstname";
 
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit();
+$link = new mysqli($hostName, $userName, $password, $databaseName);
+
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
-
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
-}
-
-if (!($result_users= mysql_query($users_Stmt, $link))) {
+if (!($result_users= $link->query($users_Stmt))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", $users_Stmt)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
@@ -37,7 +31,7 @@ if (!($result_users= mysql_query($users_Stmt, $link))) {
 $users_row='';
  
 $j=0;
-while (($field_users = mysql_fetch_object($result_users)))
+while (($field_users = $result_users->fetch_object()))
 {
  
 $b=($j%2);
@@ -84,7 +78,7 @@ $b=($j%2);
 }
 
 
-mysql_free_result($result_users);  
+$result_users->close();  
 
 
 

@@ -4,10 +4,14 @@
 <html>
 <head>
   <title>IQC</title>
-  <link   rel="StyleSheet" href="./css/styles.css" type="text/css">
+  <link rel="StyleSheet" href="./css/styles.css" type="text/css">
+  <link rel="stylesheet" type="text/css" media="all" href="./java/js/tablekit/css/style.css"/>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="GENERATOR" content="Quanta Plus">
   <script type="text/javascript" language="JavaScript" src="./java/scripts.js"></script> 
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js"></script>
+  <script type="text/javascript" src="./java/js/tablekit/fabtabulous.js"></script>
+  <script type="text/javascript" src="./java/js/tablekit/tablekit.js"></script>
 </head>
 <body bgcolor="#F3F6FF">
 
@@ -21,7 +25,7 @@
 <br>
 <br>
 
-<table NOSAVE="true" class="table_general">
+<table NOSAVE="true" class="table_general sortable"">
   {$processor_list}
 </table>
 

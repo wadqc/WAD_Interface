@@ -61,7 +61,7 @@
   </tr>
   <tr>
     <td class="table_data_blue_header">
-      <br>Ge&iuml;nstalleerde versies van Java services en WAD-QC Database:
+      <br>{$versions_title}
     </td>
   </tr>
   <tr><td>&nbsp;</td></tr>

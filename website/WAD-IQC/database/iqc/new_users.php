@@ -29,17 +29,13 @@ if( (!empty($_GET['message_level']) ) )
 $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname($_SERVER['PHP_SELF']));
 
 // Connect to the Database
-  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-     DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-     exit() ;
-  }
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-// Select the Database
-  if (!mysql_select_db($databaseName, $link)) {
-    DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-    exit() ;
-  }
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
+}
 
 
 
@@ -137,13 +133,13 @@ if( (!empty($_POST['action']) ) )
 	 $user_exists_Stmt = "SELECT count(*) from $table_users where login='%s'";
 	 $user_exists_Stmt = sprintf($user_exists_Stmt,$users_login);
 	 
-     if (!($result= mysql_query($user_exists_Stmt, $link))) {
+     if (!($result= $link->query($user_exists_Stmt))) {
         DisplayErrMsg(sprintf("Error in executing %s stmt", $selectStmt)) ;
-        DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+        DisplayErrMsg(sprintf("error: %s", $link->error)) ;
         exit() ;
      }
      
-	 $user_exists = mysql_fetch_row($result);
+	 $user_exists = $result->fetch_row();
 	 if($user_exists[0]>0) {
 		echo "Gebruikersnaam bestaat al!";
 		echo '<FORM><INPUT Type="button" VALUE="Terug" onClick="history.go(-1);return true;"></FORM>';
@@ -154,10 +150,10 @@ if( (!empty($_POST['action']) ) )
 
      $addStmt=sprintf($addStmt,$users_firstname,$users_lastname,$users_initials,$users_phone,$users_email,$login_level_1,$login_level_2,$login_level_3,$login_level_4,$login_level_5,$users_login,md5($first_login));
    
-     if (!(mysql_query($addStmt,$link))) 
+     if (!($link->query($addStmt))) 
      {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $addStmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
      }
 
@@ -175,10 +171,10 @@ if( (!empty($_POST['action']) ) )
     $updateStmt = "Update $table_users set  firstname='%s',lastname='%s',initials='%s',phone='%s',email='%s',login_level_1='%s',login_level_2='%s',login_level_3='%s',login_level_4='%s',login_level_5='%s',login='%s' where $table_users.pk='%d'";
     $updateStmt=sprintf($updateStmt,$users_firstname,$users_lastname,$users_initials,$users_phone,$users_email,$login_level_1,$login_level_2,$login_level_3,$login_level_4,$login_level_5,$users_login,$users_pk);
     
-    if (!(mysql_query($updateStmt,$link))) 
+    if (!($link->query($updateStmt))) 
     {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $updateStmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
     }
 
@@ -217,13 +213,13 @@ if( (!empty($_POST['action']) ) )
     $users_Stmt = "SELECT * from $table_users where 
     $table_users.pk=$users_pk";
  
-    if (!($result_users= mysql_query($users_Stmt, $link))) {
+    if (!($result_users= $link->query($users_Stmt))) {
        DisplayErrMsg(sprintf("Error in executing %s stmt", $selectStmt)) ;
-       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+       DisplayErrMsg(sprintf("error: %s", $link->error)) ;
        exit() ;
     }
   
-    $field_users = mysql_fetch_object($result_users);
+    $field_users = $result_users->fetch_object();
 
 
     $users->assign("users_value","Modify");
@@ -271,7 +267,7 @@ if( (!empty($_POST['action']) ) )
     $users->assign("message_login",$message_login);
     $users->assign("message_level",$message_level);
 
-    mysql_free_result($result_users);
+    $result_users->close();
 
   } 
 

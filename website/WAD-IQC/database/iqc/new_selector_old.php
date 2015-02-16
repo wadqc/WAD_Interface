@@ -11,17 +11,13 @@ $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname(
 
 
 // Connect to the Database
-  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-     DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-     exit() ;
-  }
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-// Select the Database
-  if (!mysql_select_db($databaseName, $link)) {
-    DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-    exit() ;
-  }
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
+}
 
 
 if( (!empty($_POST['action']))||(!empty($_POST['selector'])) )
@@ -70,10 +66,10 @@ if( (!empty($_POST['action']))||(!empty($_POST['selector'])) )
 
    $add_Stmt = "Insert into $table_selector(name,description,analysemodule_fk,analysemodule_cfg_fk) values ('%s','%s','%s','%s')";
 
-   if(!(mysql_query(sprintf($add_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk),$link))) 
+   if(!($link->query(sprintf($add_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk)))) 
    {
      DisplayErrMsg(sprintf("Error in executing %s stmt",sprintf($add_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk) )) ;
-     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+     DisplayErrMsg(sprintf("error: %s", $link->error)) ;
      exit() ;
    }
    
@@ -88,10 +84,10 @@ if( (!empty($_POST['action']))||(!empty($_POST['selector'])) )
   { 
     $update_Stmt = "update $table_selector set name='%s',description='%s',analysemodule_fk='%s',analysemodule_cfg_fk='%s' where pk='%d' ";
   
-    if(!(mysql_query(sprintf($update_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$pk),$link))) 
+    if(!($link->query(sprintf($update_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$pk)))) 
     {
       DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($update_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$pk) )) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
     }
   }//end if pk!=0
@@ -165,14 +161,14 @@ if (empty($_GET['selectorl']))  //first visit
     
 
 
-    if (!($result_selector= mysql_query(sprintf($selector_Stmt,$pk),$link))) {
+    if (!($result_selector= $link->query(sprintf($selector_Stmt,$pk)))) {
        DisplayErrMsg(sprintf("Error in executing %s stmt",sprintf($selector_Stmt,$pk) )) ;
-       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+       DisplayErrMsg(sprintf("error: %s", $link->error)) ;
        exit() ;
     }
     
     
-    if (!($field_selector = mysql_fetch_object($result_selector)))
+    if (!($field_selector = $result_selector->fetch_object()))
     {
       DisplayErrMsg("Internal error: the entry does not not exist") ;
       exit() ;
@@ -190,7 +186,7 @@ if (empty($_GET['selectorl']))  //first visit
 
 
      
-     mysql_free_result($result_selector);
+     $result_selector->close();
   }
 } 
 
@@ -309,18 +305,18 @@ $selector->assign("action_new_selector",sprintf("new_selector.php?pk=$pk&selecto
   $analysemodule_Stmt = "SELECT * from $table_analysemodule order by $table_analysemodule.filename";
 
   
-  if (!($result_analysemodule= mysql_query($analysemodule_Stmt, $link))) {
+  if (!($result_analysemodule= $link->query($analysemodule_Stmt))) {
      DisplayErrMsg(sprintf("Error in executing %s stmt", $analysemodule_Stmt)) ;
-     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+     DisplayErrMsg(sprintf("error: %s", $link->error)) ;
      exit() ;
   }
   $analysemodule_list["0"]=" ";  
-  while($field_analysemodule = mysql_fetch_object($result_analysemodule)) 
+  while($field_analysemodule = $result_analysemodule->fetch_object()) 
   {
     $analysemodule_name=sprintf("%s",$field_analysemodule->filename);
     $analysemodule_list[$field_analysemodule->pk]=sprintf("%s",$analysemodule_name);
   }
-  mysql_free_result($result_analysemodule);
+  $result_analysemodule->close();
   $selector->assign("analysemodule_options",$analysemodule_list);
 
   //drop_down_data analysemodule_cfg
@@ -330,18 +326,18 @@ $selector->assign("action_new_selector",sprintf("new_selector.php?pk=$pk&selecto
   $analysemodule_cfg_Stmt = "SELECT * from $table_analysemodule_cfg order by $table_analysemodule_cfg.filename";
 
   
-  if (!($result_analysemodule_cfg= mysql_query($analysemodule_cfg_Stmt, $link))) {
+  if (!($result_analysemodule_cfg= $link->query($analysemodule_cfg_Stmt))) {
      DisplayErrMsg(sprintf("Error in executing %s stmt", $analysemodule_cfg_Stmt)) ;
-     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+     DisplayErrMsg(sprintf("error: %s", $link->error)) ;
      exit() ;
   }
   $analysemodule_cfg_list["0"]=" ";  
-  while($field_analysemodule_cfg = mysql_fetch_object($result_analysemodule_cfg)) 
+  while($field_analysemodule_cfg = $result_analysemodule_cfg->fetch_object()) 
   {
     $analysemodule_cfg_name=sprintf("%s",$field_analysemodule_cfg->filename);
     $analysemodule_cfg_list[$field_analysemodule_cfg->pk]=sprintf("%s",$analysemodule_cfg_name);
   }
-  mysql_free_result($result_analysemodule_cfg);
+  $result_analysemodule_cfg->close();
   $selector->assign("analysemodule_cfg_options",$analysemodule_cfg_list);
 
     

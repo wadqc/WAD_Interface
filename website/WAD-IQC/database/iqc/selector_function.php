@@ -8,18 +8,14 @@ function selector_function_pssi($pk,$selector_patient_pk,$selector_study_pk,$sel
     //require("./php/includes/setup.php");
     
     
-    //Connect to the Database
-    if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-       DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-       exit() ;
-    }
-  
-    //Select the Database
-    if (!mysql_select_db($databaseName, $link)) {
-        DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-        DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-        exit() ;
-    }
+    // Connect to the Database
+$link = new mysqli($hostName, $userName, $password, $databaseName);
+
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
+}
     
     $patient_header="";
     $study_header="";
@@ -38,13 +34,13 @@ function selector_function_pssi($pk,$selector_patient_pk,$selector_study_pk,$sel
       $table_patient.pk='$selector_patient_pk'";
 
    
-      if (!($result_patient= mysql_query($patient_Stmt,$link))) {
+      if (!($result_patient= $link->query($patient_Stmt))) {
        DisplayErrMsg(sprintf("Error in executing %s stmt", $student_Stmt)) ;
-       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+       DisplayErrMsg(sprintf("error: %s", $link->error)) ;
        exit() ;
       }
 
-      if (!($field_patient = mysql_fetch_object($result_patient)))
+      if (!($field_patient = $result_patient->fetch_object()))
       {
         DisplayErrMsg("Internal error: the entry does not exist") ;
         exit() ;
@@ -64,7 +60,7 @@ function selector_function_pssi($pk,$selector_patient_pk,$selector_study_pk,$sel
       $patient->assign("default_pat_custom1",$field_patient->pat_custom1);
       $patient->assign("default_pat_custom2",$field_patient->pat_custom2);
       $patient->assign("default_pat_custom3",$field_patient->pat_custom3);
-      mysql_free_result($result_patient);
+      $result_patient->close();
 
       $table_patient=$patient->fetch("selector_patient.tpl");
 
@@ -87,13 +83,13 @@ function selector_function_pssi($pk,$selector_patient_pk,$selector_study_pk,$sel
       $table_study.pk='$selector_study_pk'";
 
          
-      if (!($result_study= mysql_query($study_Stmt,$link))) {
+      if (!($result_study= $link->query($study_Stmt))) {
        DisplayErrMsg(sprintf("Error in executing %s stmt", $student_Stmt)) ;
-       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+       DisplayErrMsg(sprintf("error: %s", $link->error)) ;
        exit() ;
       }
 
-      if (!($field_study = mysql_fetch_object($result_study)))
+      if (!($field_study = $result_study->fetch_object()))
       {
         DisplayErrMsg("Internal error: the entry does not exist") ;
         exit() ;
@@ -131,7 +127,7 @@ function selector_function_pssi($pk,$selector_patient_pk,$selector_study_pk,$sel
       $study->assign("default_updated_time",$field_study->updated_time);
       $study->assign("default_study_attrs",$field_study->study_attrs);     
       
-      mysql_free_result($result_study);
+      $result_study->close();
 
       $table_study=$study->fetch("selector_study.tpl");
     } 
@@ -148,13 +144,13 @@ function selector_function_pssi($pk,$selector_patient_pk,$selector_study_pk,$sel
       $table_series.pk='$selector_series_pk'";
 
    
-      if (!($result_series= mysql_query($series_Stmt,$link))) {
+      if (!($result_series= $link->query($series_Stmt))) {
        DisplayErrMsg(sprintf("Error in executing %s stmt", $student_Stmt)) ;
-       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+       DisplayErrMsg(sprintf("error: %s", $link->error)) ;
        exit() ;
       }
 
-      if (!($field_series = mysql_fetch_object($result_series)))
+      if (!($field_series = $result_series->fetch_object()))
       {
         DisplayErrMsg("Internal error: the entry does not exist") ;
         exit() ;
@@ -210,13 +206,13 @@ function selector_function_pssi($pk,$selector_patient_pk,$selector_study_pk,$sel
       $table_instance.pk='$selector_instance_pk'";
    
       
-      if (!($result_instance= mysql_query($instance_Stmt,$link))) {
+      if (!($result_instance= $link->query($instance_Stmt))) {
        DisplayErrMsg(sprintf("Error in executing %s stmt", $student_Stmt)) ;
-       DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+       DisplayErrMsg(sprintf("error: %s", $link->error)) ;
        exit() ;
       }
 
-      if (!($field_instance = mysql_fetch_object($result_instance)))
+      if (!($field_instance = $result_instance->fetch_object()))
       {
         DisplayErrMsg("Internal error: the entry does not exist") ;
         exit() ;
@@ -247,7 +243,7 @@ function selector_function_pssi($pk,$selector_patient_pk,$selector_study_pk,$sel
     
 
 
-      mysql_free_result($result_instance);
+      $result_instance->close();
 
       $table_instance=$instance->fetch("selector_instance.tpl");
     } 

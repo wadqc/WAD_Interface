@@ -11,23 +11,17 @@ $config_file_Stmt = "SELECT * from $table_config_file
 order by $table_config_file.omschrijving, $table_config_file.filenaam";
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit();
+$link = new mysqli($hostName, $userName, $password, $databaseName);
+
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
-
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
-}
-
-if (!($result_config_file= mysql_query($config_file_Stmt, $link))) {
+if (!($result_config_file= $link->query($config_file_Stmt))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
@@ -35,7 +29,7 @@ if (!($result_config_file= mysql_query($config_file_Stmt, $link))) {
 $table_config_file='';
  
 $j=0;
-while (($field_config_file = mysql_fetch_object($result_config_file)))
+while (($field_config_file = $result_config_file->fetch_object()))
 {
  
 $b=($j%2);
@@ -65,7 +59,7 @@ $b=($j%2);
 }
 
 
-mysql_free_result($result_config_file);  
+$result_config_file->close();  
 
 $data = new Smarty_NM();
 $data->assign("Title","Config Files");

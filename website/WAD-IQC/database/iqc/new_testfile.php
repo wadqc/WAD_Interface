@@ -26,33 +26,29 @@ if(!empty($_POST['action']))
   $delStmt = "delete from  $table_test_file where $table_test_file.pk='%d'";
 
   // Connect to the Database
-  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-  DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-  exit() ;
-  }
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-  // Select the Database
-  if (!mysql_select_db($databaseName, $link)) {
-     DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-     exit() ;
-  }
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
+}
 
   if ($test_file_ref<=0)
   { 
-    if (!(mysql_query(sprintf($addStmt,$title,$firstname,$lastname,$address,$phone,$school),$link))) 
+    if (!($link->query(sprintf($addStmt,$title,$firstname,$lastname,$address,$phone,$school)))) 
     {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
     }
   }
   if ($test_file_ref>0)
   { 
-    if (!(mysql_query(sprintf($update_Stmt,$title,$firstname,$lastname,$address,$phone,$school,$test_file_ref),$link))) 
+    if (!($link->query(sprintf($update_Stmt,$title,$firstname,$lastname,$address,$phone,$school,$test_file_ref)))) 
     {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
     }
   }
@@ -99,25 +95,21 @@ if ($test_file_ref>0)
   $table_test_file.school='$school'";
 
   // Connect to the Database
-  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-     DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-     exit() ;
-  }
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-  // Select the Database
-  if (!mysql_select_db($databaseName, $link)) {
-    DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-    exit() ;
-  }
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
+}
   
-  if (!($result_test_file= mysql_query($test_file_Stmt, $link))) {
+  if (!($result_test_file= $link->query($test_file_Stmt))) {
      DisplayErrMsg(sprintf("Error in executing %s stmt", $mpc_class_Stmt)) ;
-     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+     DisplayErrMsg(sprintf("error: %s", $link->error)) ;
      exit() ;
   }
     
-  $new = mysql_fetch_object($result_test_file);
+  $new = $result_test_file->fetch_object();
   
   $test_file->assign("default_title",$new->title);
   $test_file->assign("default_fname",$new->firstname);
@@ -125,7 +117,7 @@ if ($test_file_ref>0)
   $test_file->assign("default_address",$new->address);
   $test_file->assign("default_phone",$new->phone);
   
-  mysql_free_result($result_test_file);
+  $result_test_file->close();
   
   $test_file->assign("submit_value","Update");
 }

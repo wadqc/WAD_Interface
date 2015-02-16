@@ -1,11 +1,19 @@
 <?php
 
-//$home_path=$_SERVER['DOCUMENT_ROOT'];
+// deze file wordt aangeroepen vanuit:
+//   WAD-IQC/database/login
+//   WAD-IQC/database/main
+//   WAD-IQC/database/iqc
+// dus $home_path geeft vanuit deze locaties de relatieve locatie
+// van de site-root.
+
 $home_path="../../..";
 $SMARTY_folder=sprintf("%s/WAD-Smarty",$home_path);
-$logo_log_file="/logo_pictures/log_file.jpg";
-$logo_pdf_file="/logo_pictures/pdf_file.jpg";
-$logo_obj_file="/logo_pictures/object_file.jpg";
+
+// gebruikt in show_results.php (vanuit database/iqc/)
+$logo_log_file="logo_pictures/log_file.jpg";
+$logo_pdf_file="logo_pictures/pdf_file.jpg";
+$logo_obj_file="logo_pictures/object_file.jpg";
 
 // load Smarty library files
 

@@ -51,16 +51,12 @@ $select_Stmt1= "select * from $table_analysemodule where $table_analysemodule.fi
 $del_analysemodule_Stmt = "delete from  $table_analysemodule where $table_analysemodule.pk='%d'";
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-exit() ;
-}
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
 
@@ -136,10 +132,10 @@ if(!empty($_POST['action']))
        chmod($item, $filemode);
     }
 	
-	if (!(mysql_query(sprintf($addStmt,$description,$filename_strippedzip,$filepath_root . '/'),$link))) 
+	if (!($link->query(sprintf($addStmt,$description,$filename_strippedzip,$filepath_root . '/')))) 
 	{
 		DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-		DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+		DisplayErrMsg(sprintf("error: %s", $link->error)) ;
 		exit() ;
 	}
   }
@@ -147,10 +143,10 @@ if(!empty($_POST['action']))
   { 
     if ($error==4)    
     {
-      if (!(mysql_query(sprintf($update_Stmt1,$description,$pk),$link)))  
+      if (!($link->query(sprintf($update_Stmt1,$description,$pk))))  
       {
         DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-        DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+        DisplayErrMsg(sprintf("error: %s", $link->error)) ;
         exit() ;
       }
     }
@@ -192,14 +188,14 @@ if(!empty($_POST['action']))
 		}
 
 		// checken of tijdens updaten een andere modulenaam wordt gebruikt dan degene in de DB; zo ja, dan de oude folder weghalen
-		if (!($result_analysemodule= mysql_query(sprintf($select_Stmt,$pk), $link))) {
+		if (!($result_analysemodule= $link->query(sprintf($select_Stmt,$pk)))) {
 			DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
-			DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+			DisplayErrMsg(sprintf("error: %s", $link->error)) ;
 			exit() ;
 		}
-		$field_analysemodule = mysql_fetch_object($result_analysemodule);
+		$field_analysemodule = $result_analysemodule->fetch_object();
 		$db_filepath=$field_analysemodule->filepath;
-		mysql_free_result($result_analysemodule);
+		$result_analysemodule->close();
 		rrmdir(__DIR__ . '/../../../' . $db_filepath);
 		
 		// succesvolle upload dus oude folder met identieke naam weghalen (indien deze bestaat) en tijdelijke folder hernoemen
@@ -215,10 +211,10 @@ if(!empty($_POST['action']))
 			chmod($item, $filemode);
 		}
 		
-		if (!(mysql_query(sprintf($update_Stmt,$description,$filename_strippedzip,$filepath_root . '/',$pk),$link))) 
+		if (!($link->query(sprintf($update_Stmt,$description,$filename_strippedzip,$filepath_root . '/',$pk)))) 
 		{   
 			DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-			DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+			DisplayErrMsg(sprintf("error: %s", $link->error)) ;
 			exit() ;
 		}
 
@@ -264,26 +260,26 @@ if ($pk==-1)         //delete
     if ($analysemodule[$analysemodule_ref_key[$i]]=='on')
     {
     
-      if (!($result_analysemodule= mysql_query(sprintf($select_Stmt,$analysemodule_ref_key[$i]), $link))) {
+      if (!($result_analysemodule= $link->query(sprintf($select_Stmt,$analysemodule_ref_key[$i])))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
       }
-      $field_analysemodule = mysql_fetch_object($result_analysemodule);
+      $field_analysemodule = $result_analysemodule->fetch_object();
       $filepath=$field_analysemodule->filepath;
-      mysql_free_result($result_analysemodule);
+      $result_analysemodule->close();
 
-      if (!($result_analysemodule= mysql_query(sprintf($select_Stmt1,$filepath), $link))) {
+      if (!($result_analysemodule= $link->query(sprintf($select_Stmt1,$filepath)))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
       }
       $counter=0;
-      while ($field_analysemodule = mysql_fetch_object($result_analysemodule) )
+      while ($field_analysemodule = $result_analysemodule->fetch_object() )
       {
         $counter++;
       }
-      mysql_free_result($result_analysemodule);
+      $result_analysemodule->close();
       if ($counter==1) //only 1 row that contains filepath
       {
         //$target_path=$target_path.$filepath;
@@ -293,9 +289,9 @@ if ($pk==-1)         //delete
 	$target_path=__DIR__ . '/../../../' . $filepath;
         rrmdir($target_path);
       } 
-      if (!($result_analysemodule= mysql_query(sprintf($del_analysemodule_Stmt,$analysemodule_ref_key[$i]),$link))) {
+      if (!($result_analysemodule= $link->query(sprintf($del_analysemodule_Stmt,$analysemodule_ref_key[$i])))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;}
     
     }
@@ -325,25 +321,21 @@ if ($pk>0)   //insert part of update
   $table_analysemodule.pk='$pk' ";
 
   // Connect to the Database
-  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-     DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-     exit() ;
-  }
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-  // Select the Database
-  if (!mysql_select_db($databaseName, $link)) {
-    DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-    exit() ;
-  }
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
+}
   
-  if (!($result_analysemodule= mysql_query($analysemodule_Stmt, $link))) {
+  if (!($result_analysemodule= $link->query($analysemodule_Stmt))) {
      DisplayErrMsg(sprintf("Error in executing %s stmt", $mpc_class_Stmt)) ;
-     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+     DisplayErrMsg(sprintf("error: %s", $link->error)) ;
      exit() ;
   }
     
-  $new = mysql_fetch_object($result_analysemodule);
+  $new = $result_analysemodule->fetch_object();
 
   $analysemodule->assign("title","Test file");
   $analysemodule->assign("header","Test file");
@@ -354,7 +346,7 @@ if ($pk>0)   //insert part of update
   $analysemodule->assign("default_filepath",$new->filepath);
   
   
-  mysql_free_result($result_analysemodule);
+  $result_analysemodule->close();
   
   $analysemodule->assign("submit_value","Update");
 }

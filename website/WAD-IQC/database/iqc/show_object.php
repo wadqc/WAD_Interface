@@ -29,21 +29,17 @@ where $table_resultaten_object.pk=$pk";
 
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s", $hostName, $userName)) ;
-   exit();
+$link = new mysqli($hostName, $userName, $password, $databaseName);
+
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
-}
-
-if (!($result_object= mysql_query($results_object_Stmt, $link))) {
+if (!($result_object= $link->query($results_object_Stmt))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", $results_object_Stmt)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
@@ -53,7 +49,7 @@ $table_resultaten_object='';
 $name_row='';
 $picture_row='';
 
-$field_results = mysql_fetch_object($result_object);
+$field_results = $result_object->fetch_object();
 
 $picture = new Smarty_NM();
 $description_name = new Smarty_NM();
@@ -83,7 +79,7 @@ if ($object_type=="image/jpeg")
     $table_resultaten_object.=sprintf("<tr>%s</tr>",$picture_row);
     $table_resultaten_object.=sprintf("<tr>%s</tr>",$name_row);
 
-    mysql_free_result($result_object); 
+    $result_object->close(); 
 
     $data = new Smarty_NM();
     $data->assign("Title","Results");

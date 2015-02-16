@@ -17,26 +17,21 @@ $password_Stmt="SELECT * from $table_users where $table_users.login='$user_name'
 
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-   DisplayErrMsg(sprintf("error connecting to host %s, by user %s",
-                             $hostName, $userName)) ;
-   exit();
+$link = new mysqli($hostName, $userName, $password, $databaseName);
+
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
+if (!($result_password= $link->query($password_Stmt))) {
    DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
 
-if (!($result_password= mysql_query($password_Stmt, $link))) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
-}
-
-$pw_field = mysql_fetch_object($result_password);
+$pw_field = $result_password->fetch_object();
 if ($pw_field=='')
 {
   $message=sprintf("Wrong user!");
@@ -61,7 +56,7 @@ if (md5($user_password)==$pw_field->password)
 
   if (md5($first_login)==$pw_field->password)
   {
-    //mysql_free_result($result_password);
+    //$result_password->close();
 
     $message=sprintf("First login succesfully, please enter your own personal password twice");
     $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname($_SERVER['PHP_SELF']));
@@ -74,7 +69,7 @@ if (md5($user_password)==$pw_field->password)
   }  
   if (md5($first_login)!=$pw_field->password)
   {
-    mysql_free_result($result_password);
+    $result_password->close();
 
     $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname($_SERVER['PHP_SELF']));
        

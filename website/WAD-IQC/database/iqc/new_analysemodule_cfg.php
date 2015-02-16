@@ -4,6 +4,16 @@ require("../globals.php") ;
 require("./common.php") ;
 require("./php/includes/setup.php");
 
+// add new cfg : GET pk = 0
+// na toevoegen: GET pk = 0
+//               $_POST['action'] = "Add"
+// update cfg  : GET pk = pk van cfg in analysemodule_cfg tabel
+// na updaten  : GET pk = pk van cfg in analysemodule_cfg tabel
+//               $_POST['action'] = "Update"
+// delete cfg  : GET pk = -1 (via FORM action in POST)
+//               $_POST['analysemodule_cfg[pk]'] = "on"  (pk van te deleten cfg)
+//               $_POST['action'] = ""
+
 $pk=$_GET['pk'];
 
 
@@ -11,6 +21,10 @@ $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname(
 
 
 $table_analysemodule_cfg='analysemodule_cfg';
+$table_selector='selector';
+
+
+
 $addStmt = "Insert into $table_analysemodule_cfg(description,filename,filepath) values ('%s','%s','%s')";
 $update_Stmt = "Update $table_analysemodule_cfg set description='%s',filename='%s',filepath='%s' where $table_analysemodule_cfg.pk='%d'";
 $update_Stmt1 = "Update $table_analysemodule_cfg set description='%s' where $table_analysemodule_cfg.pk='%d'";
@@ -18,20 +32,17 @@ $update_Stmt1 = "Update $table_analysemodule_cfg set description='%s' where $tab
 $select_Stmt= "select * from $table_analysemodule_cfg where $table_analysemodule_cfg.pk='%d'";
 $select_Stmt1= "select * from $table_analysemodule_cfg where $table_analysemodule_cfg.filepath='%s'";
 
+$selector_Stmt= "select * from $table_selector where $table_selector.analysemodule_cfg_fk='%d'";
 
 $del_analysemodule_cfg_Stmt = "delete from  $table_analysemodule_cfg where $table_analysemodule_cfg.pk='%d'";
 
 // Connect to the Database
-if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-exit() ;
-}
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-// Select the Database
-if (!mysql_select_db($databaseName, $link)) {
-   DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-   DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-   exit() ;
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
 
 
@@ -42,16 +53,16 @@ if (!mysql_select_db($databaseName, $link)) {
 
 
 
-
+// Aanroep na toevoegen (pk=0) of na updaten (pk>0)van config
 if(!empty($_POST['action']))
 {
  
   
-  $error    = $_FILES['uploadedfile']['error'];
+  $error    = $_FILES['uploadedfile']['error']; // 0 = success, 4 = no file uploaded
   $description=$_POST['description'];
   
   
-
+  // add new analysemodule cfg
   if ($pk==0)
   { 
     $filename=basename( $_FILES['uploadedfile']['name']);
@@ -59,6 +70,11 @@ if(!empty($_POST['action']))
     $filepath = $filepath_root.basename( $_FILES['uploadedfile']['name']); 
 
     $target_path=__DIR__ . '/../../../' . $filepath;
+
+    if (file_exists($target_path)) {
+       echo "Config \"$filename\" already exists! Please rename config and try to upload again, or click on config filename to update the module.";
+       exit();
+    }
 
     if ( move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path) )
     {
@@ -71,26 +87,45 @@ if(!empty($_POST['action']))
 
 
 
-    if (!(mysql_query(sprintf($addStmt,$description,$filename,$filepath_root),$link))) 
+    if (!($link->query(sprintf($addStmt,$description,$filename,$filepath_root)))) 
     {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
     }
   }
+  // update analysemodule cfg
   if ($pk>0)
   { 
-    if ($error==4)    
+    if ($error==4)    // "no file uploaded" -> alleen omschrijving aanpassen
     {
-      if (!(mysql_query(sprintf($update_Stmt1,$description,$pk),$link)))  
+      if (!($link->query(sprintf($update_Stmt1,$description,$pk))))  
       {
         DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-        DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+        DisplayErrMsg(sprintf("error: %s", $link->error)) ;
         exit() ;
       }
     }
     if ($error==0)    
     {
+       // delete eerst de oude config
+       if (!($result_analysemodule_cfg=$link->query(sprintf($select_Stmt,$pk)))) {
+         DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
+         DisplayErrMsg(sprintf("error: %s", $link->error)) ;
+         exit() ;
+       }
+       $field_analysemodule_cfg = $result_analysemodule_cfg->fetch_object();
+       $filename_db=$field_analysemodule_cfg->filename;
+       $filepath_db=$field_analysemodule_cfg->filepath;
+       $result_analysemodule_cfg->close();
+       $target_folder_db =__DIR__ . '/../../../' . $filepath_db;
+       $target_path_db = $target_folder_db . $filename_db;
+       if (!unlink($target_path_db))
+       {
+          echo ("Error deleting old config \"$filename_db\"");
+          exit();
+       }
+       // kopieer de nieuwe upload naar de analysemodule_cfg folder
        $filename=basename( $_FILES['uploadedfile']['name']);
        $filepath_root="WAD-IQC/uploads/analysemodule_cfg/";
        $filepath = $filepath_root.basename( $_FILES['uploadedfile']['name']); 
@@ -107,10 +142,10 @@ if(!empty($_POST['action']))
        }
 
 
-       if (!(mysql_query(sprintf($update_Stmt,$description,$filename,$filepath_root,$pk),$link))) 
+       if (!($link->query(sprintf($update_Stmt,$description,$filename,$filepath_root,$pk)))) 
        {   
         DisplayErrMsg(sprintf("Error in executing %s stmt", $stmt)) ;
-        DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+        DisplayErrMsg(sprintf("error: %s", $link->error)) ;
         exit() ;
        }
 
@@ -132,7 +167,7 @@ if (!empty($_POST['action']))
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// if it will get to here it is either the first time or it returned from add/modify picture
+// if it will get to here it is either the first time or it returned from add/modify config
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -145,9 +180,9 @@ if ($pk==-1)         //delete
   $limit=0;
   if (!empty($_POST['analysemodule_cfg']))
   {
-    $analysemodule_cfg=$_POST['analysemodule_cfg'];
-    $analysemodule_cfg_ref_key=array_keys($analysemodule_cfg);
-    $limit=sizeof($analysemodule_cfg_ref_key);
+    $analysemodule_cfg=$_POST['analysemodule_cfg'];            // array vd vorm { [pk1] = "on", [pk2] = "on", .. }
+    $analysemodule_cfg_ref_key=array_keys($analysemodule_cfg); // array met aangevinkte pk's
+    $limit=sizeof($analysemodule_cfg_ref_key);                 // aantal aangevinkte configs
   } 
   $i=0;
 
@@ -155,37 +190,48 @@ if ($pk==-1)         //delete
   {
     if ($analysemodule_cfg[$analysemodule_cfg_ref_key[$i]]=='on')
     {
-    
-      if (!($result_analysemodule_cfg= mysql_query(sprintf($select_Stmt,$analysemodule_cfg_ref_key[$i]), $link))) {
-      DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-      exit() ;
+      // controleer eerst of er nog selectoren zijn gekoppeld aan de config
+      if (!($result_selector=$link->query(sprintf($selector_Stmt,$analysemodule_cfg_ref_key[$i])))) {
+        DisplayErrMsg(sprintf("Error in executing %s stmt", $selector_Stmt));
+        DisplayErrMsg(sprintf("error: %s", $link->error)) ;
+        exit() ;
       }
-      $field_analysemodule_cfg = mysql_fetch_object($result_analysemodule_cfg);
-      $filepath=$field_analysemodule_cfg->filepath;
-      mysql_free_result($result_analysemodule_cfg);
 
-      if (!($result_analysemodule_cfg= mysql_query(sprintf($select_Stmt1,$filepath), $link))) {
+      $result_selector->close();
+
+      $count=0; $selectorlist=array();
+      while ($field_selector = $result_selector->fetch_object() )
+      {
+        $count++;
+        array_push($selectorlist,$field_selector->name);
+      }
+      if ($count) {
+         print("Fout: config is in gebruik door de volgende selector(en): ".implode(', ',$selectorlist));
+         exit();
+      }
+
+      // haal config filename op uit DB op basis van pk
+      if (!($result_analysemodule_cfg= $link->query(sprintf($select_Stmt,$analysemodule_cfg_ref_key[$i])))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $subject_Stmt)) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
       }
-      $counter=0;
-      while ($field_analysemodule_cfg = mysql_fetch_object($result_analysemodule_cfg) )
+      $field_analysemodule_cfg = $result_analysemodule_cfg->fetch_object();
+      $filename=$field_analysemodule_cfg->filename;
+      $filepath=$field_analysemodule_cfg->filepath;
+      $result_analysemodule_cfg->close();
+
+      $target_folder =__DIR__ . '/../../../' . $filepath;
+      $target_path = $target_folder . $filename;
+      if (!unlink($target_path))
       {
-        $counter++;
+         echo ("Error deleting \"$filename\"");
+         exit();
       }
-      mysql_free_result($result_analysemodule_cfg);
-      if ($counter==1) //only 1 row that contains filepath
-      {
-        $target_path=$target_path.$filepath;
-        //printf("target=%s",$target_path);
-        //exit();
-        unlink($target_path);
-      } 
-      if (!($result_analysemodule_cfg= mysql_query(sprintf($del_analysemodule_cfg_Stmt,$analysemodule_cfg_ref_key[$i]),$link))) {
+
+      if (!($result_analysemodule_cfg= $link->query(sprintf($del_analysemodule_cfg_Stmt,$analysemodule_cfg_ref_key[$i])))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($del_analysemodule_cfg_Stmt,$analysemodule_cfg_ref_key[$i]) ) ) ;
-      DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;}
     }
     $i++;
@@ -214,25 +260,21 @@ if ($pk>0)   //insert part of update
   $table_analysemodule_cfg.pk='$pk' ";
 
   // Connect to the Database
-  if (!($link=@mysql_pconnect($hostName, $userName, $password))) {
-     DisplayErrMsg(sprintf("error connecting to host %s, by user %s",$hostName, $userName)) ;
-     exit() ;
-  }
+$link = new mysqli($hostName, $userName, $password, $databaseName);
 
-  // Select the Database
-  if (!mysql_select_db($databaseName, $link)) {
-    DisplayErrMsg(sprintf("Error in selecting %s database", $databaseName)) ;
-    DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
-    exit() ;
-  }
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
+}
   
-  if (!($result_analysemodule_cfg= mysql_query($analysemodule_cfg_Stmt, $link))) {
+  if (!($result_analysemodule_cfg= $link->query($analysemodule_cfg_Stmt))) {
      DisplayErrMsg(sprintf("Error in executing %s stmt", $mpc_class_Stmt)) ;
-     DisplayErrMsg(sprintf("error:%d %s", mysql_errno($link), mysql_error($link))) ;
+     DisplayErrMsg(sprintf("error: %s", $link->error)) ;
      exit() ;
   }
     
-  $new = mysql_fetch_object($result_analysemodule_cfg);
+  $new = $result_analysemodule_cfg->fetch_object();
 
   $analysemodule_cfg->assign("title","Config file");
   $analysemodule_cfg->assign("header","Config file");
@@ -243,7 +285,7 @@ if ($pk>0)   //insert part of update
   $analysemodule_cfg->assign("default_filepath",$new->filepath);
   
   
-  mysql_free_result($result_analysemodule_cfg);
+  $result_analysemodule_cfg->close();
   
   $analysemodule_cfg->assign("submit_value","Update");
 }
@@ -256,15 +298,3 @@ if ($pk>0)   //insert part of update
 
    
 ?>
-
-
-
-
-
-
-
-
-
-
-
-

@@ -8,10 +8,13 @@ require("./php/includes/setup.php");
 $table_selector='selector';
 $table_analysemodule='analysemodule';
 $table_analysemodule_cfg='analysemodule_cfg';
+$table_selector_category='selector_categorie';
 
 
-$selector_Stmt = "SELECT * from $table_selector 
-order by $table_selector.name";
+$selector_Stmt = "SELECT $table_selector.*,$table_selector_category.omschrijving from $table_selector
+                  left join $table_selector_category 
+                  on $table_selector.selector_categorie_fk=$table_selector_category.pk
+                  order by $table_selector.name";
 
 $testfile_Stmt = "SELECT * from $table_analysemodule 
 where $table_analysemodule.pk='%d'";
@@ -39,10 +42,7 @@ if (!($result_selector= $link->query($selector_Stmt))) {
 
 $table_selector='';
 
-
-
  
-
 
  
 $j=0;
@@ -52,6 +52,7 @@ while (($field_selector = $result_selector->fetch_object()))
   $selector_study_fk=$field_selector->selector_study_fk;
   $selector_series_fk=$field_selector->selector_series_fk;
   $selector_instance_fk=$field_selector->selector_instance_fk;
+  $selector_category=$field_selector->omschrijving;
 
   if (!($result_analysemodule= $link->query(sprintf($testfile_Stmt,$field_selector->analysemodule_fk)))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($testfile_Stmt,$field_selector->analysemodule_fk))) ;
@@ -93,6 +94,10 @@ while (($field_selector = $result_selector->fetch_object()))
    $table_data->assign("name",$field_selector->name);
    $table_data->assign("analysemodule",$analysemodule_name);
    $table_data->assign("analysemodule_cfg",$analysemodule_cfg_name);
+   $table_data->assign("category",$selector_category);
+   $table_data->assign("modality",$field_selector->modaliteit);
+   $table_data->assign("location",$field_selector->lokatie);
+   $table_data->assign("qc_frequency",$qc_frequency_list[$field_selector->qc_frequentie]);
    
    $table_data->assign("action",$action);
       

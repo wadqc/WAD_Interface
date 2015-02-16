@@ -83,7 +83,7 @@ $password="TY8BqYRdn3Uhzq8T";
 $databaseName = "iqc"; 	   
 
 // Version of WAD_Interface
-$version = "1.0.1";
+$version = "1.1.0";
 
 
 
@@ -106,6 +106,18 @@ $report_average_color='#CBDCF5';
 $analyselevel_list['study']='study';
 $analyselevel_list['series']='series';
 $analyselevel_list['instance']='instance';
+
+$groups_list['0'] = '';
+$groups_list['1'] = 'categorie';
+$groups_list['2'] = 'modaliteit';
+$groups_list['3'] = 'lokatie';
+
+$qc_frequency_list['1']='dagelijks';
+$qc_frequency_list['7']='wekelijks';
+$qc_frequency_list['14']='tweewekelijks';
+$qc_frequency_list['30']='maandelijks';
+$qc_frequency_list['91']='kwartaal';
+$qc_frequency_list['365']='jaarlijks';
 
 
 //mail settings

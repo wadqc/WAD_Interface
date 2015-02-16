@@ -6,4 +6,7 @@
   <td class="table_data">
     {$description}
   </td>
+  <td class="table_data">
+    {$datetime}
+  </td>
 </tr>

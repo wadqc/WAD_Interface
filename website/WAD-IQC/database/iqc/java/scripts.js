@@ -200,3 +200,9 @@ function selector_status_drop_list(date_filter,status,querystring)
   action='status-collector.php?date_filter='+date_filter+'&status='+status+'&'+querystring;
   self.location.replace(action);
 }
+
+function dashboard_drop_list(group,querystring)
+{
+  action='show_dashboard.php?group='+group+'&'+querystring;
+  self.location.replace(action);
+}

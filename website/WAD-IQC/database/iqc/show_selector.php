@@ -5,14 +5,17 @@ require("./php/includes/setup.php");
 
 
 $table_selector='selector';
+$table_gewenste_processen='gewenste_processen';
 
 
 $v=$_GET['v'];
 
 
-$selector_Stmt="SELECT * from $table_selector
-order by $table_selector.name"; 
-
+$selector_Stmt="select s.*,g.creation_time 
+                from $table_selector s 
+                left join 
+                  (select * from $table_gewenste_processen order by pk desc) g 
+                on s.pk=g.selector_fk group by s.pk";
 
 // Connect to the Database
 $link = new mysqli($hostName, $userName, $password, $databaseName);
@@ -58,6 +61,7 @@ while (($field_selector = $result_selector->fetch_object()))
    $table_data->assign("bgcolor",$bgcolor);
    $table_data->assign("selector",$field_selector->name);
    $table_data->assign("description",$field_selector->description);
+   $table_data->assign("datetime",$field_selector->creation_time);
    $table_data->assign("action_selector",$action);
       
    $table_selector.=$table_data->fetch("selector_select_row.tpl");

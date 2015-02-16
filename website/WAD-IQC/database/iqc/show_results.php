@@ -810,7 +810,7 @@ while (($field_results = $result_object->fetch_object()))
   $object_type="None";
 
   $finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
-  $object_type=finfo_file($finfo, $filename);
+  $object_type=@finfo_file($finfo, $filename);
   finfo_close($finfo);
 
 

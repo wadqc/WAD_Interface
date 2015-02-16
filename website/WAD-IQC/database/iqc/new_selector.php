@@ -20,7 +20,32 @@ if (mysqli_connect_errno()) {
 }
 
 
- //action
+
+//drop_down_data categorie
+
+$table_selector_categorie = 'selector_categorie';
+$category_list = array();
+$category_list[' '] = '';
+
+$category_list_Stmt = "select * from $table_selector_categorie order by omschrijving";
+
+if (!($result_category = $link->query($category_list_Stmt)))
+{
+   DisplayErrMsg(sprintf("Error in executing %s stmt",$category_list_Stmt)) ;
+   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
+   exit() ;
+}
+
+while ($field_category = $result_category->fetch_object())
+{
+   $category_list[$field_category->pk] = $field_category->omschrijving;
+}
+
+$default_category = ' ';
+
+
+
+//action (aanmaken of update van selector)
 if( (!empty($_POST['action']))||(!empty($_POST['selector'])) )
 {
   
@@ -47,6 +72,22 @@ if( (!empty($_POST['action']))||(!empty($_POST['selector'])) )
   {
     $selector_analyselevel=$_POST['selector_analyselevel'];
   }
+  if (!empty($_POST['selector_category']))
+  {
+    $selector_category_fk=$_POST['selector_category'];
+  }
+  if (!empty($_POST['selector_modality']))
+  {
+    $selector_modality=$_POST['selector_modality'];
+  }
+  if (!empty($_POST['selector_location']))
+  {
+    $selector_location=$_POST['selector_location'];
+  }
+  if (!empty($_POST['selector_qc_frequency']))
+  {
+    $selector_qc_frequency=$_POST['selector_qc_frequency'];
+  }
   
   //test and config files
   $analysemodule_fk=0;
@@ -68,11 +109,11 @@ if( (!empty($_POST['action']))||(!empty($_POST['selector'])) )
   if ($pk==0) //Add Selector
   { 
 
-   $add_Stmt = "Insert into $table_selector(name,description,analysemodule_fk,analysemodule_cfg_fk,analyselevel) values ('%s','%s','%s','%s','%s')";
+   $add_Stmt = "Insert into $table_selector(name,description,analysemodule_fk,analysemodule_cfg_fk,analyselevel,selector_categorie_fk,modaliteit,lokatie,qc_frequentie) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s')";
 
-   if(!($link->query(sprintf($add_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$selector_analyselevel)))) 
+   if(!($link->query(sprintf($add_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$selector_analyselevel,$selector_category_fk,$selector_modality,$selector_location,$selector_qc_frequency)))) 
    {
-     DisplayErrMsg(sprintf("Error in executing %s stmt",sprintf($add_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$selector_analyselevel) )) ;
+     DisplayErrMsg(sprintf("Error in executing %s stmt",sprintf($add_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$selector_analyselevel,$selector_category_fk,$selector_modality,$selector_location,$selector_qc_frequency) )) ;
      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
      exit() ;
    }
@@ -88,11 +129,11 @@ if( (!empty($_POST['action']))||(!empty($_POST['selector'])) )
 
   if ($pk>0)  
   { 
-    $update_Stmt = "update $table_selector set name='%s',description='%s',analysemodule_fk='%s',analysemodule_cfg_fk='%s', analyselevel='%s' where pk='%d' ";
+    $update_Stmt = "update $table_selector set name='%s',description='%s',analysemodule_fk='%s',analysemodule_cfg_fk='%s', analyselevel='%s', selector_categorie_fk='%s', modaliteit='%s', lokatie='%s', qc_frequentie='%s' where pk='%d' ";
   
-    if(!($link->query(sprintf($update_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$selector_analyselevel,$pk)))) 
+    if(!($link->query(sprintf($update_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$selector_analyselevel,$selector_category_fk,$selector_modality,$selector_location,$selector_qc_frequency,$pk)))) 
     {
-      DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($update_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$selector_analyselevel,$pk) )) ;
+      DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($update_Stmt,$selector_name,$selector_description,$analysemodule_fk,$analysemodule_cfg_fk,$selector_analyselevel,$selector_category_fk,$selector_modality,$selector_location,$selector_qc_frequency,$pk) )) ;
       DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
     }
@@ -224,8 +265,9 @@ if(!empty($_POST['constraint']))
 //////////////////////////////////////////////////////////////////////////////////////////
 // if it will get to here it is either:
 // the first time
-// or it returned from criteria_handling  (criteria definded)
+// or it returned from criteria_handling  (criteria defined)
 ///////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 $selector = new Smarty_NM();
@@ -254,7 +296,8 @@ if (empty($_GET['selectorl']))  //first visit
       // no default values sofar
 
      $selector->assign("analyselevel_options",$analyselevel_list);
-
+     $selector->assign("category_options",$category_list);
+     $selector->assign("qc_frequency_options",$qc_frequency_list);
 
   }   
 
@@ -285,10 +328,17 @@ if (empty($_GET['selectorl']))  //first visit
     $selector->assign("default_selector_name",$field_selector->name);
     $selector->assign("default_selector_description",$field_selector->description);
     
-    $selector->assign("analyselevel_options",$analyselevel_list); 
+    $selector->assign("analyselevel_options",$analyselevel_list);
     $selector->assign("analyselevel_id",$field_selector->analyselevel);
 
-  
+    $selector->assign("category_options",$category_list);
+    $selector->assign("category_id",$field_selector->selector_categorie_fk);
+
+    $selector->assign("default_selector_modality",$field_selector->modaliteit);
+    $selector->assign("default_selector_location",$field_selector->lokatie);
+
+    $selector->assign("qc_frequency_options",$qc_frequency_list);
+    $selector->assign("qc_frequency_id",$field_selector->qc_frequentie);
 
     $selector->assign("analysemodule_id",$field_selector->analysemodule_fk);
     $selector->assign("analysemodule_cfg_id",$field_selector->analysemodule_cfg_fk);

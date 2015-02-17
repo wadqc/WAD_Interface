@@ -210,10 +210,15 @@ switch ($group) {
            $table_data->assign("status_img",$status_array['img']);
            $table_data->assign("status_txt",$status_array['txt']);
 
-           $days_since_last_qc=(strtotime(date(now))-strtotime($field_selector->creation_time))/(60*60*24);
            if(!empty($gewenste_processen)) {
-              if($days_since_last_qc>$field_selector->qc_frequentie) {
-                 $table_data->assign("qc_frequency",round($days_since_last_qc-$field_selector->qc_frequentie)." dagen te laat");
+              $now=strtotime(date("Y-m-d H:i:s"));
+              $lastqcdate=strtotime($field_selector->creation_time);
+              $time_since_last_qc=($now-$lastqcdate)/(60*60*24); // fractioneel aantal dagen
+              $days_since_last_qc=floor($time_since_last_qc);    // gehele dagen
+              $hours_since_last_qc=floor(($time_since_last_qc-$days_since_last_qc)*24); // aantal uren
+
+              if($time_since_last_qc>$field_selector->qc_frequentie) {
+                 $table_data->assign("qc_frequency","te laat (".($days_since_last_qc-$field_selector->qc_frequentie)."d ".$hours_since_last_qc."h)");
                  $table_data->assign("waarde_class","table_data_red");
               } else {
                  $table_data->assign("qc_frequency","ok");
@@ -609,7 +614,7 @@ function check_qc_frequency($link,$gewenste_processen_array) {
 
    $qc_freq_status = true;
    while ($field = $result->fetch_object()) {
-      if( (strtotime(date(now))-strtotime($field->creation_time))/(60*60*24) > $field->qc_frequentie) {
+      if( (strtotime(date("Y-m-d H:i:s"))-strtotime($field->creation_time))/(60*60*24) > $field->qc_frequentie) {
          $qc_freq_status = false;
       }
    }

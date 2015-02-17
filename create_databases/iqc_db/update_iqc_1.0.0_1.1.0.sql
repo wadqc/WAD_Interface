@@ -8,3 +8,5 @@ CREATE TABLE IF NOT EXISTS `selector_categorie` (
 
 -- kolommen toevoegen aan selector tabel
 ALTER TABLE selector ADD (modaliteit varchar(20), lokatie varchar(200), selector_categorie_fk int(11), qc_frequentie int(11));
+
+UPDATE config SET value='1.1.0',date_modified='2015-02-17' WHERE property='Version_Database';

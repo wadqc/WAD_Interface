@@ -38,7 +38,7 @@ $table_series='series';
 $table_instance='instance';
 
 
-$processor_study_Stmt = "SELECT distinct patient.pat_id AS 'pat_id', patient.pat_name AS 'pat_name', study.accession_no AS 'accession_no', study.study_datetime AS 'study_datetime', selector.name AS 'selector_name', gewenste_processen.creation_time AS 'creation_time', status_omschrijving.veld_omschrijving as 'status_omschrijving'
+$processor_study_Stmt = "SELECT patient.pat_id AS 'pat_id', patient.pat_name AS 'pat_name', study.accession_no AS 'accession_no', study.study_datetime AS 'study_datetime', selector.name AS 'selector_name', gewenste_processen.creation_time AS 'creation_time', status_omschrijving.veld_omschrijving as 'status_omschrijving'
 FROM patient
 INNER JOIN (
 study inner join (
@@ -50,9 +50,10 @@ on study.pk=gewenste_processen.study_fk
 )
 on patient.pk = study.patient_fk
 where gewenste_processen.pk='%d'
+group by gewenste_processen.pk
 ORDER BY 'creation_time'";
 
-$processor_series_Stmt = "SELECT distinct patient.pat_id AS 'pat_id', patient.pat_name AS 'pat_name', study.accession_no AS 'accession_no', study.study_datetime AS 'study_datetime', selector.name AS 'selector_name', series.modality as 'modality', series.station_name as 'station_name', coalesce(series.pps_start,instance.content_datetime) as 'series_datetime',gewenste_processen.creation_time AS 'creation_time', status_omschrijving.veld_omschrijving as 'status_omschrijving'
+$processor_series_Stmt = "SELECT patient.pat_id AS 'pat_id', patient.pat_name AS 'pat_name', study.accession_no AS 'accession_no', study.study_datetime AS 'study_datetime', selector.name AS 'selector_name', series.modality as 'modality', series.station_name as 'station_name', coalesce(series.pps_start,instance.content_datetime) as 'series_datetime',gewenste_processen.creation_time AS 'creation_time', status_omschrijving.veld_omschrijving as 'status_omschrijving'
 FROM patient
 INNER JOIN (
 study inner join (
@@ -68,9 +69,10 @@ on study.pk=series.study_fk
 on patient.pk = study.patient_fk, instance
 where gewenste_processen.pk='%d'
 and instance.series_fk=series.pk
+group by gewenste_processen.pk
 ORDER BY 'creation_time'";
 
-$processor_instance_Stmt = "SELECT distinct patient.pat_id AS 'pat_id', patient.pat_name AS 'pat_name', study.accession_no AS 'accession_no', study.study_datetime AS 'study_datetime', selector.name AS 'selector_name', series.modality as 'modality', series.station_name as 'station_name', series.pps_start as 'series_datetime', instance.content_datetime as 'image_datetime', gewenste_processen.creation_time AS 'creation_time', status_omschrijving.veld_omschrijving as 'status_omschrijving'
+$processor_instance_Stmt = "SELECT patient.pat_id AS 'pat_id', patient.pat_name AS 'pat_name', study.accession_no AS 'accession_no', study.study_datetime AS 'study_datetime', selector.name AS 'selector_name', series.modality as 'modality', series.station_name as 'station_name', coalesce(series.pps_start,instance.content_datetime) as 'series_datetime', instance.content_datetime as 'instance_datetime', gewenste_processen.creation_time AS 'creation_time', status_omschrijving.veld_omschrijving as 'status_omschrijving'
 FROM patient
 INNER JOIN (
 study inner join (
@@ -88,6 +90,7 @@ on study.pk=series.study_fk
 )
 on patient.pk = study.patient_fk
 where gewenste_processen.pk='%d'
+group by gewenste_processen.pk
 ORDER BY 'creation_time'";
 
 
@@ -157,33 +160,12 @@ $list_date['1 MONTH'] = 'afgelopen maand';
 $list_date['1 YEAR'] = 'afgelopen jaar';
 
 
-if (!($result_processor_study= $link->query(sprintf($processor_study_Stmt,10,8)))) {
-   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($processor_study_Stmt,10,8))) ;
-   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
-   exit() ;
-}
-
-
-if (!($result_processor_series= $link->query(sprintf($processor_series_Stmt,10,56)))) {
-   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($processor_series_Stmt,10,56))) ;
-   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
-   exit() ;
-}
-
-
-if (!($result_processor_instance= $link->query(sprintf($processor_instance_Stmt,10,1)))) {
-   DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($processor_instance_Stmt,10,1))) ;
-   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
-   exit() ;
-}
-
 
 if (!($result_gewenste_processen= $link->query(sprintf($gewenste_processen_Stmt,$date_filter,$status)))) {
    DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($gewenste_processen_Stmt,$date_filter,$status))) ;
    DisplayErrMsg(sprintf("error: %s", $link->error)) ;
    exit() ;
 }
-
 
 
 $table_data = new Smarty_NM();

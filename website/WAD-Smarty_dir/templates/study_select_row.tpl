@@ -1,7 +1,7 @@
 <!-- source template: study_select_row.tpl -->
 <tr bgcolor="{$bgcolor}">
   <td>
-    <input type="checkbox" name="{$checkbox_name}" value="on">
+    <input type="checkbox" name="{$checkbox_name}" class="checkbox" value="on">
   </td>
   <td>
      <a href="{$action}" class="table_data_select">{$patient_name}</a>

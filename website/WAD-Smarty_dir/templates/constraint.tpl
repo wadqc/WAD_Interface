@@ -13,7 +13,7 @@
 <form action="{$action_constraint}" method="POST" >
 <h1 class="table_data_blue" >{$header}</h1>
 
-<h2 style="font-size:small;font-style:italic;font-weight:normal;">N.B. Eventueel kan een ";" worden gebruikt als "OR" parameter.</h2>
+<h2 style="font-size:small;font-style:italic;font-weight:normal;">N.B. Eventueel kan een ";" worden gebruikt als "OR" parameter. Ondersteunde wildcards zijn "*" en "?"</h2>
 
 <table valign="top" align="left">
   <tr>

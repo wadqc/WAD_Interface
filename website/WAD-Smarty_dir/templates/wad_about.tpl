@@ -59,16 +59,19 @@
       <br>Dit programma is gedistribueerd in de hoop dat het bruikbaar is, maar ZONDER ENIGE GARANTIE; zonder maar ook de geimpliceerde garantie van VERKOOP, of DEGELIJKHEID VOOR EEN BEPAALD DOELEIND. Zie de <a href="http://www.gnu.org/licenses/">GNU General Public License</a> voor meer details.
     </td>
   </tr>
+</table>
+
+<br>
+
+<table cellspacing="0" cellpadding="0" align="left">
   <tr>
-    <td class="table_data_blue_header">
+    <td class="table_data_blue_header" colspan="3">
       <br>{$versions_title}
     </td>
   </tr>
-  <tr><td>&nbsp;</td></tr>
-</table>
+  <tr><td colspan="3">&nbsp;</td></tr>
 
-<table>
-  {$versions_list}
+{$versions_list}
 </table>
    
 </body>

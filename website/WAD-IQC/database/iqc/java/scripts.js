@@ -206,3 +206,24 @@ function dashboard_drop_list(group,querystring)
   action='show_dashboard.php?group='+group+'&'+querystring;
   self.location.replace(action);
 }
+
+
+
+// gebruikt door study_select.tpl en processor_select.tpl
+// om refresh uit te zetten zodra wordt gesorteerd of een checkbox wordt aangeklikt
+function disable_refresh_on_click() {
+   var classnames = ['table_data_header_bold','checkbox'];
+   for (var index=0; index<classnames.length; index++) {
+      var classname = classnames[index];
+      // disable refresh when column header is clicked for sorting
+      var elements = document.getElementsByClassName(classname);
+      for(var i = 0; i < elements.length; i++) {
+         var element = elements[i];
+         element.onclick = function() {
+            document.getElementById("refresh").checked=false;
+            window.location.replace("#noautoreload");
+            clearTimeout(reloading);
+         }
+      }
+   }
+}

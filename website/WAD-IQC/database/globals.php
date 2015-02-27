@@ -112,6 +112,7 @@ $groups_list['1'] = 'categorie';
 $groups_list['2'] = 'modaliteit';
 $groups_list['3'] = 'lokatie';
 
+$qc_frequency_list['NULL']='';
 $qc_frequency_list['1']='dagelijks';
 $qc_frequency_list['7']='wekelijks';
 $qc_frequency_list['14']='tweewekelijks';

@@ -67,7 +67,7 @@ $selector_Stmt="select $table_selector.*,g.creation_time,sc.omschrijving as cate
                 on $table_selector.selector_categorie_fk=sc.pk
                 left join
                   (select * from $table_gewenste_processen where status=5 order by pk desc) g
-                on $table_selector.pk=g.selector_fk where 1=1 %s group by $table_selector.pk";
+                on $table_selector.pk=g.selector_fk where 1=1 %s group by $table_selector.pk order by $table_selector.name";
 
 
 $subquery_category = "and $table_selector.selector_categorie_fk=%s";
@@ -210,7 +210,7 @@ switch ($group) {
            $table_data->assign("status_img",$status_array['img']);
            $table_data->assign("status_txt",$status_array['txt']);
 
-           if(!empty($gewenste_processen)) {
+           if(!empty($gewenste_processen) && $field_selector->qc_frequentie!=0) {
               $now=strtotime(date("Y-m-d H:i:s"));
               $lastqcdate=strtotime($field_selector->creation_time);
               $time_since_last_qc=($now-$lastqcdate)/(60*60*24); // fractioneel aantal dagen

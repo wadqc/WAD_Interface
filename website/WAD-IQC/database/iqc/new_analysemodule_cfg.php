@@ -197,8 +197,6 @@ if ($pk==-1)         //delete
         exit() ;
       }
 
-      $result_selector->close();
-
       $count=0; $selectorlist=array();
       while ($field_selector = $result_selector->fetch_object() )
       {
@@ -209,6 +207,8 @@ if ($pk==-1)         //delete
          print("Fout: config is in gebruik door de volgende selector(en): ".implode(', ',$selectorlist));
          exit();
       }
+
+      $result_selector->close();
 
       // haal config filename op uit DB op basis van pk
       if (!($result_analysemodule_cfg= $link->query(sprintf($select_Stmt,$analysemodule_cfg_ref_key[$i])))) {

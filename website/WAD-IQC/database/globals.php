@@ -71,16 +71,20 @@ $_COOKIE=sanitize($_COOKIE);
 
 
 
- 
+
 
 $site_dir="WAD-IQC";
 
 
-$hostName="localhost";		
-$userName="iqc";	
-$password="TY8BqYRdn3Uhzq8T";	
+$hostName="localhost";
+$userName="iqc";
+$password="TY8BqYRdn3Uhzq8T";
+$databaseName = "iqc";
 
-$databaseName = "iqc"; 	   
+$hostName_dcm4chee="localhost";
+$userName_dcm4chee="wad";
+$password_dcm4chee="wad";
+$databaseName_dcm4chee = "pacsdb";
 
 // Version of WAD_Interface
 $version = "1.1.0";

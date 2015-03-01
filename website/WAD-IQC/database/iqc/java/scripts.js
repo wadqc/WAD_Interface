@@ -207,6 +207,11 @@ function dashboard_drop_list(group,querystring)
   self.location.replace(action);
 }
 
+function beheer_db_drop_list(db_action)
+{
+  action='beheer_db.php?db_action='+db_action;
+  self.location.replace(action);
+}
 
 
 // gebruikt door study_select.tpl en processor_select.tpl
@@ -226,4 +231,13 @@ function disable_refresh_on_click() {
          }
       }
    }
+}
+
+
+// toggle alle checkboxes op de huidige pagina
+function toggle_checkboxes(source) {
+  checkboxes = document.getElementsByClassName('checkbox');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
 }

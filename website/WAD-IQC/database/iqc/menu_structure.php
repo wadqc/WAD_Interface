@@ -50,7 +50,9 @@ $action['Selector']['Selector']='../iqc/create_selector.php';
 
 
 $level['Admin']['Users']=1;
+$level['Admin']['DB beheer']=2;
 $action['Admin']['Users']='../iqc/create_users.php';
+$action['Admin']['DB beheer']='../iqc/beheer_db.php';
 
 }
 

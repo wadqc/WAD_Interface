@@ -10,9 +10,10 @@ $main_page = new Smarty_NM();
 $db_action_list['0'] = 'Kies een actie uit de lijst...';
 $db_action_list['1'] = 'Verwijder alle resultaten voor een specifieke selector';
 //$db_action_list['2'] = 'Herstel IQC-database naar "fabrieksinstellingen"';
-$db_action_list['3'] = 'Verwijder patienten/studies/series zonder entry in gewenste processen tabel';
-$db_action_list['4'] = 'Verwijder gewenste processen zonder resultaten';
-//$db_action_list['5'] = 'Verwijder specifiek gewenst proces incl resultaten';
+$db_action_list['3'] = 'Verwijder studies/series zonder entry in gewenste processen tabel';
+$db_action_list['4'] = 'Verwijder patienten/studies/series zonder entry in gewenste processen tabel';
+$db_action_list['5'] = 'Verwijder gewenste processen zonder resultaten';
+//$db_action_list['6'] = 'Verwijder specifiek gewenst proces incl resultaten';
 
 
 
@@ -98,7 +99,7 @@ $study_Stmt="
   left outer join series on study.pk=series.study_fk
   left outer join instance on series.pk=instance.series_fk
   left outer join gewenste_processen
-    on gewenste_processen.study_fk=study.pk or
+   on gewenste_processen.study_fk=study.pk or
       gewenste_processen.series_fk=series.pk or
       gewenste_processen.instance_fk=instance.pk
  where
@@ -118,31 +119,49 @@ $study_dcm4chee_Stmt="
 $delete_study_Stmt="delete from study where study.pk in (%s)";
 
 
-// zoek patienten waarvoor op study/series/instance level geen entry in gewenste processen tabel zitten
-$patient_Stmt="
- select distinct patient.pk
- from patient
-  left outer join study on patient.pk=study.patient_fk
-  left outer join series on study.pk=series.study_fk
-  left outer join instance on series.pk=instance.series_fk
-  left outer join gewenste_processen
-    on gewenste_processen.study_fk=study.pk or
-      gewenste_processen.series_fk=series.pk or
-      gewenste_processen.instance_fk=instance.pk
- where
-  gewenste_processen.study_fk is null and
-  gewenste_processen.series_fk is null and
-  gewenste_processen.instance_fk is null";
-
 
 /////////////////////////////////////////////////////////////////////
 
 $gewenste_processen_failed_Stmt="select * from gewenste_processen where status!=5";
 
+/////////////////////////////////////////////////////////////////////
+// action 4:
+
+// zoek patienten waarvoor op study/series/instance level geen entry in gewenste processen tabel zitten
+$patient_Stmt="
+ select patient.pk,patient.pat_name,patient.pat_id,
+        count(distinct study.pk) as nr_studies,
+        count(distinct series.pk) as nr_series,
+        count(distinct instance.pk) as nr_instances
+ from patient
+  left outer join study on patient.pk=study.patient_fk
+  left outer join series on study.pk=series.study_fk
+  left outer join instance on series.pk=instance.series_fk
+  left outer join gewenste_processen
+   on gewenste_processen.study_fk=study.pk or
+      gewenste_processen.series_fk=series.pk or
+      gewenste_processen.instance_fk=instance.pk
+ where
+  gewenste_processen.study_fk is null and
+  gewenste_processen.series_fk is null and
+  gewenste_processen.instance_fk is null
+ group by patient.pk
+";
+
+
+// check studie nog in dcm4chee db staat (ivm deleten in iqc)
+$patient_dcm4chee_Stmt="
+ select * from patient where patient.pk=%s
+";
+
+// delete patienten (gerelateerde studies/series/instances/files/collector_study_status/collector_series_status
+//                   worden automatisch "on cascade" ook weggehaald)
+$delete_patient_Stmt="delete from patient where patient.pk in (%s)";
+
 
 
 /////////////////////////////////////////////////////////////////////
-// action 4:
+// action 5:
 
 $gewenste_processen_no_results_Stmt="
  select gewenste_processen.pk
@@ -173,7 +192,7 @@ $delete_processen_no_results_Stmt="
 ";
 
 /////////////////////////////////////////////////////////////////////
-// action 5:
+// action 6:
 
 //$delete_gewenst_proces_incl_results_Stmt="delete from gewenste_processen where pk=%d";
 
@@ -394,6 +413,107 @@ switch ($db_action) {
    case 4:
         if(!empty($confirm_action)) {
 
+           if (!empty($_POST['patient']))
+           {
+              $patients=$_POST['patient'];
+              $patient_ref_key=array_keys($patients);
+           }
+
+           $patient_list=implode(",",$patient_ref_key);
+           if(empty($patient_list)) {
+              $main_page->assign("action_result",'Geen patienten geselecteerd');
+              $db_action=0;
+           } else {
+              // actie is bevestigd en patientenlijst bevat pk's dus deleten maar...
+              if (!($result=$link->query(sprintf($delete_patient_Stmt,$patient_list)))) {
+                 DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($delete_patient_Stmt,$patient_list))) ;
+                 DisplayErrMsg(sprintf("error: %s", $link->error)) ;
+                 exit() ;
+              }
+              $result->close();
+
+              $main_page->assign("action_result",'Patient/studies/series/instances/collector_*_status entries zijn verwijderd');
+              $db_action=0;
+           }
+        } else {
+           $main_page->assign("action_text",'Selectie');
+           $main_page->assign("action_name",'Verwijder patienten');
+
+           if (!($result_patients=$link->query($patient_Stmt))) {
+              DisplayErrMsg(sprintf("Error in executing %s stmt", $patient_Stmt)) ;
+              DisplayErrMsg(sprintf("error: %s", $link->error)) ;
+              exit();
+           }
+
+           $result_output = 'Aantal gevonden patienten: ' . $result_patients->num_rows . '<br/>';
+
+           // check of deze patienten nog in de dcm4chee db staan
+           // Connect to the IQC Database
+           $link_dcm4chee = new mysqli($hostName_dcm4chee, $userName_dcm4chee, $password_dcm4chee, $databaseName_dcm4chee);
+
+           // check connection
+           if (mysqli_connect_errno()) {
+              printf("Connect failed: %s\n", mysqli_connect_error());
+              exit();
+           }
+
+           $result_output .= 'N.B. patienten moeten eerst uit DCM4CHEE worden verwijderd!<br/>';
+           $main_page->assign("action_result",$result_output);
+
+           $j=0;
+           while ($field_patient = $result_patients->fetch_object())
+           {
+              $b=($j%2);
+              $bgcolor='';
+              if ($b==0)
+              {
+                $bgcolor='#B8E7FF';
+              }
+
+              $table_data = new Smarty_NM();
+
+              if ($j==0) //define header data
+              {
+                $table_output=$table_data->fetch("beheer_db_action4_header.tpl");
+              }
+
+              $table_data->assign("bgcolor",$bgcolor);
+              $table_data->assign("patient_name",$field_patient->pat_name);
+              $table_data->assign("patient_id",$field_patient->pat_id);
+              $checkbox_name=sprintf("patient[%d]",$field_patient->pk);
+              $table_data->assign("checkbox_name",$checkbox_name);
+              $main_page->assign("toggle",1);
+              $table_data->assign("nr_studies",$field_patient->nr_studies);
+              $table_data->assign("nr_series",$field_patient->nr_series);
+              $table_data->assign("nr_instances",$field_patient->nr_instances);
+
+
+              if (!($result_patients_dcm4chee=$link->query(sprintf($patient_dcm4chee_Stmt,$field_patient->pk)))) {
+                 DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($patient_dcm4chee_Stmt,$patient_list))) ;
+                 DisplayErrMsg(sprintf("error: %s", $link->error)) ;
+                 exit();
+              }
+              if($result_patients_dcm4chee->num_rows>0) {
+                 $dcm4chee_status='aanwezig';
+              } else {
+                 $dcm4chee_status='niet aanwezig';
+              }
+
+              $table_data->assign("dcm4chee_status",$dcm4chee_status);
+
+              $table_output.=$table_data->fetch("beheer_db_action4_row.tpl");
+
+              $j++;
+           }
+
+           $result_patients->close();
+           $result_patients_dcm4chee->close();
+
+        }
+        break;
+   case 5:
+        if(!empty($confirm_action)) {
+
            // actie is bevestigd en dus deleten maar...
            if (!($result=$link->query(sprintf($delete_selector_results_Stmt,$selector_list)))) {
               DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($delete_selector_results_Stmt,$selector_list))) ;
@@ -420,7 +540,7 @@ switch ($db_action) {
 
         }
         break;
-   case 5:
+   case 6:
         if(!empty($confirm_action)) {
            // FIXME
            $main_page->assign("action_result",'Gewenst proces incl resultaten verwijderd');

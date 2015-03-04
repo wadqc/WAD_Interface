@@ -22,11 +22,11 @@ $db_action_list['5'] = 'Verwijder gewenste processen zonder resultaten';
 /////////////////////////////////////////////////////////////////////
 // action 1:
 
-//$selector_Stmt="select * from selector order by name";
+$selector_Stmt="select * from selector order by name";
 
 // lijst met selectoren, incl aantal resultaten van elk type
 // als deze te traag mocht blijken bij een gevulde DB dan vervangen door bovenstaande query
-$selector_Stmt="
+$selector_Stmt_old="
  select
    s.pk,s.name,s.description,
    count(distinct gp.pk) as nr_gewenste_processen,
@@ -285,12 +285,6 @@ switch ($db_action) {
               $checkbox_name=sprintf("selector[%d]",$field_selector->pk);
               $main_page->assign("toggle",1);
               $table_data->assign("checkbox_name",$checkbox_name);
-
-              $table_data->assign("nr_gewenste_processen",$field_selector->nr_gewenste_processen);
-              $table_data->assign("nr_results_floating",$field_selector->nr_results_floating);
-              $table_data->assign("nr_results_char",$field_selector->nr_results_char);
-              $table_data->assign("nr_results_object",$field_selector->nr_results_object);
-              $table_data->assign("nr_results_boolean",$field_selector->nr_results_boolean);
 
               $table_output.=$table_data->fetch("beheer_db_action1_row.tpl");
 

@@ -323,12 +323,11 @@ switch ($db_action) {
               $db_action=0;
            } else {
               // actie is bevestigd en studielijst bevat pk's dus deleten maar...
-              if (!($result=$link->query(sprintf($delete_study_Stmt,$study_list)))) {
+              if (!($link->query(sprintf($delete_study_Stmt,$study_list)))) {
                  DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($delete_study_Stmt,$study_list))) ;
                  DisplayErrMsg(sprintf("error: %s", $link->error)) ;
                  exit() ;
               }
-              $result->close();
 
               $main_page->assign("action_result",'Studies/series/instances/collector_*_status entries zijn verwijderd');
               $db_action=0;
@@ -387,7 +386,7 @@ switch ($db_action) {
               //$table_data->assign("status",$field_collector_study->omschrijving);
 
 
-              if (!($result_studies_dcm4chee=$link->query(sprintf($study_dcm4chee_Stmt,$field_study->pk)))) {
+              if (!($result_studies_dcm4chee=$link_dcm4chee->query(sprintf($study_dcm4chee_Stmt,$field_study->pk)))) {
                  DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($study_dcm4chee_Stmt,$study_list))) ;
                  DisplayErrMsg(sprintf("error: %s", $link->error)) ;
                  exit();
@@ -398,6 +397,8 @@ switch ($db_action) {
                  $dcm4chee_status='niet aanwezig';
               }
 
+              $result_studies_dcm4chee->close();
+
               $table_data->assign("dcm4chee_status",$dcm4chee_status);
 
               $table_output.=$table_data->fetch("beheer_db_action3_row.tpl");
@@ -406,7 +407,6 @@ switch ($db_action) {
            }
 
            $result_studies->close();
-           $result_studies_dcm4chee->close();
 
         }
         break;
@@ -425,12 +425,11 @@ switch ($db_action) {
               $db_action=0;
            } else {
               // actie is bevestigd en patientenlijst bevat pk's dus deleten maar...
-              if (!($result=$link->query(sprintf($delete_patient_Stmt,$patient_list)))) {
+              if (!($link->query(sprintf($delete_patient_Stmt,$patient_list)))) {
                  DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($delete_patient_Stmt,$patient_list))) ;
                  DisplayErrMsg(sprintf("error: %s", $link->error)) ;
                  exit() ;
               }
-              $result->close();
 
               $main_page->assign("action_result",'Patient/studies/series/instances/collector_*_status entries zijn verwijderd');
               $db_action=0;
@@ -488,7 +487,7 @@ switch ($db_action) {
               $table_data->assign("nr_instances",$field_patient->nr_instances);
 
 
-              if (!($result_patients_dcm4chee=$link->query(sprintf($patient_dcm4chee_Stmt,$field_patient->pk)))) {
+              if (!($result_patients_dcm4chee=$link_dcm4chee->query(sprintf($patient_dcm4chee_Stmt,$field_patient->pk)))) {
                  DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($patient_dcm4chee_Stmt,$patient_list))) ;
                  DisplayErrMsg(sprintf("error: %s", $link->error)) ;
                  exit();

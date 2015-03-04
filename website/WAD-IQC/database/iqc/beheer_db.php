@@ -499,6 +499,8 @@ switch ($db_action) {
                  $dcm4chee_status='niet aanwezig';
               }
 
+              $result_patients_dcm4chee->close();
+
               $table_data->assign("dcm4chee_status",$dcm4chee_status);
 
               $table_output.=$table_data->fetch("beheer_db_action4_row.tpl");
@@ -507,7 +509,6 @@ switch ($db_action) {
            }
 
            $result_patients->close();
-           $result_patients_dcm4chee->close();
 
         }
         break;

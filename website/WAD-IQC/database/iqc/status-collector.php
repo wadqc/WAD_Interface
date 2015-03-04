@@ -77,7 +77,7 @@ INNER JOIN
 where 
 series.study_fk='%d'
 AND collector_series_status.series_status in (%s)
-AND ( $table_instance.content_datetime > (NOW() - INTERVAL %s)) 
+AND ( coalesce(series.pps_start,$table_instance.content_datetime,NOW()) > (NOW() - INTERVAL %s)) 
 AND series.pk=instance.series_fk
 AND $table_instance.pk=(select min(pk) from $table_instance where series_fk=$table_series.pk)
 ORDER BY series_datetime desc";

@@ -50,7 +50,7 @@ $selector_Stmt_old="
 
 // gewenste_processen entry ook deleten of van status wijzigen?
 $delete_selector_results_Stmt="
- delete resultaten_floating,resultaten_char,resultaten_object,resultaten_boolean
+ delete gewenste_processen,resultaten_floating,resultaten_char,resultaten_object,resultaten_boolean
  from gewenste_processen
  left join resultaten_floating
    on gewenste_processen.pk=resultaten_floating.gewenste_processen_fk
@@ -62,6 +62,8 @@ $delete_selector_results_Stmt="
    on gewenste_processen.pk=resultaten_boolean.gewenste_processen_fk
  where gewenste_processen.selector_fk in (%s)
 ";
+
+
 
 
 /////////////////////////////////////////////////////////////////////
@@ -195,6 +197,8 @@ $delete_processen_no_results_Stmt="
 // action 6:
 
 //$delete_gewenst_proces_incl_results_Stmt="delete from gewenste_processen where pk=%d";
+
+
 
 
 // Connect to the IQC Database
@@ -509,8 +513,8 @@ switch ($db_action) {
         if(!empty($confirm_action)) {
 
            // actie is bevestigd en dus deleten maar...
-           if (!($result=$link->query(sprintf($delete_selector_results_Stmt,$selector_list)))) {
-              DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($delete_selector_results_Stmt,$selector_list))) ;
+           if (!($link->query($delete_processen_no_results_Stmt))) {
+              DisplayErrMsg(sprintf("Error in executing %s stmt", $delete_processen_no_results_Stmt)) ;
               DisplayErrMsg(sprintf("error: %s", $link->error)) ;
               exit() ;
            }
@@ -548,14 +552,6 @@ switch ($db_action) {
         break;
 }
 
-
-/*
-if (!($result_status= $link->query($status_list))) {
-   DisplayErrMsg(sprintf("Error in executing %s stmt", $collector_study_Stmt)) ;
-   DisplayErrMsg(sprintf("error: %s", $link->error)) ;
-   exit() ;
-}
-*/
 
 
 $table_data = new Smarty_NM();

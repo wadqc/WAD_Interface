@@ -629,7 +629,7 @@ while (($field_results = $result_boolean->fetch_object()))
    $grens_kritisch_onder[$field_results->volgnummer]='na';
    $grens_acceptabel_boven[$field_results->volgnummer]='na';
    $grens_acceptabel_onder[$field_results->volgnummer]='na';
-   $criterium[$field_results->volgnummer]='na';
+   $criterium[$field_results->volgnummer]=$field_results->criterium;
    $type[$field_results->volgnummer]='boolean';
       
 }
@@ -762,9 +762,20 @@ while ($j<sizeof($ref_key)) // loop for $ref_keys
      //$table_data->assign("eenheid",$eenheid[$ref_key[$j]]);
      $table_data->assign("waarde",$waarde[$ref_key[$j]]);
      $table_data->assign("waarde_class","table_data");
-     $table_data->assign("action_floating",$action[$ref_key[$j]]);
+     $table_data->assign("action_char",$action[$ref_key[$j]]);
+     $table_data->assign("criterium",$criterium[$ref_key[$j]]);
+
+     if ($criterium[$ref_key[$j]] != '')
+     {
+         $table_data->assign("waarde_class","table_data_green"); // default is green if criterium is defined
+     }
+     if ( ($criterium[$ref_key[$j]]!='') and ($waarde[$ref_key[$j]]!=$criterium[$ref_key[$j]]) )
+     {
+       $table_data->assign("waarde_class","table_data_red");
+     } 
+
       
-     $table_resultaten_floating.=$table_data->fetch("resultaten_floating_row.tpl");
+     $table_resultaten_floating.=$table_data->fetch("resultaten_char_row.tpl");
    }
 
    $j++;

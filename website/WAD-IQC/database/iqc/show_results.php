@@ -619,7 +619,7 @@ $result_char->close();
 while (($field_results = $result_boolean->fetch_object()))
 {
   
-   $action[$field_results->volgnummer]=sprintf("show_boolean_value.php?selector_fk=%d&status=%s&omschrijving_char=%s&t=%d",$selector_fk,$status,$field_results->omschrijving,time()); 
+   $action[$field_results->volgnummer]=sprintf("show_boolean_value.php?selector_fk=%d&analyse_level=%s&status=%s&omschrijving_bool=%s&t=%d",$selector_fk,$analyse_level,$status,$field_results->omschrijving,time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
    $grootheid[$field_results->volgnummer]='na';

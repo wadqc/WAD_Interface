@@ -113,9 +113,7 @@ order by $table_study.study_datetime desc";
 $year_Stmt_series="SELECT $table_gewenste_processen.pk as 'pk', $table_gewenste_processen.status as 'status', $table_instance.content_datetime as 'date_time' from $table_gewenste_processen inner join $table_series on $table_gewenste_processen.series_fk=$table_series.pk, $table_instance where $table_gewenste_processen.selector_fk=$selector_fk and $table_gewenste_processen.status in (%s) and $table_series.pk=$table_instance.series_fk and $table_instance.pk=(select min(pk) from $table_instance where series_fk=$table_series.pk) order by $table_instance.content_datetime desc";
 
 
-$year_Stmt_instance="SELECT $table_gewenste_processen.pk as 'pk', $table_gewenste_processen.status as 'status', $table_instance.content_datetime as 'date_time' from $table_gewenste_processen inner join $table_instance on $table_gewenste_processen.study_fk=$table_instance.pk where $table_gewenste_processen.selector_fk=$selector_fk
-and $table_gewenste_processen.status in (%s) 
-order by $table_instance.content_datetime desc";
+$year_Stmt_instance="SELECT $table_gewenste_processen.pk as 'pk', $table_gewenste_processen.status as 'status', $table_instance.content_datetime as 'date_time' from $table_gewenste_processen inner join $table_instance on $table_gewenste_processen.instance_fk=$table_instance.pk where $table_gewenste_processen.selector_fk=$selector_fk and $table_gewenste_processen.status in (%s) order by $table_instance.content_datetime desc";
 
 
 $selector_Stmt="SELECT * from $table_selector

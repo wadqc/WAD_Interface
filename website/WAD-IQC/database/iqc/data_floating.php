@@ -27,12 +27,14 @@ if (!empty($_GET['selector_fk']))
 $omschrijving="%";
 if (!empty($_GET['omschrijving']))
 {
-  $omschrijving=$_GET['omschrijving'];
+  $omschrijving=urlencode($_GET['omschrijving']);
+  $omschrijving=str_replace('%2F', '/', $omschrijving);
 }
 $grootheid="%";
 if (!empty($_GET['grootheid']))
 {
-  $grootheid=$_GET['grootheid'];
+  $grootheid=urlencode($_GET['grootheid']);
+  $grootheid=str_replace('%2F', '/', $grootheid);
 }
 $eenheid="%";
 if (!empty($_GET['eenheid']))

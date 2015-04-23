@@ -25,8 +25,10 @@ $default_selected_bottom['top']['Admin']    = 1;   // Users
 
 
 $level['Results']['Selector']=1;
+$level['Results']['Dashboard']=2;
 
 $action['Results']['Selector']='../iqc/show_selector.php';
+$action['Results']['Dashboard']='../iqc/show_dashboard.php';
 
 
 $level['Status']['Selector']=1;
@@ -38,15 +40,19 @@ $action['Status']['Processor']='../iqc/status-processor.php';
 
 $level['Selector']['Modules']=1;
 $level['Selector']['Config Files']=2;
-$level['Selector']['Selector']=3;
+$level['Selector']['Categorie']=3;
+$level['Selector']['Selector']=4;
 
 $action['Selector']['Modules']='../iqc/create_analysemodule.php';
 $action['Selector']['Config Files']='../iqc/create_analysemodule_cfg.php';
+$action['Selector']['Categorie']='../iqc/create_category.php';
 $action['Selector']['Selector']='../iqc/create_selector.php';
 
 
 $level['Admin']['Users']=1;
+$level['Admin']['DB beheer']=2;
 $action['Admin']['Users']='../iqc/create_users.php';
+$action['Admin']['DB beheer']='../iqc/beheer_db.php';
 
 }
 
@@ -62,8 +68,10 @@ $action['top']['Status']='../iqc/frontpage-bottom.html';
 
 
 $level['Results']['Selector']=1;
+$level['Results']['Dashboard']=1;
 
 $action['Results']['Selector']='../iqc/show_selector.php';
+$action['Results']['Dashboard']='../iqc/show_dashboard.php';
 
 
 $level['Status']['Selector']=1;

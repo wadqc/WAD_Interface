@@ -35,6 +35,34 @@
          </select>
     </td>
   </tr>
+  <tr>
+    <td class="table_data_blue"> Categorie </td>
+    <td class="table_data">
+         <select name="selector_category">
+           {html_options options=$category_options selected=$category_id}
+         </select>
+    </td>
+  </tr>
+  <tr>
+    <td class="table_data_blue"> Modaliteit </td>
+    <td class="table_data">
+      <input   name="selector_modality" type="text" value="{$default_selector_modality}" size="50"> </input>
+    </td>
+  </tr>
+  <tr>
+    <td class="table_data_blue"> Lokatie </td>
+    <td class="table_data">
+      <input   name="selector_location" type="text" value="{$default_selector_location}" size="50"> </input>
+    </td>
+  </tr>
+  <tr>
+    <td class="table_data_blue"> QC frequentie </td>
+    <td class="table_data">
+         <select name="selector_qc_frequency">
+           {html_options options=$qc_frequency_options selected=$qc_frequency_id}
+         </select>
+    </td>
+  </tr>
 
 </table>
      

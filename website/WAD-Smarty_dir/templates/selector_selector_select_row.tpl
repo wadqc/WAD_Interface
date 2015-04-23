@@ -12,5 +12,17 @@
   <td class="table_data">
     {$analysemodule_cfg}
   </td>
+  <td class="table_data">
+    {$category}
+  </td>
+  <td class="table_data">
+    {$modality}
+  </td>
+  <td class="table_data">
+    {$location}
+  </td>
+  <td class="table_data">
+    {$qc_frequency}
+  </td>
 </tr>
 

@@ -113,7 +113,7 @@ order by $table_study.study_datetime desc";
 $year_Stmt_series="SELECT $table_gewenste_processen.pk as 'pk', $table_gewenste_processen.status as 'status', $table_instance.content_datetime as 'date_time' from $table_gewenste_processen inner join $table_series on $table_gewenste_processen.series_fk=$table_series.pk, $table_instance where $table_gewenste_processen.selector_fk=$selector_fk and $table_gewenste_processen.status in (%s) and $table_series.pk=$table_instance.series_fk and $table_instance.pk=(select min(pk) from $table_instance where series_fk=$table_series.pk) order by $table_instance.content_datetime desc";
 
 
-$year_Stmt_instance="SELECT $table_gewenste_processen.pk as 'pk', $table_gewenste_processen.status as 'status', $table_instance.content_datetime as 'date_time' from $table_gewenste_processen inner join $table_instance on $table_gewenste_processen.study_fk=$table_instance.pk where $table_gewenste_processen.selector_fk=$selector_fk
+$year_Stmt_instance="SELECT $table_gewenste_processen.pk as 'pk', $table_gewenste_processen.status as 'status', $table_instance.content_datetime as 'date_time' from $table_gewenste_processen inner join $table_instance on $table_gewenste_processen.instance_fk=$table_instance.pk where $table_gewenste_processen.selector_fk=$selector_fk
 and $table_gewenste_processen.status in (%s) 
 order by $table_instance.content_datetime desc";
 
@@ -619,7 +619,7 @@ $result_char->close();
 while (($field_results = $result_boolean->fetch_object()))
 {
   
-   $action[$field_results->volgnummer]=sprintf("show_boolean_value.php?selector_fk=%d&status=%s&omschrijving_char=%s&t=%d",$selector_fk,$status,$field_results->omschrijving,time()); 
+   $action[$field_results->volgnummer]=sprintf("show_boolean_value.php?selector_fk=%d&analyse_level=%s&status=%s&omschrijving_bool=%s&t=%d",$selector_fk,$analyse_level,$status,$field_results->omschrijving,time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
    $grootheid[$field_results->volgnummer]='na';
@@ -629,7 +629,7 @@ while (($field_results = $result_boolean->fetch_object()))
    $grens_kritisch_onder[$field_results->volgnummer]='na';
    $grens_acceptabel_boven[$field_results->volgnummer]='na';
    $grens_acceptabel_onder[$field_results->volgnummer]='na';
-   $criterium[$field_results->volgnummer]='na';
+   $criterium[$field_results->volgnummer]=$field_results->criterium;
    $type[$field_results->volgnummer]='boolean';
       
 }
@@ -762,9 +762,20 @@ while ($j<sizeof($ref_key)) // loop for $ref_keys
      //$table_data->assign("eenheid",$eenheid[$ref_key[$j]]);
      $table_data->assign("waarde",$waarde[$ref_key[$j]]);
      $table_data->assign("waarde_class","table_data");
-     $table_data->assign("action_floating",$action[$ref_key[$j]]);
+     $table_data->assign("action_char",$action[$ref_key[$j]]);
+     $table_data->assign("criterium",$criterium[$ref_key[$j]]);
+
+     if ($criterium[$ref_key[$j]] != '')
+     {
+         $table_data->assign("waarde_class","table_data_green"); // default is green if criterium is defined
+     }
+     if ( ($criterium[$ref_key[$j]]!='') and ($waarde[$ref_key[$j]]!=$criterium[$ref_key[$j]]) )
+     {
+       $table_data->assign("waarde_class","table_data_red");
+     } 
+
       
-     $table_resultaten_floating.=$table_data->fetch("resultaten_floating_row.tpl");
+     $table_resultaten_floating.=$table_data->fetch("resultaten_char_row.tpl");
    }
 
    $j++;
@@ -810,7 +821,7 @@ while (($field_results = $result_object->fetch_object()))
   $object_type="None";
 
   $finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
-  $object_type=finfo_file($finfo, $filename);
+  $object_type=@finfo_file($finfo, $filename);
   finfo_close($finfo);
 
 

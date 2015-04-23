@@ -231,6 +231,29 @@ display:none;}
 }
 
 
+/* warning box voor DB beheer pagina */
+.alert-box {
+ border-style: solid;
+ border-width: 1px;
+ display: block;
+ font-weight: bold;
+ margin-bottom: 1.11111rem;
+ position: relative;
+ padding: 0.77778rem 1.33333rem 0.77778rem 0.77778rem;
+ font-size: 16px;
+ transition: opacity 300ms ease-out;
+ background-color: #008CBA;
+ border-color: #0078a0;
+ color: #FFFFFF;
+}
+
+.alert-box.alert {
+ background-color: #FF0000;
+ border-color: #FF0000;
+ color: #FFFFFF;
+}
+
+
 
  .keuze_data {
  font-family: arial;

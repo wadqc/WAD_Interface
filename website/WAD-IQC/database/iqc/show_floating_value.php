@@ -248,8 +248,8 @@ $data->assign("selection_list",$selector_list);
 $data->assign("header_result",$header_result);
 $data->assign("header_value","Resultaten floating");
 $data->assign("picture_src","./logo_pictures/excel.jpg");
-$export_action=sprintf("export_floating_value.php?selector_fk=%d&status=%d&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$status,$analyse_level,$omschrijving,$grootheid,$eenheid ,time());
-$action_page=sprintf("data_floating.php?selector_fk=%d&status=%s&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$status,$analyse_level,$omschrijving,$grootheid,$eenheid ,time());
+$export_action=sprintf("export_floating_value.php?selector_fk=%d&status=%d&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$status,$analyse_level,rawurlencode($omschrijving),rawurlencode($grootheid),$eenheid ,time());
+$action_page=sprintf("data_floating.php?selector_fk=%d&status=%s&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$status,$analyse_level,rawurlencode($omschrijving),rawurlencode($grootheid),$eenheid ,time());
 //printf("data_floating.php?selector_fk=%d&status=%s&analyse_level=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$status,$analyse_level,$omschrijving,$grootheid,$eenheid ,time());
 //exit();
 

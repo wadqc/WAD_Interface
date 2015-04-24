@@ -25,7 +25,7 @@ if (!empty($_GET['selector_fk']))
 $omschrijving_char="%";
 if (!empty($_GET['omschrijving_char']))
 {
-  $omschrijving_char=$_GET['omschrijving_char'];
+  $omschrijving_char=rawurldecode($_GET['omschrijving_char']);
 }
 
 

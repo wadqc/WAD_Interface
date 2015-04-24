@@ -28,12 +28,12 @@ if (!empty($_GET['selector_fk']))
 $omschrijving="%";
 if (!empty($_GET['omschrijving']))
 {
-  $omschrijving=$_GET['omschrijving'];
+  $omschrijving=rawurldecode($_GET['omschrijving']);
 }
 $grootheid="%";
 if (!empty($_GET['grootheid']))
 {
-  $grootheid=$_GET['grootheid'];
+  $grootheid=rawurldecode($_GET['grootheid']);
 }
 $eenheid="%";
 if (!empty($_GET['eenheid']))
@@ -44,7 +44,7 @@ if (!empty($_GET['eenheid']))
 $omschrijving_char="%%";
 if (!empty($_GET['omschrijving_char']))
 {
-  $omschrijving_char=$_GET['omschrijving_char'];
+  $omschrijving_char=rawurldecode($_GET['omschrijving_char']);
 }
 
 

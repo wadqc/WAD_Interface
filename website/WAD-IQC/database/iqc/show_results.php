@@ -576,7 +576,7 @@ while (($field_results = $result_floating->fetch_object()))
 {
 
    
-   $action[$field_results->volgnummer]=sprintf("show_floating_value.php?selector_fk=%d&analyse_level=%s&status=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$status,$field_results->omschrijving,$field_results->grootheid,$field_results->eenheid ,time()); 
+   $action[$field_results->volgnummer]=sprintf("show_floating_value.php?selector_fk=%d&analyse_level=%s&status=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$status,rawurlencode($field_results->omschrijving),rawurlencode($field_results->grootheid),$field_results->eenheid ,time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
    $grootheid[$field_results->volgnummer]=$field_results->grootheid;
@@ -597,7 +597,7 @@ $result_floating->close();
 while (($field_results = $result_char->fetch_object()))
 {
 
-   $action[$field_results->volgnummer]=sprintf("show_char_value.php?selector_fk=%d&analyse_level=%s&status=%s&omschrijving_char=%s&t=%d",$selector_fk,$analyse_level,$status,$field_results->omschrijving,time()); 
+   $action[$field_results->volgnummer]=sprintf("show_char_value.php?selector_fk=%d&analyse_level=%s&status=%s&omschrijving_char=%s&t=%d",$selector_fk,$analyse_level,$status,rawurlencode($field_results->omschrijving),time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
    $grootheid[$field_results->volgnummer]='na';
@@ -619,7 +619,7 @@ $result_char->close();
 while (($field_results = $result_boolean->fetch_object()))
 {
   
-   $action[$field_results->volgnummer]=sprintf("show_boolean_value.php?selector_fk=%d&analyse_level=%s&status=%s&omschrijving_bool=%s&t=%d",$selector_fk,$analyse_level,$status,$field_results->omschrijving,time()); 
+   $action[$field_results->volgnummer]=sprintf("show_boolean_value.php?selector_fk=%d&analyse_level=%s&status=%s&omschrijving_bool=%s&t=%d",$selector_fk,$analyse_level,$status,rawurlencode($field_results->omschrijving),time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
    $grootheid[$field_results->volgnummer]='na';

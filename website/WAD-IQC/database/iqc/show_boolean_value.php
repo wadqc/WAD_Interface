@@ -26,7 +26,7 @@ if (!empty($_GET['selector_fk']))
 $omschrijving_bool="%";
 if (!empty($_GET['omschrijving_bool']))
 {
-  $omschrijving_bool=$_GET['omschrijving_bool'];
+  $omschrijving_bool=rawurldecode($_GET['omschrijving_bool']);
 }
 
 

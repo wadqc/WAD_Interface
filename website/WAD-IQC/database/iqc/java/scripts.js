@@ -189,15 +189,24 @@ function selector_drop_list(gewenste_processen_id,niveau,status,selector_fk,anal
   self.location.replace(action);
 }
 
-function processor_status_drop_list(date_filter,status)
+function processor_status_drop_list(date_filter,status,selector)
 {
-  action='status-processor.php?date_filter='+date_filter+'&status='+status;
+  action='status-processor.php?date_filter='+date_filter+'&status='+status+'&selector='+selector;
   self.location.replace(action);
 }
+
 
 function selector_status_drop_list(date_filter,status,querystring)
 {
   action='status-collector.php?date_filter='+date_filter+'&status='+status+'&'+querystring;
+  self.location.replace(action);
+}
+
+function dose_drop_list(omschrijving,selector_fk,niveau,status)
+{
+  
+  test=encodeURIComponent(omschrijving);
+  action='show_results_dose.php?omschrijving='+test+'&selector_fk='+selector_fk+'&niveau='+niveau+'&status='+status;
   self.location.replace(action);
 }
 

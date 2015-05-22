@@ -1,0 +1,38 @@
+php.ini file: 
+extension=fileinfo.so
+upload_max_filesize=200M
+
+pear:
+Find php/pear/Mail.php, go to line 74 and change:
+
+function &factory($driver, $params = array())
+to
+
+static function &factory($driver, $params = array())
+Also in php/pear/Mail.php go to line 253 and change:
+
+$addresses = Mail_RFC822::parseAddressList($recipients, 'localhost', false);
+to
+
+$Mail_RFC822 = new Mail_RFC822();
+$addresses = $Mail_RFC822->parseAddressList($recipients, 'localhost', false);
+Find php/pear/PEAR.php, go to line 250 and change:
+
+function isError($data, $code = null)
+to
+
+static function isError($data, $code = null)
+
+Mysql
+To set the default to UTF-8, you want to add the following to my.cnf
+[client]
+default-character-set=utf8
+
+[mysql]
+default-character-set=utf8
+
+
+[mysqld]
+collation-server = utf8_unicode_ci
+init-connect='SET NAMES utf8'
+character-set-server = utf8

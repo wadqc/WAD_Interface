@@ -89,7 +89,7 @@ $databaseName_dcm4chee = "pacsdb";
 // Version of WAD_Interface
 $version = "1.1.0";
 
-
+$omschrijving_dosis_categorie="Dosis";
 
 $picture_root="./../../";
 $picture_root_pdf="./../../../";

@@ -55,7 +55,8 @@ $b=($j%2);
      }
    }
    $checkbox_name=sprintf("users[%d]",$field_users->pk);
-   $action=sprintf("view_users.php?pk=%s&t=%d",$field_users->pk,time());
+   //$action=sprintf("view_users.php?pk=%s&t=%d",$field_users->pk,time());
+   $action=sprintf("new_users.php?users_pk=%s&t=%d",$field_users->pk,time());
    $table_data->assign("bgcolor",$bgcolor);
    $table_data->assign("checkbox_name",$checkbox_name);
    $table_data->assign("login",$field_users->login);

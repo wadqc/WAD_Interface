@@ -3,9 +3,9 @@
   <td class="table_data">
     {$patient_id}
   </td>
-  <td class="table_data">
+{* <td class="table_data">
      {$patient_name}
-  </td>
+  </td> *}
   <td class="table_data">
     {$accession_number}
   </td>
@@ -30,6 +30,9 @@
   <td class="table_data">
      {$proces_date}
   </td>
+  <td class="table_data">
+    {$proces_id}
+  </td> 
   <td class="table_data">
     {$proces_status}
   </td>  

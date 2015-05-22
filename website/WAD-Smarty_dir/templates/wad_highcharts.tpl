@@ -5,7 +5,7 @@
 <head >
   <link   rel="StyleSheet" href="./database/open_iqc/css/styles.css" type="text/css">
   <title>Image Qualty Control</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="GENERATOR" content="Quanta Plus">
   <script type="text/javascript" src="java/js/jquery-1.9.1.js"></script>
   <script type="text/javascript" src="java/js/highcharts.js" ></script>

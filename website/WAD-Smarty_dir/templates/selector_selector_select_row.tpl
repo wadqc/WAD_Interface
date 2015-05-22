@@ -1,7 +1,7 @@
 <!-- source template: selector_selector_select_row.tpl -->
 <tr bgcolor="{$bgcolor}">
   <td>
-    <input type="checkbox" name="{$checkbox_name}" value="on">
+    <input type="checkbox" name="{$checkbox_name}" {$checked} value="on">
   </td>
   <td class="table_data">
     <a href="{$action}" class="table_data_select">{$name}</a>

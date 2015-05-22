@@ -4,7 +4,7 @@
 <html>
 <head>
   <title>WAD-QC</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
   <meta name="GENERATOR" content="Quanta Plus">
   <link rel="shortcut icon" href="{$favicon}">
   <frameset rows="140,*" framespacing="0" border="0" frameborder="0">

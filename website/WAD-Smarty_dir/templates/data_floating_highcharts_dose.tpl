@@ -6,7 +6,7 @@
 <head>
   <title>{$Title}</title>
   <link   rel="StyleSheet" href="./css/styles.css" type="text/css">
-  {* <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> *}
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
   <meta name="GENERATOR" content="Quanta Plus">
@@ -94,11 +94,11 @@
 							switch(i)
                                           {
                                           case 0:
-                                            options.series[0].name = line[0];
-                                            options.series[1].name = line[1];
+                                            //options.series[0].name = line[0];
+                                            //options.series[1].name = line[1];
                                             options.series[2].name = line[2];
-                                            options.series[3].name = line[3];
-                                            options.series[4].name = line[4];  
+                                            //options.series[3].name = line[3];
+                                            //options.series[4].name = line[4];  
                                             break;
                                           case 1:
                                             options.series[0].color = line[0];

@@ -1,11 +1,11 @@
 <!-- source template: study_row.tpl -->
 <tr bgcolor="{$bgcolor}">
   <td>
-     <a href="{$action}" class="table_data_select">{$patient_name}</a>
+     <a href="{$action}" class="table_data_select">{$patient_id}</a>
   </td>
-  <td class="table_data">
+  {* <td class="table_data">
     {$patient_id}
-  </td>
+  </td> *} 
   <td class="table_data">
     {$study_description}
   </td>

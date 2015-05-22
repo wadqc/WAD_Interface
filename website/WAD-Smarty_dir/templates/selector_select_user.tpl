@@ -13,9 +13,9 @@
     Status&nbsp;
     <select name="status" onchange="selector_drop_list(gewenste_processen_id.value,niveau.value,status.value,'{$selector_fk}','{$analyse_level}','{$v}')" id="status"> {html_options options=$status_options selected=$status_id} </select>
   &nbsp;</td>
-  {$notitie}
+
+  {$notitie}    
   {$row_line}
-  {$selection}
 
 </tr>
 {$menu_line}

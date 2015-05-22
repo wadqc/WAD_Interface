@@ -6,7 +6,7 @@
   <link   rel="StyleSheet" href="./database/iqc/css/styles.css" type="text/css">
   <title>Open School</title>
   <link rel="icon" href="./database/open_school/logo_pictures/logo_open_school.jpg" type="image/jpeg"> 
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="GENERATOR" content="Quanta Plus">
 </head>
 

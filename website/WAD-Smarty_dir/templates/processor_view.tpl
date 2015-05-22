@@ -6,7 +6,7 @@
   <title>IQC</title>
   <link rel="StyleSheet" href="./css/styles.css" type="text/css">
   <link rel="stylesheet" type="text/css" media="all" href="./java/js/tablekit/css/style.css"/>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="GENERATOR" content="Quanta Plus">
   <script type="text/javascript" language="JavaScript" src="./java/scripts.js"></script> 
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js"></script>

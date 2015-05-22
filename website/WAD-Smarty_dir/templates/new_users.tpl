@@ -5,7 +5,7 @@
   <head >
   <link   rel="StyleSheet" href="./css/styles.css" type="text/css">
   <title>WAD-QC</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="GENERATOR" content="Quanta Plus">
 </head>
 <body bgcolor="#f3f6ff" link="blue" alink="blue" vlink="red">
@@ -75,12 +75,14 @@
           <td class="table_data"> <input type="checkbox" {$checked_login_level_1} name="login_level_1" value="on"> </td>
           <td class="table_data"> <input type="checkbox" {$checked_login_level_2} name="login_level_2" value="on"> </td>
           <td class="table_data"> <input type="checkbox" {$checked_login_level_3} name="login_level_3" value="on"> </td>
-	    <td class="table_data_blue"> {$message_level} </td>
+	  <td class="table_data"> <input type="checkbox" {$checked_login_level_4} name="login_level_4" value="on"> </td>  
+         <td class="table_data_blue"> {$message_level} </td>
         </tr>
         <tr>
           <td class="table_data_blue"> Admin </td>
-	    <td class="table_data_blue"> Technician </td>
-	    <td class="table_data_blue"> Vendor </td>
+	  <td class="table_data_blue"> Technician </td>
+	  <td class="table_data_blue"> Vendor </td>
+          <td class="table_data_blue"> Dashboard </td>
 	  </tr>
       </table>
     </td>
@@ -88,6 +90,13 @@
 </table>
 <font class="table_data_red">* Verplicht veld</font>
 <hr>
+<font class="table_data_blue_header">*Selector Rechten</font>
+<hr>
+<table NOSAVE="true" class="table_general">
+  {$selector_list}
+</table>
+
+
 <input type="submit" name="action" value="{$users_value}">
 </form>
 </body>

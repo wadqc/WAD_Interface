@@ -5,7 +5,7 @@
   <head >
   <link   rel="StyleSheet" href="./css/styles.css" type="text/css">
   <title>Image Quality Control</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="GENERATOR" content="Quanta Plus">
 </head>
 <body bgcolor="#f3f6ff" link="blue" alink="blue" vlink="red">

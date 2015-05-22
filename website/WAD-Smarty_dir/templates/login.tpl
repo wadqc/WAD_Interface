@@ -5,7 +5,7 @@
   <head >
   <link   rel="StyleSheet" href="../iqc/css/styles.css" type="text/css">
   <title>WAD-QC</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="GENERATOR" content="Quanta Plus">
   <link rel="shortcut icon" href="{$favicon}">
   <script language="JavaScript" type="text/javascript">

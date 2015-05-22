@@ -5,7 +5,7 @@
   <head >
   <link   rel="StyleSheet" href="./css/styles.css" type="text/css">
   <title>New Selector</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="GENERATOR" content="Quanta Plus">
 </head>
 <body bgcolor="#f3f6ff" link="blue" alink="blue" vlink="red">
@@ -18,7 +18,7 @@
   <tr>
     <td class="table_data_blue"> Geef omschrijving waarom resultaat wordt verwijderd </td>
     <td class="table_data">
-      <input   name="delete_description" type="text" value="{$default_delete_description}" size="100"> </input>
+      <input   name="omschrijving" type="text" value="{$default_description}" size="100"> </input>
     </td>
   </tr>
   <tr>

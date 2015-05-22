@@ -56,23 +56,32 @@ $action['Admin']['DB beheer']='../iqc/beheer_db.php';
 
 }
 
-//non admin privileges
-if (empty($user_level_1))
+//Technician
+if (!empty($user_level_2))
 {
 
-$level['top']['Results']=1;
-$level['top']['Status']=2;
+$level['top']['Results']  = 1;
+$level['top']['Status']   = 2;
 
-$action['top']['Results']='../iqc/show_selector.php';
-$action['top']['Status']='../iqc/frontpage-bottom.html';
+
+
+// Default action for top menu entries
+$action['top']['Results'] =  '../iqc/show_selector.php';     // Selector
+$action['top']['Status'] =   '../iqc/frontpage-bottom.html'; // none
+
+
+// Default bottom menu selection for top menu entries
+$default_selected_bottom['top']['Results']  = 1;   // Selector
+$default_selected_bottom['top']['Status']   = 100; // none
+
+
 
 
 $level['Results']['Selector']=1;
-$level['Results']['Dashboard']=1;
+$level['Results']['Dashboard']=2;
 
 $action['Results']['Selector']='../iqc/show_selector.php';
 $action['Results']['Dashboard']='../iqc/show_dashboard.php';
-
 
 $level['Status']['Selector']=1;
 $level['Status']['Processor']=2;
@@ -81,6 +90,56 @@ $action['Status']['Selector']='../iqc/status-collector.php';
 $action['Status']['Processor']='../iqc/status-processor.php';
 
 }
+
+//Vendor
+if (!empty($user_level_3))
+{
+
+$level['top']['Results']  = 1;
+
+
+
+// Default action for top menu entries
+$action['top']['Results'] =  '../iqc/show_selector.php';     // Selector
+
+
+// Default bottom menu selection for top menu entries
+$default_selected_bottom['top']['Results']  = 1;   // Selector
+
+
+
+
+$level['Results']['Selector']=1;
+
+
+$action['Results']['Selector']='../iqc/show_selector.php';
+
+
+}
+
+//Dashboard
+if (!empty($user_level_4))
+{
+
+$level['top']['Results']  = 1;
+
+
+
+// Default action for top menu entries
+$action['top']['Results'] =  '../iqc/show_dashboard.php';     // Dashboard
+
+
+// Default bottom menu selection for top menu entries
+$default_selected_bottom['top']['Results']  = 1;   // Selector
+
+
+
+$level['Results']['Dashboard']=1;
+
+$action['Results']['Dashboard']='../iqc/show_dashboard.php';
+
+}
+
 
 
 

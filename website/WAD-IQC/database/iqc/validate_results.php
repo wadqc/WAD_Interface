@@ -70,6 +70,7 @@ $table_users='users';
   {
     $initialen=$_POST['initialen'];
   }
+  
   if (!empty($_POST['status']))
   {
     $status=$_POST['status'];
@@ -78,7 +79,13 @@ $table_users='users';
   {
     $status=$_GET['status'];
   }
-
+ 
+  //description
+  $omschrijving='';
+  if (!empty($_POST['omschrijving']))
+  {
+    $omschrijving=$_POST['omschrijving'];
+  }
 
 
 
@@ -93,9 +100,6 @@ and $table_gewenste_processen.pk='%d'";
 
 $selector_Stmt="SELECT * from $table_selector
 where $table_selector.pk=$selector_fk"; 
-
-//$gewenste_processen_Stmt="SELECT * from $table_gewenste_processen 
-//where $table_gewenste_proecessen.pk=$selector_fk";
 
 $update_Stmt="update $table_gewenste_processen set status='%d' where $table_gewenste_processen.pk='%d'";
 
@@ -162,17 +166,7 @@ case Delete:
   {
 
 
-
-
-  
-  //description
-  $delete_description='';
-  if (!empty($_POST['delete_description']))
-  {
-    $delete_description=$_POST['delete_description'];
-  }
-
-  if ($delete_description=='')
+  if ($omschrijving=='')
   {
 
     if (!($result_selector= $link->query($selector_Stmt))) {
@@ -194,7 +188,7 @@ case Delete:
     exit();
   }
  
-  if ($delete_description!='')
+  if ($omschrijving!='')
   {
 
         
@@ -236,7 +230,7 @@ case Delete:
     }
     if ($resultaten_status_id!=-1) //row available, update row
     {
-      if (!$link->query(sprintf($update_resultaten_status_Stmt,$user,$delete_description,$initialen,$resultaten_status_id))) {
+      if (!$link->query(sprintf($update_resultaten_status_Stmt,$user,$omschrijving,$initialen,$resultaten_status_id))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", sprintf($update_resultaten_status_Stmt,$user,$delete_description,$initialen,$resultaten_status_id) )) ;
       DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
@@ -296,26 +290,29 @@ case Valideer:
     }
     //add
   
-    if(!$link->query(sprintf($add_Stmt,$gewenste_processen_id,$user,$delete_description,$initialen))) 
+    if(!$link->query(sprintf($add_Stmt,$gewenste_processen_id,$user,$omschrijving,$initialen))) 
     {
       DisplayErrMsg(sprintf("Error in executing %s stmt",sprintf($add_Stmt,$gewenste_processen_id,$user,$delete_description,$initialen)  )) ;
       DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;
     } 
 
-    if (!empty($user_level_3)) //vendor
+    if (!($result_users= $link->query(sprintf($users_Stmt)))) {
+    DisplayErrMsg(sprintf("Error in executing %s stmt", $users_Stmt)) ;
+    DisplayErrMsg(sprintf("error: %s", $link->error)) ;
+    exit() ;
+    }
+    $field_users = $result_users->fetch_object();
+
+
+    //if (!empty($user_level_3)) //vendor
+    if (!empty($field_users->email)) 
     {
-      if (!($result_users= $link->query(sprintf($users_Stmt)))) {
-      DisplayErrMsg(sprintf("Error in executing %s stmt", $users_Stmt)) ;
-      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
-      exit() ;
-      }
-      $field_users = $result_users->fetch_object();
+      
  
       $to=$field_users->email;
-      $vendor_name=$field_users->lastname;
-  
-      $result_users->close(); 
+      $sender_name=$field_users->login;
+       
 
       //////////////////////
       if (!($result_selector= $link->query($selector_Stmt))) {
@@ -333,7 +330,7 @@ case Valideer:
       $from = "Anne Talsma <talsma.anne@gekooooomail.com>";
       $subject = sprintf("QC klinische vrijgave %s",$selector_name);
       
-      $body = sprintf("Toestel %s ,QC datum: %s, is klinisch vrijgegeven door leverancier: %s met initialen: %s",$selector_name, $date_result,$vendor_name,$initialen);
+      $body = sprintf("Toestel %s ,QC datum: %s, is klinisch vrijgegeven door gebruiker met login naam: %s",$selector_name, $date_result,$sender_name);
       
       
 
@@ -360,14 +357,14 @@ case Valideer:
 
 
     }
-
+    $result_users->close();
     
 
    
 
   }
     $executestring = sprintf("Location: http://%s%s/",$_SERVER['HTTP_HOST'],dirname($_SERVER['PHP_SELF']));
-    $executestring.= sprintf("show_results.php?selector_fk=%d&analyse_level=%s&gewenste_processen_id=%d&status=%d&v=%d&t=%d",$selector_fk,$analyse_level,$gewenste_processen_id,$status,$v,time());
+    $executestring.= sprintf("show_results.php?selector_fk=%d&analyse_level=%s&gewenste_processen_id=%d&status=%d&omschrijving=%s&v=%d&t=%d",$selector_fk,$analyse_level,$gewenste_processen_id,$status,$omschrijving,$v,time());
     header($executestring);
     exit();
 

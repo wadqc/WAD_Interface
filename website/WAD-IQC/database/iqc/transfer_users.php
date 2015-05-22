@@ -17,7 +17,7 @@ if (!empty($_GET['transfer_action']))
 
 
 $table_users='users';
-
+$table_selector_user='selector_user';
 
 //transfer specific
 
@@ -28,6 +28,8 @@ $table_users.pk='%d'";
 //delete specific
 $del_users = "delete from  $table_users where 
 $table_users.pk='%d'";
+$del_selector_users = "delete FROM $table_selector_user WHERE user_pk='%d'"; 
+  
 
 
 $updateStmt_users = "Update $table_users set
@@ -75,7 +77,13 @@ while ($i<$limit) // loop for $users_ref_key
       DisplayErrMsg(sprintf("Error in executing %s stmt",sprintf($del_users,$users_ref_key[$i]) )) ;
       DisplayErrMsg(sprintf("error: %s", $link->error)) ;
       exit() ;}
-  } // end delete action and users=on
+
+    if (!($link->query(sprintf($del_selector_users,$users_ref_key[$i])))) {
+      DisplayErrMsg(sprintf("Error in executing %s stmt",sprintf($del_selector_users,$users_ref_key[$i]) )) ;
+      DisplayErrMsg(sprintf("error: %s", $link->error)) ;
+      exit() ;}
+  } 
+  // end delete action and users=on
   
   if (($transfer_action=='reset_pwd')&&($users[$users_ref_key[$i]]=='on'))
   {

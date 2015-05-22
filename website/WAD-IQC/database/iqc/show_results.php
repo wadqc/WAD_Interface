@@ -61,6 +61,11 @@ if (!empty($_POST['status']))
   $status=$_POST['status'];
 }
 
+$omschrijving='';
+if (!empty($_GET['omschrijving']))
+{
+  $omschrijving=$_GET['omschrijving'];
+}
 
 
 
@@ -186,8 +191,8 @@ if (mysqli_connect_errno()) {
 
 
 
-// geeft anders problemen met selectoren die alleen gewneste processen hebben met status!=5
-$status_select=5;
+// geeft anders problemen met selectoren die alleen gewenste processen hebben met status!=5
+// $status_select=5;
 
 
 
@@ -249,6 +254,7 @@ if ($analyse_level=='study')
   }
   $result_year->close();
   //$status=$status_selected;
+  
   if ($counter==0)
   {
     if (!($result_year= $link->query(sprintf($year_Stmt_study,$status_select)))) {
@@ -422,10 +428,12 @@ if ($status_select==20||$status_select==30)
   if ($status_select==20)
   {  
     $recover_data=sprintf("Verwijderd door: %s, Reden: %s",$field_results->gebruiker,$field_results->omschrijving);
+    $notitie_data=sprintf("Notitie: %s",$field_results->omschrijving); 
   }
   if ($status_select==30)
   {  
-    $validate_data=sprintf("Gevalideerd door: %s, Initialen: %s",$field_results->gebruiker,$field_results->initialen);
+    $validate_data=sprintf("Notitie: %s, Gevalideerd door: %s, Initialen: %s",$field_results->omschrijving, $field_results->gebruiker,$field_results->initialen);
+    $notitie_data=sprintf("Notitie: %s",$field_results->omschrijving); 
   }
  
   $result_resultaten_status->close();  
@@ -482,11 +490,14 @@ if ($status_select==5)
   
   $menu_valideer=$table_data_valideer->fetch("selector_select_valideer.tpl");
   
-  
+  $table_data_notitie = new Smarty_NM();
+  $table_data_notitie->assign("default_omschrijving",$omschrijving);
+  $menu_notitie=$table_data_notitie->fetch("selector_select_omschrijving_input.tpl");
 
+  $table_data->assign("notitie",$menu_notitie);
   $table_data->assign("row_line",$menu_valideer);
   
-  $table_data->assign("select_value","Delete");
+  //$table_data->assign("select_value","Delete");
 }
 
 
@@ -495,26 +506,58 @@ if ($status_select==20)
   $table_data_verwijderd = new Smarty_NM();
   $table_data_verwijderd->assign("recover_data",$recover_data); 
   $menu_verwijderd=$table_data_verwijderd->fetch("selector_select_verwijderd.tpl");
+  
+  $table_data_notitie = new Smarty_NM();
+  $menu_notitie=$table_data_notitie->fetch("selector_select_omschrijving_input.tpl");
+
+  $table_data_selection = new Smarty_NM();
+  $table_data_selection->assign("select_value","Herstel");
+  $menu_selection=$table_data_selection->fetch("selector_select_selection.tpl"); 
+
+
+
+  //$table_data->assign("notitie",$menu_notitie);
+
   $table_data->assign("row_line",$menu_verwijderd);
   
-  $table_data->assign("select_value","Herstel");
+  $table_data->assign("selection",$menu_selection);
 
 }
+
 
 if ($status_select==30)
 {
   $table_data_verwijderd = new Smarty_NM();
   $table_data_verwijderd->assign("recover_data",$validate_data); 
   $menu_verwijderd=$table_data_verwijderd->fetch("selector_select_verwijderd.tpl");
-  $table_data->assign("row_line",$menu_verwijderd);
   
-  $table_data->assign("select_value","Delete");
+  $table_data_notitie = new Smarty_NM();
+  $menu_notitie=$table_data_notitie->fetch("selector_select_omschrijving_input.tpl");
+
+  $table_data_selection = new Smarty_NM();
+  $table_data_selection->assign("select_value","Delete");
+  $menu_selection=$table_data_selection->fetch("selector_select_selection.tpl");
+
+  //$table_data->assign("notitie",$menu_notitie);
+
+
+  $table_data->assign("row_line",$menu_verwijderd);
+  $table_data->assign("selection","$menu_selection");  
+
+ 
 }
 
 
 
-$selector_list=$table_data->fetch("selector_select.tpl");
+if ($user_level_1=='on')
+{
+  $selector_list=$table_data->fetch("selector_select.tpl");
+}
 
+if ($user_level_1!='on')
+{
+  $selector_list=$table_data->fetch("selector_select_user.tpl");
+}
 
 //end selector_header
 
@@ -576,7 +619,7 @@ while (($field_results = $result_floating->fetch_object()))
 {
 
    
-   $action[$field_results->volgnummer]=sprintf("show_floating_value.php?selector_fk=%d&analyse_level=%s&status=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$status,rawurlencode($field_results->omschrijving),rawurlencode($field_results->grootheid),$field_results->eenheid ,time()); 
+   $action[$field_results->volgnummer]=sprintf("show_floating_value.php?selector_fk=%d&analyse_level=%s&status=%s&omschrijving=%s&grootheid=%s&eenheid=%s&t=%d",$selector_fk,$analyse_level,$status,$field_results->omschrijving,$field_results->grootheid,$field_results->eenheid ,time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
    $grootheid[$field_results->volgnummer]=$field_results->grootheid;
@@ -597,7 +640,7 @@ $result_floating->close();
 while (($field_results = $result_char->fetch_object()))
 {
 
-   $action[$field_results->volgnummer]=sprintf("show_char_value.php?selector_fk=%d&analyse_level=%s&status=%s&omschrijving_char=%s&t=%d",$selector_fk,$analyse_level,$status,rawurlencode($field_results->omschrijving),time()); 
+   $action[$field_results->volgnummer]=sprintf("show_char_value.php?selector_fk=%d&analyse_level=%s&status=%s&omschrijving_char=%s&t=%d",$selector_fk,$analyse_level,$status,$field_results->omschrijving,time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
    $grootheid[$field_results->volgnummer]='na';
@@ -619,7 +662,7 @@ $result_char->close();
 while (($field_results = $result_boolean->fetch_object()))
 {
   
-   $action[$field_results->volgnummer]=sprintf("show_boolean_value.php?selector_fk=%d&analyse_level=%s&status=%s&omschrijving_bool=%s&t=%d",$selector_fk,$analyse_level,$status,rawurlencode($field_results->omschrijving),time()); 
+   $action[$field_results->volgnummer]=sprintf("show_boolean_value.php?selector_fk=%d&status=%s&omschrijving_char=%s&t=%d",$selector_fk,$status,$field_results->omschrijving,time()); 
    $datum[$field_results->volgnummer]=$date_result;
    $omschrijving[$field_results->volgnummer]=$field_results->omschrijving;
    $grootheid[$field_results->volgnummer]='na';
@@ -629,7 +672,7 @@ while (($field_results = $result_boolean->fetch_object()))
    $grens_kritisch_onder[$field_results->volgnummer]='na';
    $grens_acceptabel_boven[$field_results->volgnummer]='na';
    $grens_acceptabel_onder[$field_results->volgnummer]='na';
-   $criterium[$field_results->volgnummer]=$field_results->criterium;
+   $criterium[$field_results->volgnummer]='na';
    $type[$field_results->volgnummer]='boolean';
       
 }
@@ -762,20 +805,9 @@ while ($j<sizeof($ref_key)) // loop for $ref_keys
      //$table_data->assign("eenheid",$eenheid[$ref_key[$j]]);
      $table_data->assign("waarde",$waarde[$ref_key[$j]]);
      $table_data->assign("waarde_class","table_data");
-     $table_data->assign("action_char",$action[$ref_key[$j]]);
-     $table_data->assign("criterium",$criterium[$ref_key[$j]]);
-
-     if ($criterium[$ref_key[$j]] != '')
-     {
-         $table_data->assign("waarde_class","table_data_green"); // default is green if criterium is defined
-     }
-     if ( ($criterium[$ref_key[$j]]!='') and ($waarde[$ref_key[$j]]!=$criterium[$ref_key[$j]]) )
-     {
-       $table_data->assign("waarde_class","table_data_red");
-     } 
-
+     $table_data->assign("action_floating",$action[$ref_key[$j]]);
       
-     $table_resultaten_floating.=$table_data->fetch("resultaten_char_row.tpl");
+     $table_resultaten_floating.=$table_data->fetch("resultaten_floating_row.tpl");
    }
 
    $j++;
@@ -820,7 +852,7 @@ while (($field_results = $result_object->fetch_object()))
   $filename=$field_results->object_naam_pad;
   $object_type="None";
 
-  $finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
+  $finfo = finfo_open(FILEINFO_MIME_TYPE,null); // return mime type ala mimetype extension
   $object_type=@finfo_file($finfo, $filename);
   finfo_close($finfo);
 
@@ -924,3 +956,4 @@ $data->display("resultaten_result.tpl");
 
 
 ?>
+                                                                                                                                                                                                                                                                                                                                                                                                                              

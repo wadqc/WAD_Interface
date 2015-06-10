@@ -42,7 +42,7 @@
 
   <tr>
     <td class="table_data_blue_header">
-      <br>WAD-QC - Copyright (C) 2012-2013 - NVKF Werkgroep Apparatuur in de Diagnostiek
+      <br>WAD-QC - Copyright (C) 2012-2015 - NVKF Werkgroep Apparatuur in de Diagnostiek
     </td>
   </tr>
   <tr>

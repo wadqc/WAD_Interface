@@ -7,6 +7,11 @@
     {$description}
   </td>
   <td>
-     <a href="{$action}" class="table_data_select">{$filename}</a>
+     <a href="{$action_update}" class="table_data_select">{$filename}</a>
   </td>
+{if isset($action_show)}
+  <td>
+     <a href="{$action_show}" class="table_data_select">xml weergeven</a>
+  </td>
+{/if}
 </tr>

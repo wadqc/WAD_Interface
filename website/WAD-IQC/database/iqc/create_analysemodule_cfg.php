@@ -45,14 +45,16 @@ $b=($j%2);
    {
      $table_analysemodule_cfg=$table_data->fetch("file_select_header.tpl");
    }
-   $action=sprintf("new_analysemodule_cfg.php?pk=%d&t=%d",$field_analysemodule_cfg->pk,time());
+   $action_update=sprintf("new_analysemodule_cfg.php?pk=%d&t=%d",$field_analysemodule_cfg->pk,time());
+   $action_show=sprintf("show_config_file.php?pk=%d&t=%d",$field_analysemodule_cfg->pk,time());
    $checkbox_name=sprintf("analysemodule_cfg[%d]",$field_analysemodule_cfg->pk);
    $table_data->assign("bgcolor",$bgcolor);
    $table_data->assign("checkbox_name",$checkbox_name);
    $table_data->assign("description",$field_analysemodule_cfg->description);
    $table_data->assign("filename",$field_analysemodule_cfg->filename);
-   $table_data->assign("action",$action);
-      
+   $table_data->assign("action_show",$action_show);
+   $table_data->assign("action_update",$action_update);
+
    $table_analysemodule_cfg.=$table_data->fetch("file_select_row.tpl");
 
    $j++;

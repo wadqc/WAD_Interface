@@ -45,13 +45,13 @@ $b=($j%2);
    {
      $table_config_file=$table_data->fetch("file_select_header.tpl");
    }
-   $action=sprintf("new_config_file.php?pk=%d&t=%d",$field_config_file->pk,time());
+   $action_update=sprintf("new_config_file.php?pk=%d&t=%d",$field_config_file->pk,time());
    $checkbox_name=sprintf("config_file[%d]",$field_config_file->pk);
    $table_data->assign("bgcolor",$bgcolor);
    $table_data->assign("checkbox_name",$checkbox_name);
    $table_data->assign("omschrijving",$field_config_file->omschrijving);
    $table_data->assign("filenaam",$field_config_file->filenaam);
-   $table_data->assign("action",$action);
+   $table_data->assign("action_update",$action_update);
       
    $table_config_file.=$table_data->fetch("file_select_row.tpl");
 

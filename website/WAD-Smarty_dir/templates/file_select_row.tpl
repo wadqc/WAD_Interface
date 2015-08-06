@@ -11,7 +11,7 @@
   </td>
 {if isset($action_show)}
   <td>
-     <a href="{$action_show}" class="table_data_select">xml weergeven</a>
+     <a href="{$action_show}" class="table_data_select">config weergeven</a>
   </td>
 {/if}
 </tr>

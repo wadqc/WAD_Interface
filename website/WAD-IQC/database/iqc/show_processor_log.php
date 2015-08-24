@@ -86,7 +86,7 @@ $file_name=$field_results->object_naam_pad;
     if ($partial_content) header('Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $file_size);
     header("Connection: close");
     //header("Content-type: " . $ctype);
-    header("Content-type: " . $object_type);
+    header("Content-type: text/plain");
 
     //if($file_extension!='txt'){
     //	header('Content-Disposition: attachment; filename=' . $file_name);

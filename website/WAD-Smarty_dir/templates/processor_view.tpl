@@ -9,7 +9,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="GENERATOR" content="Quanta Plus">
   <script type="text/javascript" language="JavaScript" src="./java/scripts.js"></script> 
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js"></script>
+  <script type="text/javascript" src="./java/js/prototype.js"></script>
   <script type="text/javascript" src="./java/js/tablekit/fabtabulous.js"></script>
   <script type="text/javascript" src="./java/js/tablekit/tablekit.js"></script>
 </head>

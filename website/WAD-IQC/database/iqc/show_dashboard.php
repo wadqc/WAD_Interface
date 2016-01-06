@@ -66,7 +66,7 @@ $selector_Stmt="select $table_selector.*,g.creation_time,sc.omschrijving as cate
                   selector_categorie sc
                 on $table_selector.selector_categorie_fk=sc.pk
                 left join
-                  (select * from $table_gewenste_processen where status=5 order by pk desc) g
+                  (select Max(pk) as pk, selector_fk, Max(creation_time) as creation_time from $table_gewenste_processen where status = 5 Group by selector_fk) g
                 on $table_selector.pk=g.selector_fk where 1=1 %s group by $table_selector.pk order by $table_selector.name";
 
 
@@ -88,7 +88,7 @@ $selector_category_Stmt="select sc.*,g.creation_time
 $selector_modality_Stmt="select modaliteit,max(g.creation_time) as creation_time
                 from $table_selector s
                 left join
-                  (select * from $table_gewenste_processen where status=5 order by pk desc) g
+                  (select Max(pk) as pk, selector_fk, Max(creation_time) as creation_time from $table_gewenste_processen where status = 5 Group by selector_fk) g
                 on s.pk=g.selector_fk
                 where modaliteit > ''
                 group by modaliteit
@@ -97,7 +97,7 @@ $selector_modality_Stmt="select modaliteit,max(g.creation_time) as creation_time
 $selector_location_Stmt="select lokatie,max(creation_time) as creation_time
                 from $table_selector s
                 left join
-                  (select * from $table_gewenste_processen where status=5 order by pk desc) g
+                  (select Max(pk) as pk, selector_fk, Max(creation_time) as creation_time from $table_gewenste_processen where status = 5 Group by selector_fk) g
                 on s.pk=g.selector_fk
                 where lokatie > ''
                 group by lokatie
@@ -481,7 +481,7 @@ function gewenste_processen($link,$selectorarray) {
    $query = "select g.pk
              from selector s
              left join
-                (select * from gewenste_processen where status=5 order by pk desc) g
+                (select Max(pk) as pk, selector_fk, Max(creation_time) as creation_time from gewenste_processen where status = 5 Group by selector_fk) g
              on s.pk=g.selector_fk where s.pk in ($selectorlist) group by s.pk";
 
    if (!($result=$link->query($query))) {

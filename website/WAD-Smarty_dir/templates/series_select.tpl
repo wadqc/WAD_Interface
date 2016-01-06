@@ -28,6 +28,8 @@
   {$series_list}
 </table>
 
+<script>disable_refresh_on_click();</script>
+
 <br>
 <br>
 

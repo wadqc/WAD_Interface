@@ -27,7 +27,8 @@ if (!empty($_GET['date_filter']))
   $date_filter=$_POST['date_filter'];
 } else
 {
-  $date_filter = '100 YEAR';
+  //$date_filter = '100 YEAR';
+  $date_filter = '1 WEEK';
 }
 
 $table_gewenste_processen='gewenste_processen';

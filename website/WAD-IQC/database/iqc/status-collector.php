@@ -39,7 +39,8 @@ if (!empty($_GET['date_filter']))
   $date_filter=$_POST['date_filter'];
 } else
 {
-  $date_filter = '100 YEAR';
+  //$date_filter = '100 YEAR';
+  $date_filter = '1 WEEK';
 }
 
 $table_patient='patient';
@@ -52,18 +53,22 @@ $table_collector_status_omschrijving='collector_status_omschrijving';
 $table_omschrijving='collector_status_omschrijving';
 
 
-$collector_study_Stmt = "SELECT distinct patient.pat_id AS 'pat_id', patient.pat_name AS 'pat_name', study.accession_no AS 'accession_no', study.study_desc as 'study_description', study.study_datetime AS 'study_datetime', study.pk AS 'study_pk', series.modality AS 'modality', collector_study_status.study_status AS 'status_study',collector_status_omschrijving.veld_omschrijving as 'omschrijving'
+$collector_study_Stmt = "SELECT distinct patient.pat_id AS 'pat_id', patient.pat_name AS 'pat_name', study.accession_no AS 'accession_no', study.study_desc as 'study_description', study.study_datetime AS 'study_datetime', study.pk AS 'study_pk', series.modality AS 'modality', collector_study_status.study_status AS 'status_study',collector_status_omschrijving.veld_omschrijving as 'omschrijving', if(count(gp_study.pk)+count(gp_series.pk)+count(gp_instance.pk) > 0, 'ja', 'nee') as 'selector_match'
 FROM patient
 INNER JOIN (
 study
-INNER JOIN series ON study.pk = series.study_fk
+INNER JOIN series ON study.pk = series.study_fk inner join instance on series.pk=instance.series_fk
 INNER JOIN 
  ( collector_study_status
    inner join collector_status_omschrijving on collector_study_status.study_status=collector_status_omschrijving.nummer
  ) ON study.pk = collector_study_status.study_fk
 ) ON patient.pk = study.patient_fk
+left outer join gewenste_processen gp_study on study.pk=gp_study.study_fk
+left outer join gewenste_processen gp_series on series.pk=gp_series.series_fk
+left outer join gewenste_processen gp_instance on instance.pk=gp_instance.instance_fk
 WHERE collector_study_status.study_status in (%s)
 AND ( study.study_datetime > (NOW() - INTERVAL %s)) 
+group by study_pk
 ORDER BY study_datetime desc";
 
 
@@ -212,6 +217,7 @@ while ($field_collector_study = $result_collector_study->fetch_object())
    $table_data->assign("accession_number",$field_collector_study->accession_no);
    $table_data->assign("study_description",$field_collector_study->study_description);
    $table_data->assign("status",$field_collector_study->omschrijving);
+   $table_data->assign("selector_match",$field_collector_study->selector_match);
 
    
    $table_data->assign("action",$action);

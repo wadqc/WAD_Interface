@@ -21,4 +21,7 @@
   <td class="table_data">
     {$status}
   </td>  
+  <td class="table_data">
+    {$selector_match}
+  </td>  
 </tr>

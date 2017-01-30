@@ -87,7 +87,7 @@ $password_dcm4chee="wad";
 $databaseName_dcm4chee = "pacsdb";
 
 // Version of WAD_Interface
-$version = "1.1.0";
+$version = "1.2.0";
 
 
 

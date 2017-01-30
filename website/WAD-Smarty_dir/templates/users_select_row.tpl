@@ -21,4 +21,7 @@
   <td class="table_data">
     {$email}
   </td>
+  <td class="table_data">
+    {$prefmodality}
+  </td>
 </tr>

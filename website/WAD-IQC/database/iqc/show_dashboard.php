@@ -60,7 +60,7 @@ $table_resultaten_status='resultaten_status';
 $v=$_GET['v'];
 
 
-$selector_Stmt="select $table_selector.*,g.creation_time,sc.omschrijving as categorie
+$selector_Stmt="select $table_selector.*,max(g.creation_time) as creation_time,sc.omschrijving as categorie
                 from $table_selector
                 left join
                   selector_categorie sc
@@ -75,12 +75,12 @@ $subquery_modality = "and $table_selector.modaliteit='%s'";
 $subquery_location = "and $table_selector.lokatie='%s'";
 
 
-$selector_category_Stmt="select sc.*,g.creation_time
+$selector_category_Stmt="select sc.*,max(g.creation_time) as creation_time
                 from $table_selector_categorie sc
                 left join $table_selector s
                    on sc.pk=s.selector_categorie_fk
                 left join
-                  (select * from gewenste_processen where status=5 order by pk desc) g
+                  (select Max(pk) as pk, selector_fk, Max(creation_time) as creation_time from $table_gewenste_processen where status = 5 Group by selector_fk) g
                 on s.pk=g.selector_fk
                 group by sc.pk
                 order by sc.omschrijving";
@@ -478,11 +478,11 @@ function gewenste_processen($link,$selectorarray) {
 
    $selectorlist = implode(",",$selectorarray);
 
-   $query = "select g.pk
+   $query = "select s.pk
              from selector s
              left join
-                (select Max(pk) as pk, selector_fk, Max(creation_time) as creation_time from gewenste_processen where status = 5 Group by selector_fk) g
-             on s.pk=g.selector_fk where s.pk in ($selectorlist) group by s.pk";
+                (select Max(pk) as pk, selector_fk from gewenste_processen where status = 5 Group by selector_fk) g
+             on s.pk=g.selector_fk where s.pk in ($selectorlist)";
 
    if (!($result=$link->query($query))) {
       DisplayErrMsg(sprintf("Error in executing %s stmt", $query)) ;

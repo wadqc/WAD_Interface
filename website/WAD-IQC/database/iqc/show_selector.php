@@ -11,7 +11,7 @@ $table_gewenste_processen='gewenste_processen';
 $v=$_GET['v'];
 
 
-$selector_Stmt="select s.*,max(g.creation_time) as creation_time 
+$selector_Stmt="select s.*,g.creation_time 
                 from $table_selector s 
                 left join 
                   (select * from $table_gewenste_processen order by pk desc) g 

@@ -68,7 +68,7 @@ left outer join gewenste_processen gp_series on series.pk=gp_series.series_fk
 left outer join gewenste_processen gp_instance on instance.pk=gp_instance.instance_fk
 WHERE collector_study_status.study_status in (%s)
 AND ( study.study_datetime > (NOW() - INTERVAL %s)) 
-group by study_pk,series.modality,collector_study_status.study_status,collector_status_omschrijving.veld_omschrijving
+group by study_pk
 ORDER BY study_datetime desc";
 
 

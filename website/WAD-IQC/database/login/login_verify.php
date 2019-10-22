@@ -80,13 +80,16 @@ if (md5($user_password)==$pw_field->password)
     // JK - by default choose results --> selector instead of nothing
     //$selected_top='100';
     //$selected_bottom='100';
+    // Select results - dashboard at login
     $selected_top='1';
-    $selected_bottom='1';
+    $selected_bottom='2';
+    $preferred_modality=$pw_field->prefmodality;
 
 
     // JK: change default behaviour: display results / selector table by default
     //$bottom_frame=sprintf("../iqc/frontpage-bottom.html");
-    $bottom_frame=sprintf("../iqc/show_selector.php");
+    //$bottom_frame=sprintf("../iqc/show_selector.php");
+    $bottom_frame=sprintf("../iqc/show_dashboard.php?modaliteit=$preferred_modality");
     $executestring.= sprintf("../main/main_iqc.php?top_menu=$top_menu&bottom_menu=$bottom_menu&selected_top=$selected_top&selected_bottom=$selected_bottom&bottom_frame=$bottom_frame&t=%d",time());
     header($executestring);
     exit();

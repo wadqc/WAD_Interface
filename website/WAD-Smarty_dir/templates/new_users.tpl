@@ -48,6 +48,12 @@
             <input   name="users_email" type="text" value="{$default_users_email}" size="30"> </input>
           </td>
         </tr>
+        <tr>
+          <td class="table_data_blue"> Preferred Modality </td>
+          <td class="table_data"> 
+            <input   name="users_preferred_modality" type="text" value="{$default_users_preferred_modality}" size="30"> </input>
+          </td>
+        </tr>
 
 
 

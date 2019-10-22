@@ -9,8 +9,7 @@ echo
 
 mysql -uroot iqc -p$1 < iqc_db/update_iqc_1.0.0_1.1.0.sql
 
-echo.
+echo
 echo Done...
-echo.
+echo
 
-pause

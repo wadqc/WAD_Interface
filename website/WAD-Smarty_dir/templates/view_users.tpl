@@ -33,6 +33,10 @@
           <td class="table_data_blue"> Email </td>
           <td class="table_data"> {$default_users_email} </td>
         </tr>
+        <tr>
+          <td class="table_data_blue"> Preferred Modality </td>
+          <td class="table_data"> {$default_users_preferred_modality} </td>
+        </tr>
 </table>
 
 <hr>

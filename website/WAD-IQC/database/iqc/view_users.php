@@ -44,6 +44,7 @@ if (!($result_users= $link->query($users_Stmt))) {
   $users->assign("default_users_lastname",$field_users->lastname);
   $users->assign("default_users_phone",$field_users->phone);
   $users->assign("default_users_email",$field_users->email);
+  $users->assign("default_users_preferred_modality",$field_users->prefmodality);
   $users->assign("default_users_initials",$field_users->initials);
   $users->assign("default_users_login",$field_users->login);
   $checked1='';

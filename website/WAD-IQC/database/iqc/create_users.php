@@ -64,6 +64,7 @@ $b=($j%2);
    $table_data->assign("initials",$field_users->initials);
    $table_data->assign("phone",$field_users->phone);
    $table_data->assign("email",$field_users->email);
+   $table_data->assign("prefmodality",$field_users->prefmodality);
    
    $table_data->assign("action",$action);
    if (!empty($user_level_1))

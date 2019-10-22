@@ -68,7 +68,7 @@ $action['top']['Status']='../iqc/frontpage-bottom.html';
 
 
 $level['Results']['Selector']=1;
-$level['Results']['Dashboard']=1;
+$level['Results']['Dashboard']=2;
 
 $action['Results']['Selector']='../iqc/show_selector.php';
 $action['Results']['Dashboard']='../iqc/show_dashboard.php';

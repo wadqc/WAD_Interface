@@ -60,6 +60,7 @@ if( (!empty($_POST['action']) ) )
   $users_initials=$_POST['users_initials'];
   $users_phone=$_POST['users_phone'];
   $users_email=$_POST['users_email'];
+  $users_preferred_modality=$_POST['users_preferred_modality'];
   
   //priveleges
   $message2=''; 
@@ -146,9 +147,9 @@ if( (!empty($_POST['action']) ) )
 		exit();
 	 }
 	 
-     $addStmt = "Insert into $table_users(firstname,lastname,initials,phone,email,login_level_1,login_level_2,login_level_3,login_level_4,login_level_5,login,password) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')";
+     $addStmt = "Insert into $table_users(firstname,lastname,initials,phone,email,prefmodality,login_level_1,login_level_2,login_level_3,login_level_4,login_level_5,login,password) values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')";
 
-     $addStmt=sprintf($addStmt,$users_firstname,$users_lastname,$users_initials,$users_phone,$users_email,$login_level_1,$login_level_2,$login_level_3,$login_level_4,$login_level_5,$users_login,md5($first_login));
+     $addStmt=sprintf($addStmt,$users_firstname,$users_lastname,$users_initials,$users_phone,$users_email,$users_preferred_modality,$login_level_1,$login_level_2,$login_level_3,$login_level_4,$login_level_5,$users_login,md5($first_login));
    
      if (!($link->query($addStmt))) 
      {
@@ -168,8 +169,8 @@ if( (!empty($_POST['action']) ) )
     
     $table_users='users';
     
-    $updateStmt = "Update $table_users set  firstname='%s',lastname='%s',initials='%s',phone='%s',email='%s',login_level_1='%s',login_level_2='%s',login_level_3='%s',login_level_4='%s',login_level_5='%s',login='%s' where $table_users.pk='%d'";
-    $updateStmt=sprintf($updateStmt,$users_firstname,$users_lastname,$users_initials,$users_phone,$users_email,$login_level_1,$login_level_2,$login_level_3,$login_level_4,$login_level_5,$users_login,$users_pk);
+    $updateStmt = "Update $table_users set  firstname='%s',lastname='%s',initials='%s',phone='%s',email='%s',prefmodality='%s',login_level_1='%s',login_level_2='%s',login_level_3='%s',login_level_4='%s',login_level_5='%s',login='%s' where $table_users.pk='%d'";
+    $updateStmt=sprintf($updateStmt,$users_firstname,$users_lastname,$users_initials,$users_phone,$users_email,$users_preferred_modality,$login_level_1,$login_level_2,$login_level_3,$login_level_4,$login_level_5,$users_login,$users_pk);
     
     if (!($link->query($updateStmt))) 
     {
@@ -229,6 +230,7 @@ if( (!empty($_POST['action']) ) )
     $users->assign("default_users_lastname",$field_users->lastname);
     $users->assign("default_users_phone",$field_users->phone);
     $users->assign("default_users_email",$field_users->email);
+    $users->assign("default_users_preferred_modality",$field_users->prefmodality);
     $users->assign("default_users_initials",$field_users->initials);
     $users->assign("default_users_login",$field_users->login);
     $checked1='';

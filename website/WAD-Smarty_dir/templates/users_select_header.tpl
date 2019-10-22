@@ -7,4 +7,5 @@
       <td class="table_data_header_bold">Initialen&nbsp;&nbsp;</td>
       <td class="table_data_header_bold">Telefoon&nbsp;&nbsp;</td>
       <td class="table_data_header_bold">E-mail&nbsp;&nbsp;</td>
+      <td class="table_data_header_bold">Voorkeursmodaliteit&nbsp;&nbsp;</td>
 </tr>
